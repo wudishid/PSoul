@@ -67,8 +67,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -77,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -141,8 +140,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -151,7 +149,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -212,8 +210,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -222,7 +219,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -300,8 +297,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -310,7 +306,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -402,8 +398,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -412,7 +407,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -530,8 +525,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -540,7 +534,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -608,8 +602,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -618,7 +611,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -689,8 +682,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -699,7 +691,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -767,8 +759,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -777,7 +768,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -831,8 +822,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -841,7 +831,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -899,8 +889,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -909,7 +898,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -973,8 +962,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -983,7 +971,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -1050,8 +1038,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -1060,7 +1047,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -1168,8 +1155,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -1178,7 +1164,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "E:\\UE5.4.4\\UnrealEngine-release\\Engine\\Binaries\\ThirdParty\\DotNet\\6.0.302\\windows\\sdk\\6.0.302\\RuntimeIdentifierGraph.json"
         }
       }
     }
