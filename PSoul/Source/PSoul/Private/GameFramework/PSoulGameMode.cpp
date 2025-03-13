@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "PSoulGameMode.h"
-#include "PSoulCharacter.h"
+#include "PSoul/Public/GameFramework/PSoulGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 
 APSoulGameMode::APSoulGameMode()
