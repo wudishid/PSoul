@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "PSoul",
+			"Path": "..\\Source\\PSoul.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "PSoulEditor",
+			"Path": "..\\Source\\PSoulEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

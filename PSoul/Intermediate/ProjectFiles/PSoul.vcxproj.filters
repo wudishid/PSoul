@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\PSoul.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PSoul.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\PSoulEditor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEditorPerProjectUserSettings.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\PSoul">
+      <UniqueIdentifier>{2B0D8592-E0EE-3BED-85D5-027006D6B97D}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\PSoul\PSoul.Build.cs">
+      <Filter>Source\PSoul</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\PSoul\PSoul.cpp">
+      <Filter>Source\PSoul</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PSoul\PSoul.h">
+      <Filter>Source\PSoul</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PSoul\PSoulCharacter.cpp">
+      <Filter>Source\PSoul</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PSoul\PSoulCharacter.h">
+      <Filter>Source\PSoul</Filter>
+    </ClInclude>
+    <ClCompile Include="..\..\Source\PSoul\PSoulGameMode.cpp">
+      <Filter>Source\PSoul</Filter>
+    </ClCompile>
+    <ClInclude Include="..\..\Source\PSoul\PSoulGameMode.h">
+      <Filter>Source\PSoul</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
