@@ -2,8 +2,6 @@
 # Git LFS rules for Unreal Engine project
 
 # Unreal specific file types
-# uasset
-*.[uU][aA][sS][sS][eE][tT] filter=lfs diff=lfs merge=binary -text
 # umap
 *.[uU][mM][aA][pP] filter=lfs diff=lfs merge=binary -text
 

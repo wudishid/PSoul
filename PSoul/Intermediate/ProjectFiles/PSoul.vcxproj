@@ -406,6 +406,11 @@
     </ClCompile>
     <ClInclude Include="..\..\Source\PSoul\PSoulGameMode.h"/>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="..\..\Source\PSoul\GameFramework\Game\" />
+    <Folder Include="..\..\Source\PSoul\GameFramework\Login\" />
+    <Folder Include="..\..\Source\PSoul\GAS\" />
+  </ItemGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
