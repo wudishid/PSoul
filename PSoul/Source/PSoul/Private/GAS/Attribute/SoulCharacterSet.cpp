@@ -35,22 +35,22 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	Super::PostGameplayEffectExecute(Data);
 }
 
-void USoulCharacterSet::OnRep_Health()
+void USoulCharacterSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
-	
+	OnSoulAttributeChanged.Broadcast(GetHealthAttribute(), GetHealth(), OldValue.GetCurrentValue());
 }
 
-void USoulCharacterSet::OnRep_MaxHealth()
+void USoulCharacterSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
 {
-	
+	OnSoulAttributeChanged.Broadcast(GetMaxHealthAttribute(), GetMaxHealth(), OldValue.GetCurrentValue());
 }
 
-void USoulCharacterSet::OnRep_Stamina()
+void USoulCharacterSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 {
-	
+	OnSoulAttributeChanged.Broadcast(GetStaminaAttribute(), GetStamina(), OldValue.GetCurrentValue());
 }
 
-void USoulCharacterSet::OnRep_MaxStamina()
+void USoulCharacterSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 {
-	
+	OnSoulAttributeChanged.Broadcast(GetMaxStaminaAttribute(), GetMaxStamina(), OldValue.GetCurrentValue());
 }

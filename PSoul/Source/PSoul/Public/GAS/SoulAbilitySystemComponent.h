@@ -17,16 +17,15 @@ class PSOUL_API USoulAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	// Sets default values for this component's properties
 	USoulAbilitySystemComponent();
-
+	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
-	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AbilitySet")
 	USoulAbilitySet* AbilitySet;
-	
+
 public:
 };

@@ -7,16 +7,19 @@
 #include "SoulAttributeSet.h"
 #include "SoulCharacterSet.generated.h"
 
-/**
- * 
- */
-UCLASS()
+
+
+
+UCLASS(BlueprintType)
 class PSOUL_API USoulCharacterSet : public USoulAttributeSet
 {
 	GENERATED_BODY()
 
+public:
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Health);
-	
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Stamina);
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, MaxStamina);
 public:
 	USoulCharacterSet();
 
@@ -26,28 +29,28 @@ public:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
 
 	UFUNCTION()
-	void OnRep_Health();
+	void OnRep_Health(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	void OnRep_MaxHealth();
+	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	void OnRep_Stamina();
+	void OnRep_Stamina(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	void OnRep_MaxStamina();
+	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
 	
 private:
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stamina, Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stamina, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Stamina;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxStamina;
 	
 };

@@ -50,6 +50,12 @@ void USoulAbilitySet::GiveToAbilitySystem(USoulAbilitySystemComponent* ASC) cons
 
 		UAttributeSet* AttributeSet =NewObject<UAttributeSet>(ASC->GetOwner(), AttributeToGranted.AttributeSet);
 		ASC->AddAttributeSetSubobject(AttributeSet);
+
+		//数据表初始化属性
+		if(AttributeToGranted.AttributeSetDataTable)
+		{
+			ASC->InitStats(AttributeToGranted.AttributeSet, AttributeToGranted.AttributeSetDataTable);
+		}
 	}
 	
 }

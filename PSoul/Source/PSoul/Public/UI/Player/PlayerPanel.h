@@ -6,20 +6,19 @@
 #include "UI/SoulUserWidget.h"
 #include "PlayerPanel.generated.h"
 
-class UProgressBar;
-/**
- * 
- */
-UCLASS()
+
+class UStateBar;
+
+UCLASS(Abstract)
 class PSOUL_API UPlayerPanel : public USoulUserWidget
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+	
+	UPROPERTY(meta = (BindWidget))
+	UStateBar* HealthBar;
 
 	UPROPERTY(meta = (BindWidget))
-	UProgressBar* HealthBar;
-
-	UPROPERTY(meta = (BindWidget))
-	UProgressBar* StaminaBar;
+	UStateBar* StaminaBar;
 };

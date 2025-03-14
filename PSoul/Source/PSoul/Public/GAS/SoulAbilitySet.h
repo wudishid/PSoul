@@ -23,15 +23,12 @@ struct FSoulAbilitySet_GameplayAbility
 	GENERATED_BODY()
 
 public:
-	// Gameplay ability to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<USoulGameplayAbility> Ability = nullptr;
-
-	// Level of ability to grant.
+	
 	UPROPERTY(EditDefaultsOnly)
 	int32 AbilityLevel = 1;
-
-	// Tag used to process input for the ability.
+	
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "InputTag"))
 	FGameplayTag InputTag;
 };
@@ -46,12 +43,9 @@ struct FSoulAbilitySet_GameplayEffect
 	GENERATED_BODY()
 
 public:
-
-	// Gameplay effect to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
-
-	// Level of gameplay effect to grant.
+	
 	UPROPERTY(EditDefaultsOnly)
 	float EffectLevel = 1.0f;
 };
@@ -66,10 +60,12 @@ struct FSoulAbilitySet_AttributeSet
 	GENERATED_BODY()
 
 public:
-	// Gameplay effect to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAttributeSet> AttributeSet;
 
+	//Attribute Init Data
+	UPROPERTY(EditDefaultsOnly)
+	UDataTable* AttributeSetDataTable = nullptr;
 };
 
 

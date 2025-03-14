@@ -24,6 +24,9 @@ GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnSoulAttributeChanged, FGameplayAttribute,  float/*currentValue*/,  float/*oldValue*/);
+
 UCLASS()
 class PSOUL_API USoulAttributeSet : public UAttributeSet
 {
@@ -31,4 +34,6 @@ class PSOUL_API USoulAttributeSet : public UAttributeSet
 	
 public:
 	USoulAttributeSet();
+
+	mutable  FOnSoulAttributeChanged OnSoulAttributeChanged;
 };

@@ -3,7 +3,9 @@
 
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
 
+#include "Components/CharacterAttributeComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/Attribute/SoulCharacterSet.h"
 
 
 // Sets default values
@@ -13,13 +15,16 @@ ASoulCharacterBase::ASoulCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
-	
+	CharacterSet = CreateDefaultSubobject<USoulCharacterSet>(TEXT("SoulCharacterSet"));
+	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
 }
 
 // Called when the game starts or when spawned
 void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
 }
 

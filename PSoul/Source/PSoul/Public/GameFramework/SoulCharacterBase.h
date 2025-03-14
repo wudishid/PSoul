@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+class USoulCharacterSet;
+class UCharacterAttributeComponent;
 class USoulAbilitySystemComponent;
 
 UCLASS()
@@ -26,5 +28,11 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
 	USoulAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
+	UCharacterAttributeComponent* AttributeComponent;
+
+	UPROPERTY()
+	USoulCharacterSet* CharacterSet;
 	
 };
