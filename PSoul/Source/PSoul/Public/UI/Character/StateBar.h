@@ -3,9 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttributeSet.h"
 #include "UI/SoulUserWidget.h"
 #include "StateBar.generated.h"
 
+
+class UCharacterAttributeComponent;
 class UProgressBar;
 /**
  * 
@@ -18,11 +21,13 @@ class PSOUL_API UStateBar : public USoulUserWidget
 public:
 	virtual void NativeConstruct() override;
 
-	void Init(APawn* OwnerPawn, FName InAttributeName, FName InMaxAttributeName);
+	void Init(APawn* OwnerPawn);
+	void Init(APawn* OwnerPawn, FGameplayAttribute InAttribute, FGameplayAttribute InMaxAttribute);
 	
 	UFUNCTION()
-	void HandleAttributeChanged(FGameplayAttribute Attribute, float InCurrentValue, float InOldValue);
+	void HandleAttributeChanged(FGameplayAttribute InAttribute, float InCurrentValue, float InOldValue);
 
+	void UpdateBar();
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UProgressBar* StateBar;
@@ -31,11 +36,11 @@ protected:
 	FLinearColor BarFillColor = FLinearColor::Red;
 	
 	UPROPERTY(EditAnywhere, Category = "StateBar")
-	FName AttributeName;
+	FGameplayAttribute Attribute;
 
 	UPROPERTY(EditAnywhere, Category = "StateBar")
-	FName MaxAttributeName;
+	FGameplayAttribute MaxAttribute;
 	
-	float CurrentValue = 0.f;
-	float MaxValue = 0.f;
+	UPROPERTY()
+	UCharacterAttributeComponent* AttributeComponent;
 };

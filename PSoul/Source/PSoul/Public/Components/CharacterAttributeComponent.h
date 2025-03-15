@@ -12,6 +12,7 @@ class USoulCharacterSet;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAttrributeChanged, FGameplayAttribute, GameplayAttribute, float, CurrentValue, float, OldValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDeath);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UCharacterAttributeComponent : public UActorComponent
@@ -26,11 +27,20 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
+
+	UFUNCTION(Client, Reliable)
+	void HandleCharacterDeath();
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttrributeChanged OnAttributeChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnCharacterDeath OnCharacterDeath;
 	
 	void InitWithAbilitySystemComponent(USoulAbilitySystemComponent* InASC);
+	
+	float GetAttributeValue(FGameplayAttribute Attribute) const;
+	
 protected:
 	UPROPERTY()
 	const USoulCharacterSet* CharacterSet;

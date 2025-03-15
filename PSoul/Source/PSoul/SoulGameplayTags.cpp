@@ -9,4 +9,11 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look, "InputTag.Look", "InputTag.Look");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Attack, "InputTag.Attack", "InputTag.Attack");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Jump, "InputTag.Jump", "InputTag.Jump");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Hit, "GameplayEvent.Hit", "GameplayEvent.Hit");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Hit, "Status.Hit", "Status.Hit");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Status.Death");
+	
 }

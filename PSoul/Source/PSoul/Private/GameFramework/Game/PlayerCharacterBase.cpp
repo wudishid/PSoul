@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
 #include "PSoul/SoulGameplayTags.h"
@@ -140,4 +141,23 @@ void APlayerCharacterBase::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 void APlayerCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	AbilitySystemComponent->AbilityInputTagReleased(InputTag);
+}
+
+void APlayerCharacterBase::HandleDeath()
+{
+	Super::HandleDeath();
+
+	GetCharacterMovement()->StopMovementImmediately();
+	GetController()->SetIgnoreMoveInput(true);
+}
+
+void APlayerCharacterBase::FinishDeath()
+{
+	Super::FinishDeath();
+#if WITH_SERVER_CODE
+	if (ASoulPlayerController_Game* PC = Cast<ASoulPlayerController_Game>(GetController()))
+	{
+		PC->RestartPlayer();
+	}
+#endif
 }

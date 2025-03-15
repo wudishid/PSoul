@@ -23,8 +23,15 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void NotifyRestarted() override;
+	UFUNCTION()
+	virtual void HandleDeath();
 
+	UFUNCTION(BlueprintCallable)
+	virtual void FinishDeath();
+	
 public:
+	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")

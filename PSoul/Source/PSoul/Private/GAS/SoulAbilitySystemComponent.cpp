@@ -30,14 +30,17 @@ void USoulAbilitySystemComponent::BeginPlay()
 void USoulAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {
 	bool bNewAvatatActor = AbilityActorInfo.Get()->AvatarActor != InAvatarActor;
-	
+
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
-	
-	if (bNewAvatatActor)
+
+	if (GetOwner()->HasAuthority())
 	{
-		if (AbilitySet)
+		if (bNewAvatatActor)
 		{
-			AbilitySet->GiveToAbilitySystem(this);
+			if (AbilitySet)
+			{
+				AbilitySet->GiveToAbilitySystem(this);
+			}
 		}
 	}
 }

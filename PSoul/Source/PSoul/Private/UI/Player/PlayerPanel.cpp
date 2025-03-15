@@ -9,7 +9,10 @@
 void UPlayerPanel::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	HealthBar->Init(GetOwningPlayerPawn(), "Health", "MaxHealth");
-	StaminaBar->Init(GetOwningPlayerPawn(), "Stamina", "MaxStamina");
+}
+
+void UPlayerPanel::InitPanel()
+{
+	HealthBar->Init(GetOwningPlayerPawn());
+	StaminaBar->Init(GetOwningPlayerPawn());
 }

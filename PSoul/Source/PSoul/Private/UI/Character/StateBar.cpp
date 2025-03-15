@@ -12,30 +12,54 @@ void UStateBar::NativeConstruct()
 	StateBar->SetFillColorAndOpacity(BarFillColor);
 }
 
-void UStateBar::Init(APawn* OwnerPawn, FName InAttributeName, FName InMaxAttributeName)
+void UStateBar::Init(APawn* OwnerPawn)
 {
 	if(ensureMsgf(OwnerPawn, TEXT("UStateBar::Init InOwnerPawn is nullptr")))
 	{
-		if(UCharacterAttributeComponent* AttributeComponent = OwnerPawn->FindComponentByClass<UCharacterAttributeComponent>())
+		AttributeComponent = OwnerPawn->FindComponentByClass<UCharacterAttributeComponent>();
+		if(ensureMsgf(AttributeComponent, TEXT("Pawn Has not AttributeComponent!")))
 		{
-			AttributeComponent->OnAttributeChanged.AddDynamic(this, &ThisClass::HandleAttributeChanged);
-			AttributeName = InAttributeName;
-			MaxAttributeName = InMaxAttributeName;
+			if(!AttributeComponent->OnAttributeChanged.IsAlreadyBound(this, &ThisClass::HandleAttributeChanged))
+			{
+				AttributeComponent->OnAttributeChanged.AddDynamic(this, &ThisClass::HandleAttributeChanged);
+			}
+			
+			UpdateBar();
 		}
 	}
 }
 
-void UStateBar::HandleAttributeChanged(FGameplayAttribute Attribute, float InCurrentValue, float InOldValue)
+void UStateBar::Init(APawn* OwnerPawn, FGameplayAttribute InAttribute, FGameplayAttribute InMaxAttribute)
 {
-	if(Attribute.GetName() == AttributeName)
+	if(ensureMsgf(OwnerPawn, TEXT("UStateBar::Init InOwnerPawn is nullptr")))
 	{
-		CurrentValue = InCurrentValue;
-		StateBar->SetPercent(CurrentValue / MaxValue);
+		AttributeComponent = OwnerPawn->FindComponentByClass<UCharacterAttributeComponent>();
+		if(ensureMsgf(AttributeComponent, TEXT("Pawn Has not AttributeComponent!")))
+		{
+			if(!AttributeComponent->OnAttributeChanged.IsAlreadyBound(this, &ThisClass::HandleAttributeChanged))
+			{
+				AttributeComponent->OnAttributeChanged.AddDynamic(this, &ThisClass::HandleAttributeChanged);
+			}
+			
+			Attribute = InAttribute;
+			MaxAttribute = InMaxAttribute;
+
+			UpdateBar();
+		}
 	}
-	else if(Attribute.GetName() == MaxAttributeName)
+}
+
+void UStateBar::HandleAttributeChanged(FGameplayAttribute InAttribute, float InCurrentValue, float InOldValue)
+{
+	if (InAttribute == Attribute || InAttribute == MaxAttribute)
 	{
-		MaxValue = InCurrentValue;
-		StateBar->SetPercent(CurrentValue / MaxValue);
+		UpdateBar();
 	}
-	
+}
+
+void UStateBar::UpdateBar()
+{
+	float CurValue = AttributeComponent->GetAttributeValue(Attribute);
+	float MaxValue = AttributeComponent->GetAttributeValue(MaxAttribute);
+	StateBar->SetPercent(CurValue / MaxValue);
 }

@@ -18,7 +18,8 @@ public class PSoul : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
-			"UMG"
+			"UMG",
+			"AnimGraphRuntime"
 		});
 	}
 }

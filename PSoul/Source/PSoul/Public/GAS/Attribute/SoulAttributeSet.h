@@ -34,6 +34,6 @@ class PSOUL_API USoulAttributeSet : public UAttributeSet
 	
 public:
 	USoulAttributeSet();
-
+	float GetAttributeValue(FGameplayAttribute& InAttribute) const;
 	mutable  FOnSoulAttributeChanged OnSoulAttributeChanged;
 };

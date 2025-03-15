@@ -8,7 +8,7 @@
 #include "SoulCharacterSet.generated.h"
 
 
-
+DECLARE_MULTICAST_DELEGATE(FOnSoulCharacterDeath);
 
 UCLASS(BlueprintType)
 class PSOUL_API USoulCharacterSet : public USoulAttributeSet
@@ -23,11 +23,15 @@ public:
 public:
 	USoulCharacterSet();
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	mutable  FOnSoulCharacterDeath OnCharacterDeath;
 	
+protected:
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData &Data) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData &Data) override;
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);
 
@@ -39,6 +43,9 @@ public:
 
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
+
+
+	void ClampAttribute(const FGameplayAttribute& Attribute, float NewValue);
 	
 private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Meta = (AllowPrivateAccess = true))

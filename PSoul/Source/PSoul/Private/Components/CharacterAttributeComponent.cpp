@@ -3,6 +3,7 @@
 #include "Components/CharacterAttributeComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "PSoul/SoulGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -20,8 +21,6 @@ UCharacterAttributeComponent::UCharacterAttributeComponent()
 void UCharacterAttributeComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
 	
 }
 
@@ -29,6 +28,17 @@ void UCharacterAttributeComponent::HandleAttributeChanged(FGameplayAttribute Att
 	float OldValue)
 {
 	OnAttributeChanged.Broadcast(Attribute, CurrentValue, OldValue);
+}
+
+void UCharacterAttributeComponent::HandleCharacterDeath_Implementation()
+{
+	if (ASC)
+	{
+		FGameplayEventData Payload;
+		Payload.EventTag = SoulGameplayTags::GameplayEvent_Death;
+		ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
+	}
+	OnCharacterDeath.Broadcast();
 }
 
 void UCharacterAttributeComponent::InitWithAbilitySystemComponent(USoulAbilitySystemComponent* InASC)
@@ -39,10 +49,17 @@ void UCharacterAttributeComponent::InitWithAbilitySystemComponent(USoulAbilitySy
 	if(CharacterSet)
 	{
 		CharacterSet->OnSoulAttributeChanged.AddUObject(this, &ThisClass::HandleAttributeChanged);
-		OnAttributeChanged.Broadcast(CharacterSet->GetHealthAttribute(), CharacterSet->GetHealth(), CharacterSet->GetHealth());
-		OnAttributeChanged.Broadcast(CharacterSet->GetMaxHealthAttribute(), CharacterSet->GetMaxHealth(), CharacterSet->GetMaxHealth());
-		OnAttributeChanged.Broadcast(CharacterSet->GetStaminaAttribute(), CharacterSet->GetStamina(), CharacterSet->GetStamina());
-		OnAttributeChanged.Broadcast(CharacterSet->GetMaxStaminaAttribute(), CharacterSet->GetMaxStamina(), CharacterSet->GetMaxStamina());
+		CharacterSet->OnCharacterDeath.AddUObject(this, &ThisClass::HandleCharacterDeath);
+	}
+}
+
+float UCharacterAttributeComponent::GetAttributeValue(FGameplayAttribute Attribute) const
+{
+	if(CharacterSet)
+	{
+		return CharacterSet->GetAttributeValue(Attribute);
 	}
 	
+	return 0.f;
 }
+

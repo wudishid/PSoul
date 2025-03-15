@@ -13,4 +13,5 @@ UCLASS()
 class PSOUL_API ASoulGameMode_Game : public APSoulGameMode
 {
 	GENERATED_BODY()
+public:
 };

@@ -52,15 +52,15 @@ public:
 	APlayerCharacterBase();
 
 protected:
-
 	/** Called for movement input */
 	void Input_Move(const FInputActionValue& Value);
-
 	/** Called for looking input */
 	void Input_Look(const FInputActionValue& Value);
-
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+
+	virtual void HandleDeath() override;
+	virtual void FinishDeath() override;
 
 protected:
 	// APawn interface

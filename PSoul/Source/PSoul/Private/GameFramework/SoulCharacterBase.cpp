@@ -5,6 +5,7 @@
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/Attribute/SoulCharacterSet.h"
 #include "UI/Character/StateBar.h"
 
 
@@ -15,24 +16,30 @@ ASoulCharacterBase::ASoulCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
+	
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
-
+	AttributeComponent->OnCharacterDeath.AddDynamic(this, &ThisClass::HandleDeath);
+	
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarComp->SetupAttachment(GetMesh());
 
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
 // Called when the game starts or when spawned
 void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
 
 	if (!HasAuthority() && !IsLocallyControlled())
 	{
 		HealthBarComp->SetHiddenInGame(false);
 		if (UStateBar* StateBar = Cast<UStateBar>(HealthBarComp->GetUserWidgetObject()))
 		{
-			StateBar->Init(this, "Health", "MaxHealth");
+			StateBar->Init(this, USoulCharacterSet::GetHealthAttribute(), USoulCharacterSet::GetMaxHealthAttribute());
 		}
 	}
 	else
@@ -40,8 +47,21 @@ void ASoulCharacterBase::BeginPlay()
 		HealthBarComp->SetHiddenInGame(true);
 	}
 	
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
+}
+
+void ASoulCharacterBase::NotifyRestarted()
+{
+	Super::NotifyRestarted();
+}
+
+void ASoulCharacterBase::HandleDeath()
+{
 	
 }
+
+void ASoulCharacterBase::FinishDeath()
+{
+	
+}
+
 

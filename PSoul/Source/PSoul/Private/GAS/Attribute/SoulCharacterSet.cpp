@@ -3,6 +3,7 @@
 
 #include "GAS/Attribute/SoulCharacterSet.h"
 
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 USoulCharacterSet::USoulCharacterSet()
@@ -35,6 +36,22 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	Super::PostGameplayEffectExecute(Data);
 }
 
+void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+	ClampAttribute(Attribute, NewValue);
+}
+
+void USoulCharacterSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+
+	if(Attribute == GetHealthAttribute() && NewValue <= 0)
+	{
+		OnCharacterDeath.Broadcast();
+	}
+}
+
 void USoulCharacterSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
 	OnSoulAttributeChanged.Broadcast(GetHealthAttribute(), GetHealth(), OldValue.GetCurrentValue());
@@ -53,4 +70,24 @@ void USoulCharacterSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 void USoulCharacterSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 {
 	OnSoulAttributeChanged.Broadcast(GetMaxStaminaAttribute(), GetMaxStamina(), OldValue.GetCurrentValue());
+}
+
+void USoulCharacterSet::ClampAttribute(const FGameplayAttribute& Attribute, float NewValue)
+{
+	if(Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+	}
+	else if(Attribute == GetMaxHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, 1);
+	}
+	else if(Attribute == GetStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, GetMaxStamina());
+	}else if(Attribute == GetMaxStaminaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.f, 1);
+	}
+	
 }

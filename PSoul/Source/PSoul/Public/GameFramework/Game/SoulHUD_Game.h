@@ -14,11 +14,13 @@ UCLASS()
 class PSOUL_API ASoulHUD_Game : public ASoulHUD
 {
 	GENERATED_BODY()
-
 public:
 	virtual void BeginPlay() override;
-
+	void InitHUD();
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UPlayerPanel> PlayerPanelClass;
+
+	UPROPERTY()
+	TObjectPtr<UPlayerPanel> PlayerPanel;
 };

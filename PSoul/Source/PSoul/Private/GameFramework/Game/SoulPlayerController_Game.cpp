@@ -4,6 +4,8 @@
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 
 #include "GameFramework/Character.h"
+#include "GameFramework/GameModeBase.h"
+#include "GameFramework/Game/SoulHUD_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 
 void ASoulPlayerController_Game::SetupInputComponent()
@@ -21,6 +23,16 @@ void ASoulPlayerController_Game::PostProcessInput(const float DeltaTime, const b
 	}
 }
 
+void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
+{
+	Super::AcknowledgePossession(P);
+
+	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
+	{
+		HUD->InitHUD();
+	}
+}
+
 USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemComponent() const
 {
 	static USoulAbilitySystemComponent* ASC = nullptr;
@@ -30,4 +42,12 @@ USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemCompone
 	}
 	
 	return ASC;
+}
+
+void ASoulPlayerController_Game::RestartPlayer()
+{
+	APawn* CurPawn = GetPawn();
+	CurPawn->DetachFromControllerPendingDestroy();
+	CurPawn->Destroy();
+	GetWorld()->GetAuthGameMode()->RestartPlayer(this);
 }

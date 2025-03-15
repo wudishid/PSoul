@@ -13,7 +13,7 @@ UCLASS(Abstract)
 class PSOUL_API UPlayerPanel : public USoulUserWidget
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void NativeConstruct() override;
 	
 	UPROPERTY(meta = (BindWidget))
@@ -21,4 +21,8 @@ public:
 
 	UPROPERTY(meta = (BindWidget))
 	UStateBar* StaminaBar;
+
+public:
+	void InitPanel();
+	
 };

@@ -6,12 +6,22 @@
 void ASoulHUD_Game::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	if(IsValid(PlayerPanelClass))
+void ASoulHUD_Game::InitHUD()
+{
+	if(PlayerPanel)
 	{
-		if(UPlayerPanel* PlayerPanel = CreateWidget<UPlayerPanel>(GetOwningPlayerController(), PlayerPanelClass))
+		PlayerPanel->InitPanel();
+	}
+	else
+	{
+		if(IsValid(PlayerPanelClass))
 		{
+			PlayerPanel = CreateWidget<UPlayerPanel>(GetOwningPlayerController(), PlayerPanelClass);
 			PlayerPanel->AddToViewport();
+			PlayerPanel->InitPanel();
 		}
 	}
 }
+

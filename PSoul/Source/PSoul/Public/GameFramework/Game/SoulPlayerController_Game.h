@@ -16,8 +16,10 @@ class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 	GENERATED_BODY()
 
 public:
+	USoulAbilitySystemComponent* GetAbilitySystemComponent() const;
+	void RestartPlayer();
+protected:
 	virtual void SetupInputComponent() override;
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
-	USoulAbilitySystemComponent* GetAbilitySystemComponent() const;
-	
+	virtual void AcknowledgePossession(class APawn* P) override;
 };
