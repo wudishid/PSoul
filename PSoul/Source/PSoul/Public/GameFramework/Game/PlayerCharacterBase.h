@@ -3,17 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/SoulCharacterBase.h"
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class USoulInputConfig;
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
 class APlayerCharacterBase : public ASoulCharacterBase
@@ -44,18 +45,22 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USoulInputConfig> InputConfig;
+	
 public:
 	APlayerCharacterBase();
-	
 
 protected:
 
 	/** Called for movement input */
-	void Move(const FInputActionValue& Value);
+	void Input_Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
-	void Look(const FInputActionValue& Value);
-			
+	void Input_Look(const FInputActionValue& Value);
+
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
 protected:
 	// APawn interface

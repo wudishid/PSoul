@@ -36,6 +36,13 @@ void UCharacterAttributeComponent::InitWithAbilitySystemComponent(USoulAbilitySy
 	check(InASC);
 	ASC = InASC;
 	CharacterSet =  ASC->GetSet<USoulCharacterSet>();
-	check(CharacterSet);
-	CharacterSet->OnSoulAttributeChanged.AddUObject(this, &ThisClass::HandleAttributeChanged);
+	if(CharacterSet)
+	{
+		CharacterSet->OnSoulAttributeChanged.AddUObject(this, &ThisClass::HandleAttributeChanged);
+		OnAttributeChanged.Broadcast(CharacterSet->GetHealthAttribute(), CharacterSet->GetHealth(), CharacterSet->GetHealth());
+		OnAttributeChanged.Broadcast(CharacterSet->GetMaxHealthAttribute(), CharacterSet->GetMaxHealth(), CharacterSet->GetMaxHealth());
+		OnAttributeChanged.Broadcast(CharacterSet->GetStaminaAttribute(), CharacterSet->GetStamina(), CharacterSet->GetStamina());
+		OnAttributeChanged.Broadcast(CharacterSet->GetMaxStaminaAttribute(), CharacterSet->GetMaxStamina(), CharacterSet->GetMaxStamina());
+	}
+	
 }

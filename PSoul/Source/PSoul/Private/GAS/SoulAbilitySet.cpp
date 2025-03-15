@@ -48,14 +48,14 @@ void USoulAbilitySet::GiveToAbilitySystem(USoulAbilitySystemComponent* ASC) cons
 			UE_LOG(LogSoulAbilitySystem, Warning, TEXT("%s attribute is null"), *GetNameSafe(this));
 		}
 
-		UAttributeSet* AttributeSet =NewObject<UAttributeSet>(ASC->GetOwner(), AttributeToGranted.AttributeSet);
-		ASC->AddAttributeSetSubobject(AttributeSet);
-
+		 UAttributeSet* AttributeSet =NewObject<UAttributeSet>(ASC->GetOwner(), AttributeToGranted.AttributeSet);
+		 ASC->AddAttributeSetSubobject(AttributeSet);
+		
 		//数据表初始化属性
-		if(AttributeToGranted.AttributeSetDataTable)
-		{
-			ASC->InitStats(AttributeToGranted.AttributeSet, AttributeToGranted.AttributeSetDataTable);
-		}
+		 if(AttributeToGranted.AttributeSetDataTable)
+		 {
+		 	ASC->InitStats(AttributeToGranted.AttributeSet, AttributeToGranted.AttributeSetDataTable);
+		 }
 	}
 	
 }

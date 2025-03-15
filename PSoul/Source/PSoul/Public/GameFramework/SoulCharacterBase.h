@@ -31,8 +31,5 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UCharacterAttributeComponent* AttributeComponent;
-
-	UPROPERTY()
-	USoulCharacterSet* CharacterSet;
 	
 };

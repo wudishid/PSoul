@@ -15,7 +15,6 @@ ASoulCharacterBase::ASoulCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
-	CharacterSet = CreateDefaultSubobject<USoulCharacterSet>(TEXT("SoulCharacterSet"));
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
 }
 

@@ -18,6 +18,12 @@ public:
 	// Sets default values for this component's properties
 	USoulAbilitySystemComponent();
 	virtual void InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor) override;
+
+	void AbilityInputTagPressed(const FGameplayTag& InputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+
+	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
+	void ClearAbilityInput();
 	
 protected:
 	// Called when the game starts
@@ -26,6 +32,15 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AbilitySet")
 	USoulAbilitySet* AbilitySet;
+
+	// Handles to abilities that had their input pressed this frame.
+	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
+
+	// Handles to abilities that had their input released this frame.
+	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
+
+	// Handles to abilities that have their input held.
+	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 
 public:
 };

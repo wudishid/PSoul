@@ -11,8 +11,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "GAS/SoulAbilitySystemComponent.h"
-
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
+#include "Input/SoulInputComponent.h"
+#include "PSoul/SoulGameplayTags.h"
 
 //////////////////////////////////////////////////////////////////////////
 // APSoulCharacter
@@ -73,29 +73,30 @@ void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+
+
+			USoulInputComponent* SoulIC = Cast<USoulInputComponent>(PlayerInputComponent);
+			if (ensureMsgf(SoulIC, TEXT("Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it.")))
+			{
+				// Add the key mappings that may have been set by the player
+				SoulIC->AddInputMappings(InputConfig, Subsystem);
+
+				// This is where we actually bind and input action to a gameplay tag, which means that Gameplay Ability Blueprints will
+				// be triggered directly by these input actions Triggered events. 
+				TArray<uint32> BindHandles;
+				SoulIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+
+				SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, /*bLogIfNotFound=*/ false);
+				SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look, /*bLogIfNotFound=*/ false);
+				
+			}
+			
 		}
 	}
 	
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
-		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
-		// Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacterBase::Move);
-
-		// Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacterBase::Look);
-	}
-	else
-	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
 }
 
-void APlayerCharacterBase::Move(const FInputActionValue& Value)
+void APlayerCharacterBase::Input_Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
@@ -118,7 +119,7 @@ void APlayerCharacterBase::Move(const FInputActionValue& Value)
 	}
 }
 
-void APlayerCharacterBase::Look(const FInputActionValue& Value)
+void APlayerCharacterBase::Input_Look(const FInputActionValue& Value)
 {
 	// input is a Vector2D
 	FVector2D LookAxisVector = Value.Get<FVector2D>();
@@ -129,4 +130,14 @@ void APlayerCharacterBase::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void APlayerCharacterBase::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	AbilitySystemComponent->AbilityInputTagPressed(InputTag);
+}
+
+void APlayerCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	AbilitySystemComponent->AbilityInputTagReleased(InputTag);
 }
