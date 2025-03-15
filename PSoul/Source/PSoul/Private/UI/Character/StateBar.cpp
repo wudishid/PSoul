@@ -9,16 +9,20 @@
 void UStateBar::NativeConstruct()
 {
 	Super::NativeConstruct();
+	StateBar->SetFillColorAndOpacity(BarFillColor);
+}
 
-	if(APawn* OwnerPawn = GetOwningPlayerPawn())
+void UStateBar::Init(APawn* OwnerPawn, FName InAttributeName, FName InMaxAttributeName)
+{
+	if(ensureMsgf(OwnerPawn, TEXT("UStateBar::Init InOwnerPawn is nullptr")))
 	{
 		if(UCharacterAttributeComponent* AttributeComponent = OwnerPawn->FindComponentByClass<UCharacterAttributeComponent>())
 		{
 			AttributeComponent->OnAttributeChanged.AddDynamic(this, &ThisClass::HandleAttributeChanged);
+			AttributeName = InAttributeName;
+			MaxAttributeName = InMaxAttributeName;
 		}
 	}
-
-	StateBar->SetFillColorAndOpacity(BarFillColor);
 }
 
 void UStateBar::HandleAttributeChanged(FGameplayAttribute Attribute, float InCurrentValue, float InOldValue)
@@ -26,11 +30,12 @@ void UStateBar::HandleAttributeChanged(FGameplayAttribute Attribute, float InCur
 	if(Attribute.GetName() == AttributeName)
 	{
 		CurrentValue = InCurrentValue;
+		StateBar->SetPercent(CurrentValue / MaxValue);
 	}
 	else if(Attribute.GetName() == MaxAttributeName)
 	{
 		MaxValue = InCurrentValue;
+		StateBar->SetPercent(CurrentValue / MaxValue);
 	}
-
-	StateBar->SetPercent(CurrentValue / MaxValue);
+	
 }

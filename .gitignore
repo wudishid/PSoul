@@ -4,6 +4,7 @@
 # 临时构建目录
 Binaries/
 Intermediate/
+Intermediate/Build/BuildRulesProjects
 Saved/
 DerivedDataCache/
 
@@ -102,3 +103,4 @@ Plugins/Intermediate/
 # 项目配置文件（如有需要可保留）
 # !Config/
 # !Source/
+PSoul/Intermediate/Build/BuildRulesProjects/PSoulModuleRules/obj/Development/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs

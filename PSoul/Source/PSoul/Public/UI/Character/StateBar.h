@@ -18,6 +18,8 @@ class PSOUL_API UStateBar : public USoulUserWidget
 public:
 	virtual void NativeConstruct() override;
 
+	void Init(APawn* OwnerPawn, FName InAttributeName, FName InMaxAttributeName);
+	
 	UFUNCTION()
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float InCurrentValue, float InOldValue);
 
@@ -26,7 +28,7 @@ protected:
 	UProgressBar* StateBar;
 
 	UPROPERTY(EditAnywhere, Category = "StateBar")
-	FLinearColor BarFillColor;
+	FLinearColor BarFillColor = FLinearColor::Red;
 	
 	UPROPERTY(EditAnywhere, Category = "StateBar")
 	FName AttributeName;

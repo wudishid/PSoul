@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+class UWidgetComponent;
 class USoulCharacterSet;
 class UCharacterAttributeComponent;
 class USoulAbilitySystemComponent;
@@ -31,5 +32,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UCharacterAttributeComponent* AttributeComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
+	UWidgetComponent* HealthBarComp;
 	
 };
