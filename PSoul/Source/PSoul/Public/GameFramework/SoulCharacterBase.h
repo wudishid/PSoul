@@ -19,17 +19,19 @@ class PSOUL_API ASoulCharacterBase : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ASoulCharacterBase();
+	UFUNCTION(Server, Reliable)
+	virtual void HandleKill();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual void NotifyRestarted() override;
 	UFUNCTION()
 	virtual void HandleDeath();
 
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishDeath();
 	
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual void NotifyRestarted() override;
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 

@@ -8,7 +8,7 @@
 #include "SoulCharacterSet.generated.h"
 
 
-DECLARE_MULTICAST_DELEGATE(FOnSoulCharacterDeath);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSoulCharacterDeath, AActor*/*Causer*/);
 
 UCLASS(BlueprintType)
 class PSOUL_API USoulCharacterSet : public USoulAttributeSet

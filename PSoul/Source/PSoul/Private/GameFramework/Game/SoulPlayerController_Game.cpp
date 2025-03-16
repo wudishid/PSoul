@@ -6,7 +6,9 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/Game/SoulHUD_Game.h"
+#include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "PSoul/SoulLog.h"
 
 void ASoulPlayerController_Game::SetupInputComponent()
 {
@@ -44,10 +46,42 @@ USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemCompone
 	return ASC;
 }
 
-void ASoulPlayerController_Game::RestartPlayer()
+void ASoulPlayerController_Game::HandlePlayerDeath()
 {
+	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
+	{
+		PS->AddDeathNumber();
+	}
+	
 	APawn* CurPawn = GetPawn();
 	CurPawn->DetachFromControllerPendingDestroy();
 	CurPawn->Destroy();
 	GetWorld()->GetAuthGameMode()->RestartPlayer(this);
+}
+
+void ASoulPlayerController_Game::HandlePlayerKill()
+{
+	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
+	{
+		PS->AddKillNumber();
+	}
+}
+
+void ASoulPlayerController_Game::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+void ASoulPlayerController_Game::InitPlayerState()
+{
+	Super::InitPlayerState();
+	UE_LOG(LogSoul, Error, TEXT("InitPlayerState on %d"), GetWorld()->GetNetMode());
+#if WITH_SERVER_CODE
+	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
+	{
+		ESoulCharacterTeam Team = FMath::RandBool() ? ESoulCharacterTeam::RedPlayer : ESoulCharacterTeam::BluePlayer;
+		PS->InitPlayerState(1, 1, Team);
+	}
+#endif
+	
 }

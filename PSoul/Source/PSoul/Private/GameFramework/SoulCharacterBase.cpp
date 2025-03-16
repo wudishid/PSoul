@@ -26,11 +26,20 @@ ASoulCharacterBase::ASoulCharacterBase()
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
+void ASoulCharacterBase::HandleKill_Implementation()
+{
+	
+}
+
 // Called when the game starts or when spawned
 void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(IsLocallyControlled())
+	{
+		
+	}
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
 
@@ -54,14 +63,15 @@ void ASoulCharacterBase::NotifyRestarted()
 	Super::NotifyRestarted();
 }
 
+void ASoulCharacterBase::FinishDeath()
+{
+	
+}
+
 void ASoulCharacterBase::HandleDeath()
 {
 	
 }
 
-void ASoulCharacterBase::FinishDeath()
-{
-	
-}
 
 

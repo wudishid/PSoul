@@ -28,8 +28,11 @@ protected:
 	virtual void BeginPlay() override;
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
 
+	
+	void HandleCharacterDeath(AActor* InCauser);
+
 	UFUNCTION(Client, Reliable)
-	void HandleCharacterDeath();
+	void Client_SendDeathEvent();
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttrributeChanged OnAttributeChanged;

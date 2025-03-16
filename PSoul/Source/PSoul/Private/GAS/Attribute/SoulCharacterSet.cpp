@@ -5,6 +5,7 @@
 
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+#include "PSoul/SoulLog.h"
 
 USoulCharacterSet::USoulCharacterSet()
 :Health(100),
@@ -28,12 +29,25 @@ void USoulCharacterSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 
 bool USoulCharacterSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
 {
+	if(GetHealth() <= 0)
+	{
+		return false;
+	}
 	return Super::PreGameplayEffectExecute(Data);
 }
 
 void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
+	UE_LOG(LogSoulAbilitySystem, Error, TEXT("PostGameplayEffectExecute on %d"), GetWorld()->GetNetMode());
+	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+	AActor* Causer = EffectContext.GetEffectCauser();
+
+	if(GetHealth() <= 0)
+	{
+		OnCharacterDeath.Broadcast(Causer);
+	}
+	
 }
 
 void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -45,11 +59,6 @@ void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 void USoulCharacterSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
-
-	if(Attribute == GetHealthAttribute() && NewValue <= 0)
-	{
-		OnCharacterDeath.Broadcast();
-	}
 }
 
 void USoulCharacterSet::OnRep_Health(const FGameplayAttributeData& OldValue)

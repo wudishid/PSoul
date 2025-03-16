@@ -13,5 +13,8 @@ UCLASS()
 class PSOUL_API ASoulGameMode_Game : public APSoulGameMode
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void BeginPlay() override;
 public:
 };

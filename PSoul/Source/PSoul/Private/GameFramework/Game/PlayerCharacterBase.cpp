@@ -143,6 +143,16 @@ void APlayerCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 	AbilitySystemComponent->AbilityInputTagReleased(InputTag);
 }
 
+void APlayerCharacterBase::HandleKill()
+{
+	Super::HandleKill();
+	
+	if (ASoulPlayerController_Game* PC = GetPlayerController())
+	{
+		PC->HandlePlayerKill();
+	}
+}
+
 void APlayerCharacterBase::HandleDeath()
 {
 	Super::HandleDeath();
@@ -154,10 +164,9 @@ void APlayerCharacterBase::HandleDeath()
 void APlayerCharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
-#if WITH_SERVER_CODE
-	if (ASoulPlayerController_Game* PC = Cast<ASoulPlayerController_Game>(GetController()))
+
+	if (ASoulPlayerController_Game* PC = GetPlayerController())
 	{
-		PC->RestartPlayer();
+		PC->HandlePlayerDeath();
 	}
-#endif
 }

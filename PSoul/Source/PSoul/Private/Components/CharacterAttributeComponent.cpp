@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/CharacterAttributeComponent.h"
+
+#include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
 #include "PSoul/SoulGameplayTags.h"
@@ -30,7 +32,17 @@ void UCharacterAttributeComponent::HandleAttributeChanged(FGameplayAttribute Att
 	OnAttributeChanged.Broadcast(Attribute, CurrentValue, OldValue);
 }
 
-void UCharacterAttributeComponent::HandleCharacterDeath_Implementation()
+void UCharacterAttributeComponent::HandleCharacterDeath(AActor* InCauser)
+{
+	Client_SendDeathEvent();
+	OnCharacterDeath.Broadcast();
+	if(ASoulCharacterBase* CauserCharacter = Cast<ASoulCharacterBase>(InCauser))
+	{
+		CauserCharacter->HandleKill();
+	}
+}
+
+void UCharacterAttributeComponent::Client_SendDeathEvent_Implementation()
 {
 	if (ASC)
 	{
@@ -38,7 +50,6 @@ void UCharacterAttributeComponent::HandleCharacterDeath_Implementation()
 		Payload.EventTag = SoulGameplayTags::GameplayEvent_Death;
 		ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
 	}
-	OnCharacterDeath.Broadcast();
 }
 
 void UCharacterAttributeComponent::InitWithAbilitySystemComponent(USoulAbilitySystemComponent* InASC)

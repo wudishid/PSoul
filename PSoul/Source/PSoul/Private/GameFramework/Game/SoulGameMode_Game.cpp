@@ -3,3 +3,7 @@
 
 #include "GameFramework/Game/SoulGameMode_Game.h"
 
+void ASoulGameMode_Game::BeginPlay()
+{
+	Super::BeginPlay();
+}

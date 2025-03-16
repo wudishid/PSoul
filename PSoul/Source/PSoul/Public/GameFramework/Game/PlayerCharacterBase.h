@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "SoulPlayerController_Game.h"
 #include "GameFramework/SoulCharacterBase.h"
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class ASoulPlayerController_Game;
 class USoulInputConfig;
 class USpringArmComponent;
 class UCameraComponent;
@@ -50,7 +52,7 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	
 public:
 	APlayerCharacterBase();
-
+	FORCEINLINE ASoulPlayerController_Game* GetPlayerController() { return Cast<ASoulPlayerController_Game>(GetController()); };
 protected:
 	/** Called for movement input */
 	void Input_Move(const FInputActionValue& Value);
@@ -59,6 +61,7 @@ protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 
+	virtual void HandleKill() override;
 	virtual void HandleDeath() override;
 	virtual void FinishDeath() override;
 
