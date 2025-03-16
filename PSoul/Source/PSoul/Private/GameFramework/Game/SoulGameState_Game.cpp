@@ -23,7 +23,7 @@ void ASoulGameState_Game::BeginPlay()
 			if(GameTimeLength <= 0)
 			{
 				GetWorld()->GetTimerManager().ClearTimer(Timer_GameTimeLength);
-				GetWorld()->ServerTravel("ThirdPersonMap");
+				GetWorld()->ServerTravel("Map1");
 			}
 			
 		}, 1.f, true);

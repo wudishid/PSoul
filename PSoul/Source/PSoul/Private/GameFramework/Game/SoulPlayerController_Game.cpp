@@ -5,9 +5,11 @@
 
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
+#include "GameFramework/SoulGameInstance.h"
 #include "GameFramework/Game/SoulHUD_Game.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "PSoul/SoulLog.h"
 
 void ASoulPlayerController_Game::SetupInputComponent()
@@ -29,10 +31,32 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 {
 	Super::AcknowledgePossession(P);
 
+	FInputModeGameOnly ModeGameOnly;
+	SetShowMouseCursor(false);
+	SetInputMode(ModeGameOnly);
+	
 	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
 	{
 		HUD->InitHUD();
 	}
+}
+
+void ASoulPlayerController_Game::OnRep_Team()
+{
+	InitSoulPlayerState();
+}
+
+void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
+{
+	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
+	{
+		PS->InitPlayerState(0, 0, Team);
+	}
+}
+
+void ASoulPlayerController_Game::SetTeam_Implementation(ESoulCharacterTeam InTeam)
+{
+	Team = InTeam;
 }
 
 USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemComponent() const
@@ -70,18 +94,21 @@ void ASoulPlayerController_Game::HandlePlayerKill()
 void ASoulPlayerController_Game::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if(IsLocalController())
+	{
+		USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>();
+		if(ensureMsgf(GameInstance, TEXT("SoulGameInstance Is not Valid!")))
+		{
+			SetTeam(GameInstance->Team);
+		}
+	}
 }
 
-void ASoulPlayerController_Game::InitPlayerState()
+void ASoulPlayerController_Game::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::InitPlayerState();
-	UE_LOG(LogSoul, Error, TEXT("InitPlayerState on %d"), GetWorld()->GetNetMode());
-#if WITH_SERVER_CODE
-	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
-	{
-		ESoulCharacterTeam Team = FMath::RandBool() ? ESoulCharacterTeam::RedPlayer : ESoulCharacterTeam::BluePlayer;
-		PS->InitPlayerState(1, 1, Team);
-	}
-#endif
-	
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(ASoulPlayerController_Game, Team, COND_None, REPNOTIFY_Always);
 }
+

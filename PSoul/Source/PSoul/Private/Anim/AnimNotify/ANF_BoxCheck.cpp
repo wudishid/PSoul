@@ -2,8 +2,8 @@
 
 
 #include "Anim/AnimNotify/ANF_BoxCheck.h"
-
 #include "GameFramework/SoulCharacterBase.h"
+#include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -39,8 +39,25 @@ void UANF_BoxCheck::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* 
 			{
 				USoulAbilitySystemComponent* CauserASC = OwnerCharacter->GetAbilitySystemComponent();
 				if(!CauserASC) return;
+				
 				for(AActor* HitActor : HitActors)
 				{
+					if (ASoulCharacterBase* TargetCharacter = Cast<ASoulCharacterBase>(HitActor))
+					{
+						if (ASoulPlayerState_Game* OwnerPlayerState = OwnerCharacter->GetPlayerState<
+							ASoulPlayerState_Game>())
+						{
+							if (ASoulPlayerState_Game* TargetPlayerState = TargetCharacter->GetPlayerState<
+								ASoulPlayerState_Game>())
+							{
+								if (OwnerPlayerState->GetTeam() == TargetPlayerState->GetTeam())
+								{
+									continue;
+								}
+							}
+						}
+					}
+					
 					USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<USoulAbilitySystemComponent>();
 					if(!TargetASC) continue;
 					UGameplayEffect* GameplayEffect = EffectToApply.GetDefaultObject();
