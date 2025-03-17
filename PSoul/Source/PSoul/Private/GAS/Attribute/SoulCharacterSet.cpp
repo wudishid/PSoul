@@ -39,7 +39,6 @@ bool USoulCharacterSet::PreGameplayEffectExecute(struct FGameplayEffectModCallba
 void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-	UE_LOG(LogSoulAbilitySystem, Error, TEXT("PostGameplayEffectExecute on %d"), GetWorld()->GetNetMode());
 	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
 	AActor* Causer = EffectContext.GetEffectCauser();
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "ANF_BoxCheck.generated.h"
 

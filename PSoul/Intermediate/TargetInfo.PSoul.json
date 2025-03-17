@@ -9,6 +9,11 @@
 			"Name": "PSoulEditor",
 			"Path": "..\\Source\\PSoulEditor.Target.cs",
 			"Type": "Editor"
+		},
+		{
+			"Name": "PSoulServer",
+			"Path": "..\\Source\\PSoulServer.Target.cs",
+			"Type": "Server"
 		}
 	]
 }

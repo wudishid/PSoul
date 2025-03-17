@@ -50,6 +50,6 @@ void ULoginPanel::HandleEnterGameClicked()
 {
 	if(USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>())
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), UKismetStringLibrary::Conv_StringToName(GameInstance->EnterGameMap));
+		UGameplayStatics::OpenLevel(GetWorld(), "47.106.12.36");
 	}
 }

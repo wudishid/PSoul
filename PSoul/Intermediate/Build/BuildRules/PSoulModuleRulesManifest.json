@@ -2,7 +2,8 @@
 	"SourceFiles": [
 		"E:\\PSoul\\PSoul\\Source\\PSoul\\PSoul.Build.cs",
 		"E:\\PSoul\\PSoul\\Source\\PSoul.Target.cs",
-		"E:\\PSoul\\PSoul\\Source\\PSoulEditor.Target.cs"
+		"E:\\PSoul\\PSoul\\Source\\PSoulEditor.Target.cs",
+		"E:\\PSoul\\PSoul\\Source\\PSoulServer.Target.cs"
 	],
 	"EngineVersion": "5.4.4"
 }

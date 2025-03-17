@@ -16,6 +16,7 @@
   <ItemGroup>
   <Compile Include="..\..\..\..\Source\PSoul.Target.cs"><Link>Source\PSoul.Target.cs</Link></Compile>
   <Compile Include="..\..\..\..\Source\PSoulEditor.Target.cs"><Link>Source\PSoulEditor.Target.cs</Link></Compile>
+  <Compile Include="..\..\..\..\Source\PSoulServer.Target.cs"><Link>Source\PSoulServer.Target.cs</Link></Compile>
   <Compile Include="..\..\..\..\Source\PSoul\PSoul.Build.cs"><Link>Source\PSoul\PSoul.Build.cs</Link></Compile>
   </ItemGroup>
 </Project>

@@ -24,7 +24,7 @@ public:
 
 	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
 	void ClearAbilityInput();
-	
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
