@@ -5,6 +5,7 @@
 
 #include "GAS/SoulAbilitySet.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values for this component's properties
@@ -135,6 +136,7 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 	for (const FGameplayAbilitySpecHandle& AbilitySpecHandle : AbilitiesToActivate)
 	{
 		TryActivateAbility(AbilitySpecHandle);
+		//UKismetSystemLibrary::PrintString(GetWorld(), "Input Trigger Ability!", true, true, FLinearColor::Yellow, 12.f);
 	}
 
 	//

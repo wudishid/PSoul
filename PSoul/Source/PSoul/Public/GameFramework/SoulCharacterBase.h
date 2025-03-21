@@ -18,7 +18,7 @@ class PSOUL_API ASoulCharacterBase : public ACharacter
 
 public:
 	// Sets default values for this character's properties
-	ASoulCharacterBase();
+	ASoulCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	UFUNCTION(Server, Reliable)
 	virtual void HandleKill();
 
