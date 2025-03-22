@@ -30,9 +30,7 @@ protected:
 
 	
 	void HandleCharacterDeath(AActor* InCauser);
-
-	UFUNCTION(Client, Reliable)
-	void Client_SendDeathEvent();
+	
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttrributeChanged OnAttributeChanged;

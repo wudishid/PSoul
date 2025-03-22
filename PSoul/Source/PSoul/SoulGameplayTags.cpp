@@ -5,6 +5,9 @@
 
 namespace SoulGameplayTags
 {
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack, "Ability.Attack", "Ability.Attack");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Jump, "Ability.Jump", "Ability.Jump");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Move, "InputTag.Move", "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look, "InputTag.Look", "InputTag.Look");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Attack, "InputTag.Attack", "InputTag.Attack");
@@ -22,4 +25,5 @@ namespace SoulGameplayTags
 }
 
 
-PSOUL_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Montage_CombWindow);
+PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack)
+	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Jump)

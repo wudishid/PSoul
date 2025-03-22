@@ -26,21 +26,16 @@ void UCharacterAttributeComponent::HandleAttributeChanged(FGameplayAttribute Att
 
 void UCharacterAttributeComponent::HandleCharacterDeath(AActor* InCauser)
 {
-	Client_SendDeathEvent();
-	OnCharacterDeath.Broadcast();
-	if(ASoulCharacterBase* CauserCharacter = Cast<ASoulCharacterBase>(InCauser))
-	{
-		CauserCharacter->HandleKill();
-	}
-}
-
-void UCharacterAttributeComponent::Client_SendDeathEvent_Implementation()
-{
 	if (ASC)
 	{
 		FGameplayEventData Payload;
 		Payload.EventTag = SoulGameplayTags::GameplayEvent_Death;
 		ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
+	}
+	OnCharacterDeath.Broadcast();
+	if(ASoulCharacterBase* CauserCharacter = Cast<ASoulCharacterBase>(InCauser))
+	{
+		CauserCharacter->HandleKill();
 	}
 }
 

@@ -27,11 +27,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishDeath();
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void NotifyRestarted() override;
+
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void NetMulticastHandleDeath();
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 

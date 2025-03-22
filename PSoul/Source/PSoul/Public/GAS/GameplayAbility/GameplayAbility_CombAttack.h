@@ -42,6 +42,9 @@ protected:
 
 	UFUNCTION()
 	void HandleMontageEnded();
+
+	UFUNCTION()
+	void HandleAttackCancelled();
 	
 public:
 	UGameplayAbility_CombAttack();

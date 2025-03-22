@@ -5,6 +5,7 @@
 
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
+#include "PSoul/SoulGameplayTags.h"
 #include "PSoul/SoulLog.h"
 
 USoulCharacterSet::USoulCharacterSet()
@@ -45,6 +46,12 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	if(GetHealth() <= 0)
 	{
 		OnCharacterDeath.Broadcast(Causer);
+	}
+	else
+	{
+		FGameplayEventData Payload;
+		Payload.EventTag = SoulGameplayTags::GameplayEvent_Hit;
+		GetOwningAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
 	}
 	
 }

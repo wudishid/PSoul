@@ -10,10 +10,9 @@
 void UANF_BoxCheck::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                            const FAnimNotifyEventReference& EventReference)
 {
-	Super::Notify(MeshComp, Animation, EventReference);
-
-#if WITH_SERVER_CODE
-
+	if (MeshComp->GetOwner()->GetNetMode() == NM_Client)return;
+	
+	UKismetSystemLibrary::PrintString(GetWorld(), "BoxCheckNotify!", true, true, FLinearColor::Yellow, 12.f);
 	if (ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(MeshComp->GetOwner()))
 	{
 		FVector StartPos = OwnerCharacter->GetActorLocation();
@@ -66,6 +65,5 @@ void UANF_BoxCheck::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* 
 			}
 		}
 	}
-
-#endif
+	
 }

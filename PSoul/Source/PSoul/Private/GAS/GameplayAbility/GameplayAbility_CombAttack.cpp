@@ -44,6 +44,10 @@ void UGameplayAbility_CombAttack::PlayMontageAndWaitForEvent()
 	{
 		PlayMontageAndWaitTask->OnBlendOut.AddDynamic(this, &ThisClass::HandleMontageEnded);
 		PlayMontageAndWaitTask->OnCompleted.AddDynamic(this, &ThisClass::HandleMontageEnded);
+
+		PlayMontageAndWaitTask->OnInterrupted.AddDynamic(this, &ThisClass::HandleAttackCancelled);
+		PlayMontageAndWaitTask->OnCancelled.AddDynamic(this, &ThisClass::HandleAttackCancelled);
+		
 		PlayMontageAndWaitTask->ReadyForActivation();
 	}
 
@@ -76,6 +80,13 @@ void UGameplayAbility_CombAttack::HandleCombNotifyEvent(FGameplayEventData Paylo
 }
 
 void UGameplayAbility_CombAttack::HandleMontageEnded()
+{
+	bComb =false;
+	CurrentCombIndex = 0;
+	K2_EndAbility();
+}
+
+void UGameplayAbility_CombAttack::HandleAttackCancelled()
 {
 	bComb =false;
 	CurrentCombIndex = 0;

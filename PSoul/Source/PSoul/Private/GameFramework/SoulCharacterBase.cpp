@@ -1,12 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/SoulCharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "UI/Character/StateBar.h"
 
 
@@ -14,17 +13,16 @@
 ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<USoulCharacterMovementComponent>(CharacterMovementComponentName))
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
 	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
 	AttributeComponent->OnCharacterDeath.AddDynamic(this, &ThisClass::HandleDeath);
 	
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarComp->SetupAttachment(GetMesh());
-
+	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
@@ -37,11 +35,7 @@ void ASoulCharacterBase::HandleKill_Implementation()
 void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if(IsLocallyControlled())
-	{
-		
-	}
+	
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
 
@@ -65,6 +59,11 @@ void ASoulCharacterBase::NotifyRestarted()
 	Super::NotifyRestarted();
 }
 
+void ASoulCharacterBase::NetMulticastHandleDeath_Implementation()
+{
+	HealthBarComp->SetHiddenInGame(true);
+}
+
 void ASoulCharacterBase::FinishDeath()
 {
 	
@@ -72,7 +71,7 @@ void ASoulCharacterBase::FinishDeath()
 
 void ASoulCharacterBase::HandleDeath()
 {
-	
+	NetMulticastHandleDeath();
 }
 
 
