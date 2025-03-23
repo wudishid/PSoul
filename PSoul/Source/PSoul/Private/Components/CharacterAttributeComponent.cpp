@@ -5,11 +5,11 @@
 #include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
 
-
-UCharacterAttributeComponent::UCharacterAttributeComponent()
+UCharacterAttributeComponent::UCharacterAttributeComponent(): bDeath(false)
 {
 }
 
@@ -18,25 +18,38 @@ void UCharacterAttributeComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+void UCharacterAttributeComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UCharacterAttributeComponent, bDeath, COND_None, REPNOTIFY_Always);
+}
+
 void UCharacterAttributeComponent::HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue,
-	float OldValue)
+                                                          float OldValue)
 {
 	OnAttributeChanged.Broadcast(Attribute, CurrentValue, OldValue);
 }
 
 void UCharacterAttributeComponent::HandleCharacterDeath(AActor* InCauser)
 {
+	bDeath = true;
+	OnCharacterDeath.Broadcast();
 	if (ASC)
 	{
 		FGameplayEventData Payload;
 		Payload.EventTag = SoulGameplayTags::GameplayEvent_Death;
 		ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
 	}
-	OnCharacterDeath.Broadcast();
 	if(ASoulCharacterBase* CauserCharacter = Cast<ASoulCharacterBase>(InCauser))
 	{
 		CauserCharacter->HandleKill();
 	}
+}
+
+void UCharacterAttributeComponent::OnRep_bDeath()
+{
+	OnCharacterDeath.Broadcast();
 }
 
 void UCharacterAttributeComponent::InitWithAbilitySystemComponent(USoulAbilitySystemComponent* InASC)

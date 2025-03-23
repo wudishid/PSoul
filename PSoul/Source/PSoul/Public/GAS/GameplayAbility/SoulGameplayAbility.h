@@ -32,5 +32,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "ActivationPolicy")
 	ESoulAbilityActivationPolicy ActivationPolicy = ESoulAbilityActivationPolicy::OnInputTriggered;
+
+	
 	
 };

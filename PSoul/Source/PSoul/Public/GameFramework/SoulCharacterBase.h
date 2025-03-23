@@ -33,8 +33,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void NotifyRestarted() override;
 
-	UFUNCTION(NetMulticast, Reliable)
-	virtual void NetMulticastHandleDeath();
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 

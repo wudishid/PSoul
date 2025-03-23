@@ -3,6 +3,7 @@
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
@@ -11,7 +12,17 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
                                                   const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	PlayMontageAndWaitForEvent();
+	
+	if(CommitAbility(Handle, ActorInfo, ActivationInfo))
+	{
+		PlayMontageAndWaitForEvent();
+	}
+	else
+	{
+		constexpr bool bReplicateEndAbility = true;
+		constexpr bool bWasCancelled = true;
+		EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	}
 }
 
 bool UGameplayAbility_CombAttack::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,

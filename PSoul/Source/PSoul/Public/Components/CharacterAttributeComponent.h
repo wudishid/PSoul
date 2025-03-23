@@ -26,10 +26,12 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
-
-	
 	void HandleCharacterDeath(AActor* InCauser);
+
+	UFUNCTION()
+	void OnRep_bDeath();
 	
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -48,4 +50,7 @@ protected:
 
 	UPROPERTY()
 	USoulAbilitySystemComponent* ASC;
+
+	UPROPERTY(ReplicatedUsing = OnRep_bDeath)
+	bool bDeath;
 };

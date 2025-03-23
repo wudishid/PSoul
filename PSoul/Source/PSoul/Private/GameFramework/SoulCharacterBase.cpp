@@ -18,6 +18,7 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 	
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
+	AttributeComponent->SetIsReplicated(true);
 	AttributeComponent->OnCharacterDeath.AddDynamic(this, &ThisClass::HandleDeath);
 	
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
@@ -59,11 +60,6 @@ void ASoulCharacterBase::NotifyRestarted()
 	Super::NotifyRestarted();
 }
 
-void ASoulCharacterBase::NetMulticastHandleDeath_Implementation()
-{
-	HealthBarComp->SetHiddenInGame(true);
-}
-
 void ASoulCharacterBase::FinishDeath()
 {
 	
@@ -71,7 +67,10 @@ void ASoulCharacterBase::FinishDeath()
 
 void ASoulCharacterBase::HandleDeath()
 {
-	NetMulticastHandleDeath();
+	if (!HasAuthority() && !IsLocallyControlled())
+	{
+		HealthBarComp->SetHiddenInGame(true);
+	}
 }
 
 
