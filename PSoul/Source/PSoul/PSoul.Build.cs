@@ -20,7 +20,8 @@ public class PSoul : ModuleRules
 			"GameplayTasks",
 			"UMG",
 			"AnimGraphRuntime",
-			"AIModule"
+			"AIModule",
+			"NetCore"
 		});
 	}
 }

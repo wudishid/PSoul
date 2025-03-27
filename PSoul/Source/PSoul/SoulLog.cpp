@@ -4,3 +4,4 @@
 
 DEFINE_LOG_CATEGORY(LogSoul);
 DEFINE_LOG_CATEGORY(LogSoulAbilitySystem);
+DEFINE_LOG_CATEGORY(LogSoulInventory);

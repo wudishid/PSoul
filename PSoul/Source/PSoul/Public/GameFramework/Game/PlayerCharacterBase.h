@@ -9,6 +9,7 @@
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class UInventoryManagerComponent;
 class ASoulPlayerController_Game;
 class USoulInputConfig;
 class USpringArmComponent;
@@ -50,6 +51,9 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoulInputConfig> InputConfig;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInventoryManagerComponent> InventoryManagerComponent;
+
 public:
 	APlayerCharacterBase();
 	FORCEINLINE ASoulPlayerController_Game* GetPlayerController() { return Cast<ASoulPlayerController_Game>(GetController()); };
