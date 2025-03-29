@@ -10,7 +10,7 @@
 
 class UBoxComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class PSOUL_API AInventoryItemInstance : public AActor
 {
 	GENERATED_BODY()

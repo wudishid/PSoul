@@ -17,3 +17,20 @@ bool Util_Inventory::GetItemInfoByName(const FName name, FInventoryItemInfo& out
 	
 	return false;
 }
+
+FString Util_Inventory::ItemOperationTypeToString(EItemOpetaionType type)
+{
+	switch (type)
+	{
+	case EItemOpetaionType::Use:
+		return TEXT("使用");
+	case EItemOpetaionType::Drop:
+		return TEXT("丢弃");
+	case EItemOpetaionType::Equip:
+		return TEXT("装备");
+	case EItemOpetaionType::UnEquip:
+		return TEXT("卸下");
+	default:
+		return TEXT("");
+	}
+}

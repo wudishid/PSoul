@@ -10,20 +10,23 @@ struct FInventoryItemSlot;
 class UButton;
 class UTextBlock;
 class UImage;
-/**
- * 
- */
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSlotRightMouseButtonDown, /**索引**/int32,  /**位置**/FVector2d);
+
 UCLASS(Abstract)
 class PSOUL_API UInventorySlot : public USoulUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	void UpdateSlot(FInventoryItemSlot& ItemSlot);
+	void UpdateSlot();
 	bool IsEmpty() const;
 	int32 SlotIndex;
+
+	FOnSlotRightMouseButtonDown OnSlotRightMouseButtonDown;
 protected:
 	virtual void NativeConstruct() override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 	UPROPERTY(meta = (BindWidget))
 	UImage* Image_Icon;

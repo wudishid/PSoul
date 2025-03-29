@@ -4,21 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "UI/SoulUserWidget.h"
-#include "InventoryPanel.generated.h"
+#include "EquipmentSlot.generated.h"
 
-class UItemOperationPanel;
-class UInventoryList;
+enum class EEquipmentType : uint8;
 /**
  * 
  */
 UCLASS(Abstract)
-class PSOUL_API UInventoryPanel : public USoulUserWidget
+class PSOUL_API UEquipmentSlot : public USoulUserWidget
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void NativeConstruct() override;
-	
-	UPROPERTY(meta = (BindWidget))
-	UInventoryList* InventoryList;
+
+	UPROPERTY(EditAnywhere, Category = "EquipmentSlot")
+	EEquipmentType EquipmentType;
 };

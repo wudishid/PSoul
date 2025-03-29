@@ -20,7 +20,7 @@ AInventoryItemInstance::AInventoryItemInstance()
 	BoxComp->SetupAttachment(GetRootComponent());
 	BoxComp->SetHiddenInGame(false);
 	
-	SetReplicates(true);
+	bReplicates = true;
 }
 
 

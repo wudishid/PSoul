@@ -21,6 +21,17 @@ public:
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void AddItem(const FInventoryItemInfo& ItemInfo);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable)
+	void RemoveItem(int32 InItemIndex);
+
+	UFUNCTION(Server, Reliable)
+	void DropItem(int32 InItemIndex);
+	
+	/// @return 是否找到物品信息
+	bool GetItemInfoByIndex(int32 Index, FInventoryItemInfo& OutItemInfo) const;
+
+	bool GetItemSlotByIndex(int32 Index, FInventoryItemSlot& OutItemSlot) const;
 	
 	FOnInventorySlotListChanged OnInventorySlotListChanged;
 protected:

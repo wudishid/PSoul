@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Inventory/InventoryPanel.h"
+#include "UI/Equipment/EquipmentSlot.h"
 
-void UInventoryPanel::NativeConstruct()
+void UEquipmentSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 }

@@ -23,5 +23,12 @@ public class PSoul : ModuleRules
 			"AIModule",
 			"NetCore"
 		});
+		
+		PrivateDependencyModuleNames.AddRange(
+		new string[]
+		{
+			"DeveloperSettings",
+		});
+		
 	}
 }

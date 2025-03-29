@@ -5,14 +5,41 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "InventoryItemDefinition.generated.h"
 
+class AEquipmentInstance;
 class AInventoryItemInstance;
+
+
+UENUM()
+enum class EItemType : uint8
+{
+	Consumable = 0,
+	Equipment
+};
+
+
+UENUM()
+enum class EEquipmentType : uint8
+{
+	Weapon,
+	Armor,
+	Ring
+};
+
+UENUM()
+enum class EItemOpetaionType : uint8
+{
+	Use,
+	Drop,
+	Equip,
+	UnEquip
+};
 
 USTRUCT(BlueprintType)
 struct FInventoryItemInfo : public FTableRowBase
 {
 	GENERATED_BODY()
 
-	FInventoryItemInfo() :  ItemName(NAME_None), Description(), Icon(nullptr), CanStack(false)
+	FInventoryItemInfo() :  ItemName(NAME_None), Description(), Icon(nullptr), CanStack(false), MaxStackAmount(1)
 	{
 	}
 
@@ -34,10 +61,24 @@ struct FInventoryItemInfo : public FTableRowBase
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanStack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "CanStack"))
+	int32 MaxStackAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<EItemOpetaionType> ItemOpetaions;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AInventoryItemInstance> ItemClass;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "ItemType == EItemType::Equipment"))
+	TSubclassOf<AEquipmentInstance> EquipmentClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "ItemType == EItemType::Equipment"))
+	EEquipmentType EquipmentType;
 };
 
 

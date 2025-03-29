@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Blueprint/UserWidget.h"
+#include "Equipment/EquipmentManagerComponent.h"
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
@@ -43,6 +44,10 @@ APlayerCharacterBase::APlayerCharacterBase()
 	
 	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("InventoryManagerComp"));
 	InventoryManagerComponent->SetIsReplicated(true);
+
+	EquipmentManagerComponent = CreateDefaultSubobject<UEquipmentManagerComponent>(TEXT("EquipmentManagerComp"));
+	EquipmentManagerComponent->SetIsReplicated(true);
+	
 }
 
 void APlayerCharacterBase::BeginPlay()
