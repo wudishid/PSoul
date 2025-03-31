@@ -9,7 +9,6 @@
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventorySlotListChanged, FInventoryItemSlotList&);
 
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UInventoryManagerComponent : public UActorComponent
 {

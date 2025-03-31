@@ -7,6 +7,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryItemDefinition.h"
 #include "Inventory/InventoryManagerComponent.h"
 #include "Kismet/KismetTextLibrary.h"
@@ -42,9 +43,53 @@ bool UInventorySlot::IsEmpty() const
 	return bEmpty;
 }
 
+EItemOpetaionType UInventorySlot::GetRulesForOperationType(EItemOpetaionType type)
+{
+	return type;
+}
+
+void UInventorySlot::HandleItemOperation(EItemOpetaionType OpetaionType)
+{
+	if(OpetaionType == EItemOpetaionType::Use)
+	{
+		
+	}
+	else if(OpetaionType == EItemOpetaionType::Drop)
+	{
+		InventoryManagerComp->DropItem(SlotIndex);
+	}
+	else if(OpetaionType == EItemOpetaionType::Equip)
+	{
+		FInventoryItemInfo ItemInfo;
+		if(InventoryManagerComp->GetItemInfoByIndex(SlotIndex, ItemInfo))
+		{
+			EquipmentManagerComp->Equip(ItemInfo.EquipmentClass);
+			InventoryManagerComp->RemoveItem(SlotIndex);
+		}
+	}
+	else if(OpetaionType == EItemOpetaionType::UnEquip)
+	{
+		
+	}
+}
+
+FInventoryItemInfo UInventorySlot::GetItemInfo() const
+{
+	FInventoryItemInfo ItemInfo;
+	InventoryManagerComp->GetItemInfoByIndex(SlotIndex, ItemInfo);
+	return ItemInfo;
+}
+
 void UInventorySlot::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
+	check(InventoryManagerComp);
+	
+	EquipmentManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
+	check(EquipmentManagerComp);
+	
 }
 
 FReply UInventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -53,7 +98,7 @@ FReply UInventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 	{
 		FVector2d MousePosition;
 		UWidgetLayoutLibrary::GetMousePositionScaledByDPI(GetOwningPlayer(), MousePosition.X, MousePosition.Y);
-		OnSlotRightMouseButtonDown.Broadcast(SlotIndex, MousePosition);
+		OnSlotRightMouseButtonDown.Broadcast(this, MousePosition);
 		return FReply::Handled();
 	}
 	

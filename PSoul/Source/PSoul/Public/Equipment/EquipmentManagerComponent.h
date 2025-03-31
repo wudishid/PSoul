@@ -7,7 +7,13 @@
 #include "EquipmentManagerComponent.generated.h"
 
 
+class UInventoryManagerComponent;
+struct FInventoryItemInfo;
+enum class EEquipmentType : uint8;
 class AEquipmentInstance;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquip, EEquipmentType, AEquipmentInstance*);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUnEquip, EEquipmentType);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UEquipmentManagerComponent : public UActorComponent
@@ -19,21 +25,40 @@ public:
 	UEquipmentManagerComponent();
 
 	UFUNCTION(Server, Reliable)
-	void WearEquipment(TSubclassOf<AEquipmentInstance> EquipmentClass);
+	void Equip(TSubclassOf<AEquipmentInstance> EquipmentClass);
 
 	UFUNCTION(Server, Reliable)
-	void RemoveEquipment(TSubclassOf<AEquipmentInstance> EquipmentClass);
+	void UnEquip(TSubclassOf<AEquipmentInstance> EquipmentClass);
+
+	UFUNCTION(Server, Reliable)
+	void Drop(EEquipmentType InEquipmentType);
 	
+	bool GetWearedEquipmentInof(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo);
+	
+	AEquipmentInstance* GetEquipmentInstance(EEquipmentType InEquipmentType);
+	
+	FOnEquip OnEquip;
+	FOnUnEquip OnUnEquip;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION()
+	void OnRep_Weapon();
+
+	UFUNCTION()
+	void OnRep_Armor();
+
+	UFUNCTION()
+	void OnRep_Ring();
 	
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_Weapon)
 	AEquipmentInstance* Weapon;
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_Armor)
 	AEquipmentInstance* Armor;
-	UPROPERTY()
+	UPROPERTY(ReplicatedUsing = OnRep_Ring)
 	AEquipmentInstance* Ring;
+
 public:
 };

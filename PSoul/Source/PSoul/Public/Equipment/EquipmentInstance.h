@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ActiveGameplayEffectHandle.h"
 #include "GameFramework/Actor.h"
+#include "Inventory/InventoryItemDefinition.h"
 #include "EquipmentInstance.generated.h"
 
-
+class USoulAbilitySystemComponent;
+class UGameplayEffect;
 enum class EEquipmentType : uint8;
 
 UCLASS(Abstract)
@@ -18,11 +21,22 @@ public:
 	AEquipmentInstance();
 	virtual void Equip();
 	virtual void UnEquip();
-	EEquipmentType GetEquipmentType() const { return EquipmentType; };
+	EEquipmentType GetEquipmentType() const { return ItemInfo.EquipmentType; };
+	FInventoryItemInfo GetItemInfo() const { return ItemInfo; };
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
+
 	UPROPERTY(EditAnywhere, Category = "EquipmentInstance")
-	EEquipmentType EquipmentType;
+	FName ItemName;
+
+	UPROPERTY(EditAnywhere, Category = "EquipmentInstance")
+	TSubclassOf<UGameplayEffect> EffectToApplyWhenEquiped;
+
+	UPROPERTY()
+	USoulAbilitySystemComponent* ASC = nullptr;
+	
+	FInventoryItemInfo ItemInfo;
+	FActiveGameplayEffectHandle EffectHandle;
+	
 };

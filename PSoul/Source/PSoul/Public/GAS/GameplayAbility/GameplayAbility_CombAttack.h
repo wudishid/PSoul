@@ -11,6 +11,11 @@ struct FCombAttackInfo
 {
 	GENERATED_BODY()
 
+	FCombAttackInfo() : Montage(nullptr), CombIndex(0)
+	{
+		
+	}
+	
 	UPROPERTY(EditAnywhere)
 	UAnimMontage* Montage;
 

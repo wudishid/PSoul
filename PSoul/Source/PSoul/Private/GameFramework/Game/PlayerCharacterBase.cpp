@@ -11,7 +11,9 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/DamageCheckComponent.h"
 #include "Equipment/EquipmentManagerComponent.h"
+#include "Equipment/Equipment_Weapon.h"
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
@@ -41,13 +43,6 @@ APlayerCharacterBase::APlayerCharacterBase()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	
-	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("InventoryManagerComp"));
-	InventoryManagerComponent->SetIsReplicated(true);
-
-	EquipmentManagerComponent = CreateDefaultSubobject<UEquipmentManagerComponent>(TEXT("EquipmentManagerComp"));
-	EquipmentManagerComponent->SetIsReplicated(true);
-	
 }
 
 void APlayerCharacterBase::BeginPlay()

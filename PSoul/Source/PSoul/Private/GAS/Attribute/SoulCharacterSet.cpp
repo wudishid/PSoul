@@ -50,25 +50,24 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
 	AActor* Causer = EffectContext.GetEffectCauser();
 
-	if(GetHealth() <= 0)
+	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
-		OnCharacterDeath.Broadcast(Causer);
-	}
-	else
-	{
-		if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), 0, GetMaxHealth()));
+		SetDamage(0.f);
+		if(GetHealth() <= 0)
 		{
-			SetHealth(FMath::Clamp(GetHealth() - GetDamage(), 0, GetMaxHealth()));
-			SetDamage(0.f);
-			
+			OnCharacterDeath.Broadcast(Causer);
+		}
+		else
+		{
 			FGameplayEventData Payload;
 			Payload.EventTag = SoulGameplayTags::GameplayEvent_Hit;
 			GetOwningAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
 		}
-		else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())
-		{
-			SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
-		}
+	}
+	else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
 	}
 }
 

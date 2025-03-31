@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "EquipmentInstance.h"
+#include "GameplayAbilitySpecHandle.h"
 #include "Equipment_Weapon.generated.h"
+
+class UGameplayAbility_CombAttack;
 
 UCLASS(Abstract)
 class PSOUL_API AEquipment_Weapon : public AEquipmentInstance
@@ -14,15 +17,23 @@ class PSOUL_API AEquipment_Weapon : public AEquipmentInstance
 public:
 	// Sets default values for this actor's properties
 	AEquipment_Weapon();
+
+	UStaticMeshComponent* GetWeaponMesh() const { return WeaponMeshComp; }
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void Equip() override;
 	virtual void UnEquip() override;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "WeaponMesh")
-	UStaticMeshComponent* MeshComp;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
+	UStaticMeshComponent* WeaponMeshComp;
 
-	UPROPERTY(EditDefaultsOnly, Category = "WeaponMesh")
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	FName SocketName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	TSubclassOf<UGameplayAbility_CombAttack> CombAttackAbilityToGive;
+
+	FGameplayAbilitySpecHandle CombAttackAbilitySpecHandle;
 };

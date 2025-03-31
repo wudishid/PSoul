@@ -6,6 +6,11 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+class AEquipmentInstance;
+enum class EEquipmentType : uint8;
+class UEquipmentManagerComponent;
+class UInventoryManagerComponent;
+class UDamageCheckComponent;
 class UWidgetComponent;
 class USoulCharacterSet;
 class UCharacterAttributeComponent;
@@ -33,6 +38,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void NotifyRestarted() override;
 
+	virtual  void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
+	virtual  void HandleUnEquip(EEquipmentType InEquipmentType);
+	
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 
@@ -45,5 +53,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UWidgetComponent* HealthBarComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInventoryManagerComponent> InventoryManagerComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UEquipmentManagerComponent> EquipmentManagerComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
+	UDamageCheckComponent* DamageCheckComponent;
 	
 };

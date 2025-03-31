@@ -9,6 +9,8 @@
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class AEquipmentInstance;
+enum class EEquipmentType : uint8;
 class UEquipmentManagerComponent;
 class UInventoryManagerComponent;
 class ASoulPlayerController_Game;
@@ -51,13 +53,7 @@ class APlayerCharacterBase : public ASoulCharacterBase
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USoulInputConfig> InputConfig;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInventoryManagerComponent> InventoryManagerComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UEquipmentManagerComponent> EquipmentManagerComponent;
-	
 public:
 	APlayerCharacterBase();
 	FORCEINLINE ASoulPlayerController_Game* GetPlayerController() { return Cast<ASoulPlayerController_Game>(GetController()); };
@@ -68,7 +64,7 @@ protected:
 	void Input_Look(const FInputActionValue& Value);
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
-
+	
 	virtual void HandleKill() override;
 	virtual void HandleDeath() override;
 	virtual void FinishDeath() override;

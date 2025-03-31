@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 
+class AInventoryItemInstance;
+
 namespace Util_Common
 {
+	bool SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass);
+	
 }

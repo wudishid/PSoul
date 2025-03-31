@@ -28,6 +28,7 @@ enum class EEquipmentType : uint8
 UENUM()
 enum class EItemOpetaionType : uint8
 {
+	None = 0,
 	Use,
 	Drop,
 	Equip,
@@ -66,7 +67,7 @@ struct FInventoryItemInfo : public FTableRowBase
 	int32 MaxStackAmount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EItemType ItemType;
+	EItemType ItemType = EItemType::Consumable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<EItemOpetaionType> ItemOpetaions;
@@ -78,7 +79,7 @@ struct FInventoryItemInfo : public FTableRowBase
 	TSubclassOf<AEquipmentInstance> EquipmentClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "ItemType == EItemType::Equipment"))
-	EEquipmentType EquipmentType;
+	EEquipmentType EquipmentType = EEquipmentType::Weapon;
 };
 
 

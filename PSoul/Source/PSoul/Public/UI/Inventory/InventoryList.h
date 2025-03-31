@@ -6,6 +6,8 @@
 #include "UI/SoulUserWidget.h"
 #include "InventoryList.generated.h"
 
+class UEquipmentSlot;
+class IItemOperationInterface;
 class UEquipmentManagerComponent;
 class UInventoryManagerComponent;
 enum class EItemOpetaionType : uint8;
@@ -28,8 +30,7 @@ protected:
 
 	void CreateInventoryPanel();
 
-	void HandleSlotRightMouseButtonDown(int32 Index, FVector2d InPosition);
-	void HandleItemOperationClicked(int32 ItemIndex, EItemOpetaionType OpetaionType);
+	void HandleSlotRightMouseButtonDown(IItemOperationInterface* InOperatedSlot, FVector2d InPosition);
 	
 	UPROPERTY(EditAnywhere)
 	int32 MaxColumn = 5;
@@ -37,6 +38,15 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UUniformGridPanel* UGP_InventoryPanel;
 
+	UPROPERTY(meta = (BindWidget))
+	UEquipmentSlot* WeaponSlot;
+
+	UPROPERTY(meta = (BindWidget))
+	UEquipmentSlot* ArmorSlot;
+
+	UPROPERTY(meta = (BindWidget))
+	UEquipmentSlot* RingSlot;
+	
 	UPROPERTY()
 	TArray<UInventorySlot*> InventorySlots;
 

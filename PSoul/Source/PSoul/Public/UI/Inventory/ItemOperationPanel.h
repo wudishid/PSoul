@@ -6,11 +6,10 @@
 #include "UI/SoulUserWidget.h"
 #include "ItemOperationPanel.generated.h"
 
+class IItemOperationInterface;
 class UItemSingleOperation;
 enum class EItemOpetaionType : uint8;
 class UVerticalBox;
-
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemOperationClicked, /**物品索引**/int32, EItemOpetaionType);
 
 UCLASS(Abstract)
 class PSOUL_API UItemOperationPanel : public USoulUserWidget
@@ -18,10 +17,8 @@ class PSOUL_API UItemOperationPanel : public USoulUserWidget
 	GENERATED_BODY()
 
 public:
-	void UpdateOperationPanel(int32 SlotIndex, FVector2d Position);
-
-	FOnItemOperationClicked OnItemOperationClicked;
-
+	void UpdateOperationPanel(IItemOperationInterface* InOperatedSlot, FVector2d Position);
+	
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
@@ -33,5 +30,5 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* VB_OperationList;
 	
-	int32 OperateSlotIndex;
+	IItemOperationInterface* OperatedSlot;
 };

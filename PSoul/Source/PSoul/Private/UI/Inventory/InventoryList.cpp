@@ -10,6 +10,7 @@
 #include "Development/Soul_UISetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
+#include "UI/Equipment/EquipmentSlot.h"
 #include "UI/Inventory/InventorySlot.h"
 #include "UI/Inventory/ItemOperationPanel.h"
 
@@ -31,15 +32,19 @@ void UInventoryList::NativePreConstruct()
 void UInventoryList::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	CreateInventoryPanel();
-
+	
 	InventoryManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
 	check(InventoryManagerComponent);
 	InventoryManagerComponent->OnInventorySlotListChanged.AddUObject(this, &ThisClass::OnPlayerInventoryChanged);
 
 	EquipmentManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
 	check(EquipmentManagerComponent);
+
+	WeaponSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+	ArmorSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+	RingSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+	
+	CreateInventoryPanel();
 }
 
 void UInventoryList::CreateInventoryPanel()
@@ -67,15 +72,14 @@ void UInventoryList::CreateInventoryPanel()
 	}
 }
 
-void UInventoryList::HandleSlotRightMouseButtonDown(int32 Index, FVector2d InPosition)
+void UInventoryList::HandleSlotRightMouseButtonDown(IItemOperationInterface* InOperatedSlot, FVector2d InPosition)
 {
 	if(ItemOperationPanel)
 	{
 		if(!ItemOperationPanel->IsInViewport())
 		{
 			ItemOperationPanel->AddToViewport();
-			ItemOperationPanel->UpdateOperationPanel(Index, InPosition);
-			ItemOperationPanel->SetFocus();
+			ItemOperationPanel->UpdateOperationPanel(InOperatedSlot, InPosition);
 		}
 	}
 	else
@@ -84,34 +88,7 @@ void UInventoryList::HandleSlotRightMouseButtonDown(int32 Index, FVector2d InPos
 		if(ensure(ItemOperationPanel))
 		{
 			ItemOperationPanel->AddToViewport();
-			ItemOperationPanel->UpdateOperationPanel(Index, InPosition);
-			ItemOperationPanel->OnItemOperationClicked.AddUObject(this, &ThisClass::HandleItemOperationClicked);
-			ItemOperationPanel->SetFocus();
+			ItemOperationPanel->UpdateOperationPanel(InOperatedSlot, InPosition);
 		}
-	}
-}
-
-void UInventoryList::HandleItemOperationClicked(int32 ItemIndex, EItemOpetaionType OpetaionType)
-{
-	if(OpetaionType == EItemOpetaionType::Use)
-	{
-		
-	}
-	else if(OpetaionType == EItemOpetaionType::Drop)
-	{
-		InventoryManagerComponent->DropItem(ItemIndex);
-	}
-	else if(OpetaionType == EItemOpetaionType::Equip)
-	{
-		FInventoryItemInfo ItemInfo;
-		if(InventoryManagerComponent->GetItemInfoByIndex(ItemIndex, ItemInfo))
-		{
-			EquipmentManagerComponent->WearEquipment(ItemInfo.EquipmentClass);
-			InventoryManagerComponent->RemoveItem(ItemIndex);
-		}
-	}
-	else if(OpetaionType == EItemOpetaionType::UnEquip)
-	{
-		
 	}
 }

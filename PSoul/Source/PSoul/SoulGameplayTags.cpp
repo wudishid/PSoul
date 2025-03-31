@@ -18,12 +18,10 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_CombWindow, "GameplayEvent.Montage.CombWindow", "GameplayEvent.Montage.CombWindow");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_EquipWeapon, "Status.EquipWeapon", "Status.EquipWeapon");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Run, "Status.Run", "Status.Run");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Hit, "Status.Hit", "Status.Hit");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Status.Death");
 	
+	
 }
-
-
-PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Attack)
-	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Jump)

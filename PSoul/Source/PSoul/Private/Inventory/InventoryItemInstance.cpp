@@ -29,27 +29,25 @@ void AInventoryItemInstance::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if(HasAuthority())
+	if(Util_Inventory::GetItemInfoByName(ItemName, ItemInfo))
 	{
-		if(Util_Inventory::GetItemInfoByName(ItemName, ItemInfo))
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		if(!BoxComp->OnComponentBeginOverlap.IsAlreadyBound(this, &ThisClass::OnBoxCompOverlap))
 		{
-			BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-			if(!BoxComp->OnComponentBeginOverlap.IsAlreadyBound(this, &ThisClass::OnBoxCompOverlap))
-			{
-				BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBoxCompOverlap);
-			}
-		}
-		else
-		{
-			ItemMeshComp->SetStaticMesh(nullptr);
-			BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			if(BoxComp->OnComponentBeginOverlap.IsAlreadyBound(this, &ThisClass::OnBoxCompOverlap))
-			{
-				BoxComp->OnComponentBeginOverlap.RemoveDynamic(this, &ThisClass::OnBoxCompOverlap);
-			}
-			UE_LOG(LogSoulInventory, Warning, TEXT("ItemInfo not found!"));
+			BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnBoxCompOverlap);
 		}
 	}
+	else
+	{
+		ItemMeshComp->SetStaticMesh(nullptr);
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		if(BoxComp->OnComponentBeginOverlap.IsAlreadyBound(this, &ThisClass::OnBoxCompOverlap))
+		{
+			BoxComp->OnComponentBeginOverlap.RemoveDynamic(this, &ThisClass::OnBoxCompOverlap);
+		}
+		UE_LOG(LogSoulInventory, Warning, TEXT("ItemInfo not found!"));
+	}
+	
 }
 
 void AInventoryItemInstance::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const

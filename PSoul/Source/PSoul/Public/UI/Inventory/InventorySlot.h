@@ -3,18 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemOperationInterface.h"
 #include "UI/SoulUserWidget.h"
 #include "InventorySlot.generated.h"
 
+class UEquipmentManagerComponent;
+class UInventoryManagerComponent;
 struct FInventoryItemSlot;
 class UButton;
 class UTextBlock;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSlotRightMouseButtonDown, /**索引**/int32,  /**位置**/FVector2d);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSlotRightMouseButtonDown, IItemOperationInterface*,  /**位置**/FVector2d);
 
 UCLASS(Abstract)
-class PSOUL_API UInventorySlot : public USoulUserWidget
+class PSOUL_API UInventorySlot : public USoulUserWidget, public IItemOperationInterface
 {
 	GENERATED_BODY()
 
@@ -24,6 +27,10 @@ public:
 	int32 SlotIndex;
 
 	FOnSlotRightMouseButtonDown OnSlotRightMouseButtonDown;
+public:
+	virtual EItemOpetaionType GetRulesForOperationType(EItemOpetaionType type) override;
+	virtual void HandleItemOperation(EItemOpetaionType OpetaionType) override;
+	virtual FInventoryItemInfo GetItemInfo() const override;
 protected:
 	virtual void NativeConstruct() override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -39,4 +46,9 @@ protected:
 
 	bool bEmpty;
 	
+	UPROPERTY()
+	UInventoryManagerComponent* InventoryManagerComp;
+
+	UPROPERTY()
+	UEquipmentManagerComponent* EquipmentManagerComp;
 };

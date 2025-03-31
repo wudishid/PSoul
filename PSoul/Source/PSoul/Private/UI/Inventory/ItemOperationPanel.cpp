@@ -6,12 +6,12 @@
 #include "Components/VerticalBox.h"
 #include "Development/Soul_UISetting.h"
 #include "Inventory/InventoryManagerComponent.h"
-#include "PSoul/SoulLog.h"
+#include "UI/Inventory/ItemOperationInterface.h"
 #include "UI/Inventory/ItemSingleOperation.h"
 
-void UItemOperationPanel::UpdateOperationPanel(int32 SlotIndex,  FVector2d Position)
+void UItemOperationPanel::UpdateOperationPanel(IItemOperationInterface* InOperatedSlot,  FVector2d Position)
 {
-	OperateSlotIndex = SlotIndex;
+	OperatedSlot = InOperatedSlot;
 
 	if(UCanvasPanelSlot* CanvasPanelSlotSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(VB_OperationList))
 	{
@@ -19,25 +19,14 @@ void UItemOperationPanel::UpdateOperationPanel(int32 SlotIndex,  FVector2d Posit
 	}
 	
 	VB_OperationList->ClearChildren();
-	
-	if(UInventoryManagerComponent* InventoryManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>())
+
+	for(EItemOpetaionType OperationType :OperatedSlot->GetItemInfo().ItemOpetaions)
 	{
-		FInventoryItemInfo OperateItemInfo;
-		if(InventoryManagerComponent->GetItemInfoByIndex(OperateSlotIndex, OperateItemInfo))
+		if(UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
 		{
-			for(EItemOpetaionType OperationType : OperateItemInfo.ItemOpetaions)
-			{
-				if(UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
-				{
-					SingleOperation->UpdateSingleOperation(OperationType);
-					SingleOperation->OnOperationClicked.AddUObject(this, &ThisClass::HandleSIngleOperationClicked);
-					VB_OperationList->AddChildToVerticalBox(SingleOperation);
-				}
-			}
-		}
-		else
-		{
-			UE_LOG(LogSoulInventory, Error, TEXT("Not Find Item By Index"));
+			SingleOperation->UpdateSingleOperation(OperatedSlot->GetRulesForOperationType(OperationType));
+			SingleOperation->OnOperationClicked.AddUObject(this, &ThisClass::HandleSIngleOperationClicked);
+			VB_OperationList->AddChildToVerticalBox(SingleOperation);
 		}
 	}
 }
@@ -45,8 +34,6 @@ void UItemOperationPanel::UpdateOperationPanel(int32 SlotIndex,  FVector2d Posit
 void UItemOperationPanel::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	
-	SetIsFocusable(true);
 }
 
 void UItemOperationPanel::NativeConstruct()
@@ -67,7 +54,10 @@ FReply UItemOperationPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 
 void UItemOperationPanel::HandleSIngleOperationClicked(EItemOpetaionType OperationType)
 {
-	OnItemOperationClicked.Broadcast(OperateSlotIndex, OperationType);
+	if(OperatedSlot)
+	{
+		OperatedSlot->HandleItemOperation(OperationType);
+	}
 	VB_OperationList->ClearChildren();
 	RemoveFromParent();
 }
