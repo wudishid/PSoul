@@ -1,11 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Equipment/EquipmentManagerComponent.h"
-
 #include "Equipment/EquipmentInstance.h"
 #include "Inventory/InventoryItemDefinition.h"
-#include "Inventory/InventoryManagerComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Util/Util_Common.h"
 
@@ -180,7 +176,7 @@ void UEquipmentManagerComponent::OnRep_Weapon()
 
 void UEquipmentManagerComponent::OnRep_Armor()
 {
-	if(Weapon != nullptr)
+	if(Armor != nullptr)
 	{
 		OnEquip.Broadcast(EEquipmentType::Armor, Armor);
 	}
@@ -192,7 +188,7 @@ void UEquipmentManagerComponent::OnRep_Armor()
 
 void UEquipmentManagerComponent::OnRep_Ring()
 {
-	if(Weapon != nullptr)
+	if(Ring != nullptr)
 	{
 		OnEquip.Broadcast(EEquipmentType::Ring, Ring);
 	}

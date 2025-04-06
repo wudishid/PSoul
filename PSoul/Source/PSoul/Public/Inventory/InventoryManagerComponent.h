@@ -7,7 +7,9 @@
 #include "Components/ActorComponent.h"
 #include "InventoryManagerComponent.generated.h"
 
+class USoulAbilitySystemComponent;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnInventorySlotListChanged, FInventoryItemSlotList&);
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UInventoryManagerComponent : public UActorComponent
@@ -26,8 +28,10 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void DropItem(int32 InItemIndex);
+
+	UFUNCTION(Server, Reliable)
+	void UseItem(int32 InItemIndex, int32 InUseAmount = 1);
 	
-	/// @return 是否找到物品信息
 	bool GetItemInfoByIndex(int32 Index, FInventoryItemInfo& OutItemInfo) const;
 
 	bool GetItemSlotByIndex(int32 Index, FInventoryItemSlot& OutItemSlot) const;
@@ -37,11 +41,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
 	UFUNCTION()
 	void OnRep_SlotList();
 
+	int32 GetSlotIndex(const FInventoryItemInfo& ItemInfo) const;
+	
 protected:
 	UPROPERTY(ReplicatedUsing = OnRep_SlotList)
 	FInventoryItemSlotList InventorySlotList;
+
+	UPROPERTY()
+	USoulAbilitySystemComponent* ASC =nullptr;
 };

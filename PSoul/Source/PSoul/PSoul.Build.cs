@@ -28,6 +28,7 @@ public class PSoul : ModuleRules
 		new string[]
 		{
 			"DeveloperSettings",
+			"MotionWarping"
 		});
 		
 	}

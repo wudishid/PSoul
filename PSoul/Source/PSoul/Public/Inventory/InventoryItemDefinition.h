@@ -60,7 +60,7 @@ struct FInventoryItemInfo : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UTexture2D> Icon;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "ItemType == EItemType::Consumable"))
 	bool CanStack;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (EditCondition = "CanStack"))

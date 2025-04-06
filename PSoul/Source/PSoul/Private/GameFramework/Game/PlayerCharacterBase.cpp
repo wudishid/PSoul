@@ -7,18 +7,15 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Blueprint/UserWidget.h"
-#include "Components/DamageCheckComponent.h"
-#include "Equipment/EquipmentManagerComponent.h"
-#include "Equipment/Equipment_Weapon.h"
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
-#include "Inventory/InventoryManagerComponent.h"
 #include "PSoul/SoulGameplayTags.h"
+#include "../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // APSoulCharacter
@@ -43,6 +40,9 @@ APlayerCharacterBase::APlayerCharacterBase()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	
+	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
 }
 
 void APlayerCharacterBase::BeginPlay()

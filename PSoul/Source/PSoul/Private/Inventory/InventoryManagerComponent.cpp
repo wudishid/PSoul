@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Inventory/InventoryManagerComponent.h"
+#include "GAS/SoulAbilitySystemComponent.h"
 #include "Inventory/InventoryItemInstance.h"
 #include "Net/UnrealNetwork.h"
 #include "Util/Util_Common.h"
@@ -30,6 +31,21 @@ void UInventoryManagerComponent::DropItem_Implementation(int32 InItemIndex)
 	}
 }
 
+
+void UInventoryManagerComponent::UseItem_Implementation(int32 InItemIndex, int32 InUseAmount)
+{
+	if(InventorySlotList.Slots.IsValidIndex(InItemIndex))
+	{
+		TSubclassOf<UGameplayEffect>ItemEffectClass =  InventorySlotList.Slots[InItemIndex].ItemInfo.ItemClass.GetDefaultObject()->GetItemEffectClass();
+		ASC->ApplyGameplayEffectToSelf(ItemEffectClass.GetDefaultObject(), 1, ASC->MakeEffectContext());
+		if(--InventorySlotList.Slots[InItemIndex].Amount <=0)
+		{
+			InventorySlotList.Slots.RemoveAt(InItemIndex);
+		}
+		InventorySlotList.MarkArrayDirty();
+	}
+}
+
 bool UInventoryManagerComponent::GetItemInfoByIndex(int32 Index, FInventoryItemInfo& OutItemInfo) const
 {
 	if(InventorySlotList.Slots.IsValidIndex(Index))
@@ -37,7 +53,7 @@ bool UInventoryManagerComponent::GetItemInfoByIndex(int32 Index, FInventoryItemI
 		OutItemInfo = InventorySlotList.Slots[Index].ItemInfo;
 		return true;
 	}
-
+	
 	return false;
 }
 
@@ -87,6 +103,9 @@ void UInventoryManagerComponent::AddItem_Implementation(const FInventoryItemInfo
 void UInventoryManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
+	check(ASC);
 }
 
 void UInventoryManagerComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -99,6 +118,19 @@ void UInventoryManagerComponent::GetLifetimeReplicatedProps(TArray<class FLifeti
 void UInventoryManagerComponent::OnRep_SlotList()
 {
 	OnInventorySlotListChanged.Broadcast(InventorySlotList);
+}
+
+int32 UInventoryManagerComponent::GetSlotIndex(const FInventoryItemInfo& ItemInfo) const
+{
+	for(int i = 0; i < InventorySlotList.Slots.Num(); i++)
+	{
+		if(InventorySlotList.Slots[i].ItemInfo == ItemInfo)
+		{
+			return i;
+		}
+	}
+	
+	return -1;
 }
 
 

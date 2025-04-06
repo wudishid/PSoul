@@ -24,8 +24,11 @@ void UInventorySlot::UpdateSlot()
 			{
 				Image_Icon->SetBrushFromTexture(ItemSlot.ItemInfo.Icon.LoadSynchronous());
 				Image_Icon->SetVisibility(ESlateVisibility::Visible);
-				Text_Amount->SetText(UKismetTextLibrary::Conv_IntToText(ItemSlot.Amount));
-				Text_Amount->SetVisibility(ESlateVisibility::Visible);
+				if(GetItemInfo().ItemType != EItemType::Equipment)
+				{
+					Text_Amount->SetText(UKismetTextLibrary::Conv_IntToText(ItemSlot.Amount));
+					Text_Amount->SetVisibility(ESlateVisibility::Visible);
+				}
 				bEmpty = false;
 			}
 			else
@@ -52,7 +55,7 @@ void UInventorySlot::HandleItemOperation(EItemOpetaionType OpetaionType)
 {
 	if(OpetaionType == EItemOpetaionType::Use)
 	{
-		
+		InventoryManagerComp->UseItem(SlotIndex);
 	}
 	else if(OpetaionType == EItemOpetaionType::Drop)
 	{
@@ -66,10 +69,6 @@ void UInventorySlot::HandleItemOperation(EItemOpetaionType OpetaionType)
 			EquipmentManagerComp->Equip(ItemInfo.EquipmentClass);
 			InventoryManagerComp->RemoveItem(SlotIndex);
 		}
-	}
-	else if(OpetaionType == EItemOpetaionType::UnEquip)
-	{
-		
 	}
 }
 

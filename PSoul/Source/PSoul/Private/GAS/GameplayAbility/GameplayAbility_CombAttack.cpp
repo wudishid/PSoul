@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
+
+#include "../../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
@@ -15,6 +16,19 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	
 	if(CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
+		//更新角色攻击旋转方向
+		if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwningActorFromActorInfo()))
+		{
+			if (UMotionWarpingComponent* MotionWrapComp = OwnerCharacter->FindComponentByClass<
+				UMotionWarpingComponent>())
+			{
+				FRotator TargetRotation = FRotator(OwnerCharacter->GetActorRotation().Pitch, OwnerCharacter->GetControlRotation().Yaw, OwnerCharacter->GetActorRotation().Roll);
+				
+				MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
+					TEXT("AttackRotate"), FVector::Zero(),  TargetRotation);
+			}
+		}
+		
 		PlayMontageAndWaitForEvent();
 	}
 	else

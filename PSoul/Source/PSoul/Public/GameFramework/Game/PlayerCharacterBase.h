@@ -9,6 +9,7 @@
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class UMotionWarpingComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
 class UEquipmentManagerComponent;
@@ -34,6 +35,9 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UMotionWarpingComponent* MotionWarpComp;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

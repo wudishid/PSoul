@@ -8,6 +8,7 @@
 #include "InventoryItemInstance.generated.h"
 
 
+class UGameplayEffect;
 class UBoxComponent;
 
 UCLASS(Abstract)
@@ -36,9 +37,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintreadWrite, Category = "InventoryItemInstance")
 	UBoxComponent* BoxComp;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly, BlueprintreadWrite, Category = "InventoryItemInstance")
 	FName ItemName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintreadWrite, Category = "InventoryItemInstance")
+	TSubclassOf<UGameplayEffect> ItemEffectClass;
 	
 	FInventoryItemInfo ItemInfo;
 public:
+	TSubclassOf<UGameplayEffect> GetItemEffectClass() const{ return ItemEffectClass; }
 };

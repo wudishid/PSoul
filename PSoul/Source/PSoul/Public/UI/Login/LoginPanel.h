@@ -36,4 +36,5 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* Btn_EnterGame;
+	
 };

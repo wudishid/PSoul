@@ -5,6 +5,7 @@
 
 #include "Components/Button.h"
 #include "Components/CheckBox.h"
+#include "Engine/AssetManager.h"
 #include "GameFramework/SoulGameInstance.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "Kismet/GameplayStatics.h"

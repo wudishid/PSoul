@@ -2,6 +2,7 @@
 
 #include "Inventory/InventoryItemInstance.h"
 #include "Components/BoxComponent.h"
+#include "GAS/SoulAbilitySystemComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulLog.h"
@@ -47,7 +48,6 @@ void AInventoryItemInstance::BeginPlay()
 		}
 		UE_LOG(LogSoulInventory, Warning, TEXT("ItemInfo not found!"));
 	}
-	
 }
 
 void AInventoryItemInstance::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -68,5 +68,6 @@ void AInventoryItemInstance::OnBoxCompOverlap(UPrimitiveComponent* OverlappedCom
 		}
 	}
 }
+
 
 

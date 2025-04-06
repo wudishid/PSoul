@@ -51,7 +51,7 @@ void UInventoryList::CreateInventoryPanel()
 {
 	UGP_InventoryPanel->ClearChildren();
 	
-	for(int index = 0; index < 30; index++)
+	for(int index = 0; index < MaxColumn * 8; index++)
 	{
 		UInventorySlot* InventorySlot =nullptr;
 		if(GetWorld()->HasBegunPlay())
