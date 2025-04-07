@@ -5,7 +5,7 @@
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
-
+#include "PSoul/SoulGameplayTags.h"
 
 
 // Sets default values for this component's properties
@@ -119,6 +119,7 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 						USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 							USoulAbilitySystemComponent>();
 						if (!TargetASC) continue;
+						
 						UGameplayEffect* GameplayEffect = EffectToApply.GetDefaultObject();
 						CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
 						

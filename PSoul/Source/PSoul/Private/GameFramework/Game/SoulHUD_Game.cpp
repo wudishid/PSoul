@@ -25,3 +25,21 @@ void ASoulHUD_Game::InitHUD()
 	}
 }
 
+void ASoulHUD_Game::SetShowInventoryPanel(bool bShow)
+{
+	if(PlayerPanel)
+	{
+		PlayerPanel->SetShowInventoryPanel(bShow);
+	}
+}
+
+bool ASoulHUD_Game::IsShowingInventoryPanel() const
+{
+	if (PlayerPanel)
+	{
+		return PlayerPanel->IsShowInventoryPanel();
+	}
+	return false;
+}
+
+

@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
-
+#include "AbilitySystemComponent.h"
 #include "../../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
@@ -40,26 +40,40 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 }
 
 bool UGameplayAbility_CombAttack::CanActivateAbility(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
-	const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+                                                     const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
+                                                     const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
-	return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+	if(GetCurrentMontage())
+	{
+		if(bComb)
+		{
+			CurrentCombIndex++;
+			bComb = false;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+	}
+	
 }
 
 void UGameplayAbility_CombAttack::InputPressed(const FGameplayAbilitySpecHandle Handle,
                                                const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
-	HandleCombAttack();
-	ServerHandleCombAttack();
+	GetAbilitySystemComponentFromActorInfo()->TryActivateAbility(Handle);
 }
 
 void UGameplayAbility_CombAttack::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UGameplayAbility_CombAttack, CurrentCombIndex);
-	DOREPLIFETIME(UGameplayAbility_CombAttack, bComb);
+	
 }
 
 void UGameplayAbility_CombAttack::PlayMontageAndWaitForEvent()
@@ -77,11 +91,17 @@ void UGameplayAbility_CombAttack::PlayMontageAndWaitForEvent()
 	}
 
 	//监听通知窗口事件
-	if(UAbilityTask_WaitGameplayEvent* WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, SoulGameplayTags::GameplayEvent_Montage_CombWindow))
+	if(UAbilityTask_WaitGameplayEvent* WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, SoulGameplayTags::GameplayEvent_Montage_OpenCombWindow))
 	{
-		WaitEventTask->EventReceived.AddDynamic(this, &ThisClass::HandleCombNotifyEvent);
+		WaitEventTask->EventReceived.AddDynamic(this, &ThisClass::HandleOpenCombWindow);
 		WaitEventTask->ReadyForActivation();
 	}
+	if(UAbilityTask_WaitGameplayEvent* WaitEventTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, SoulGameplayTags::GameplayEvent_Montage_CloseCombWindow))
+	{
+		WaitEventTask->EventReceived.AddDynamic(this, &ThisClass::HandleCloseCombWindow);
+		WaitEventTask->ReadyForActivation();
+	}
+	
 }
 
 void UGameplayAbility_CombAttack::HandleCombAttack()
@@ -94,14 +114,14 @@ void UGameplayAbility_CombAttack::HandleCombAttack()
 	}
 }
 
-void UGameplayAbility_CombAttack::ServerHandleCombAttack_Implementation()
-{
-	HandleCombAttack();
-}
-
-void UGameplayAbility_CombAttack::HandleCombNotifyEvent(FGameplayEventData Payload)
+void UGameplayAbility_CombAttack::HandleOpenCombWindow(FGameplayEventData Payload)
 {
 	bComb = true;
+}
+
+void UGameplayAbility_CombAttack::HandleCloseCombWindow(FGameplayEventData Payload)
+{
+	bComb = false;
 }
 
 void UGameplayAbility_CombAttack::HandleMontageEnded()
@@ -115,13 +135,13 @@ void UGameplayAbility_CombAttack::HandleAttackCancelled()
 {
 	bComb =false;
 	CurrentCombIndex = 0;
-	K2_EndAbility();
+	K2_CancelAbility();
 }
 
 UGameplayAbility_CombAttack::UGameplayAbility_CombAttack()
 	: CurrentCombIndex(0), bComb(false)
 {
-	
+	bRetriggerInstancedAbility = true;
 }
 
 UAnimMontage* UGameplayAbility_CombAttack::GetCurrentCombMontage()

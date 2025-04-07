@@ -3,18 +3,32 @@
 
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 
+#include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SoulGameInstance.h"
 #include "GameFramework/Game/SoulHUD_Game.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "Input/SoulInputComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "PSoul/SoulGameplayTags.h"
 #include "PSoul/SoulLog.h"
 
 void ASoulPlayerController_Game::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+
+	USoulInputComponent* SoulIC = Cast<USoulInputComponent>(InputComponent);
+	if (ensureMsgf(
+		SoulIC,
+		TEXT(
+			"Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it."
+		)))
+	{
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenInventoryPanel, ETriggerEvent::Completed, this,
+		                         &ThisClass::ToggleShowInventoryPanel, /*bLogIfNotFound=*/ false);
+	}
 }
 
 void ASoulPlayerController_Game::PostProcessInput(const float DeltaTime, const bool bGamePaused)
@@ -44,6 +58,27 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 void ASoulPlayerController_Game::OnRep_Team()
 {
 	InitSoulPlayerState();
+}
+
+void ASoulPlayerController_Game::ToggleShowInventoryPanel()
+{
+	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
+	{
+		if(HUD->IsShowingInventoryPanel())
+		{
+			HUD->SetShowInventoryPanel(false);
+			SetShowMouseCursor(false);
+			SetIgnoreLookInput(false);
+			SetInputMode(FInputModeGameOnly());
+		}
+		else
+		{
+			HUD->SetShowInventoryPanel(true);
+			SetShowMouseCursor(true);
+			SetIgnoreLookInput(true);
+			SetInputMode(FInputModeGameAndUI());
+		}
+	}
 }
 
 void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()

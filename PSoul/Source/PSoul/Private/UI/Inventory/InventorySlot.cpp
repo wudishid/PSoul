@@ -14,31 +14,34 @@
 
 void UInventorySlot::UpdateSlot()
 {
-	if (UInventoryManagerComponent* InventoryManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<
-		UInventoryManagerComponent>())
+	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
+	check(InventoryManagerComp);
+
+	EquipmentManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
+	check(EquipmentManagerComp);
+	
+	FInventoryItemSlot ItemSlot;
+	if (InventoryManagerComp->GetItemSlotByIndex(SlotIndex, ItemSlot))
 	{
-		FInventoryItemSlot ItemSlot;
-		if (InventoryManagerComponent->GetItemSlotByIndex(SlotIndex, ItemSlot))
+		if (ItemSlot.IsValidSlot())
 		{
-			if (ItemSlot.IsValidSlot())
+			Image_Icon->SetBrushFromTexture(ItemSlot.ItemInfo.Icon.LoadSynchronous());
+			Image_Icon->SetVisibility(ESlateVisibility::Visible);
+			if (GetItemInfo().ItemType != EItemType::Equipment)
 			{
-				Image_Icon->SetBrushFromTexture(ItemSlot.ItemInfo.Icon.LoadSynchronous());
-				Image_Icon->SetVisibility(ESlateVisibility::Visible);
-				if(GetItemInfo().ItemType != EItemType::Equipment)
-				{
-					Text_Amount->SetText(UKismetTextLibrary::Conv_IntToText(ItemSlot.Amount));
-					Text_Amount->SetVisibility(ESlateVisibility::Visible);
-				}
-				bEmpty = false;
+				Text_Amount->SetText(UKismetTextLibrary::Conv_IntToText(ItemSlot.Amount));
+				Text_Amount->SetVisibility(ESlateVisibility::Visible);
 			}
-			else
-			{
-				Image_Icon->SetVisibility(ESlateVisibility::Collapsed);
-				Text_Amount->SetVisibility(ESlateVisibility::Collapsed);
-				bEmpty = true;
-			}
+			bEmpty = false;
+		}
+		else
+		{
+			Image_Icon->SetVisibility(ESlateVisibility::Collapsed);
+			Text_Amount->SetVisibility(ESlateVisibility::Collapsed);
+			bEmpty = true;
 		}
 	}
+	
 }
 
 bool UInventorySlot::IsEmpty() const
@@ -82,13 +85,6 @@ FInventoryItemInfo UInventorySlot::GetItemInfo() const
 void UInventorySlot::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
-	check(InventoryManagerComp);
-	
-	EquipmentManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
-	check(EquipmentManagerComp);
-	
 }
 
 FReply UInventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

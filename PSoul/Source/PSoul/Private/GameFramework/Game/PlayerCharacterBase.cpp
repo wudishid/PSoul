@@ -1,5 +1,4 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "GameFramework/Game/PlayerCharacterBase.h"
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
@@ -58,32 +57,37 @@ void APlayerCharacterBase::BeginPlay()
 void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	// Add Input Mapping Context
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	if (ASoulPlayerController_Game* PC = GetPlayerController())
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+			UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 
 
 			USoulInputComponent* SoulIC = Cast<USoulInputComponent>(PlayerInputComponent);
-			if (ensureMsgf(SoulIC, TEXT("Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it.")))
+			if (ensureMsgf(
+				SoulIC,
+				TEXT(
+					"Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it."
+				)))
 			{
 				// Add the key mappings that may have been set by the player
-				SoulIC->AddInputMappings(InputConfig, Subsystem);
+				SoulIC->AddInputMappings(PC->InputConfig, Subsystem);
 
 				// This is where we actually bind and input action to a gameplay tag, which means that Gameplay Ability Blueprints will
 				// be triggered directly by these input actions Triggered events. 
 				TArray<uint32> BindHandles;
-				SoulIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed, &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+				SoulIC->BindAbilityActions(PC->InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
+				                           &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
 
-				SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this, &ThisClass::Input_Move, /*bLogIfNotFound=*/ false);
-				SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this, &ThisClass::Input_Look, /*bLogIfNotFound=*/ false);
-				
+				SoulIC->BindNativeAction(PC->InputConfig, SoulGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this,
+				                         &ThisClass::Input_Move, /*bLogIfNotFound=*/ false);
+				SoulIC->BindNativeAction(PC->InputConfig, SoulGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this,
+				                         &ThisClass::Input_Look, /*bLogIfNotFound=*/ false);
 			}
-			
 		}
 	}
-	
 }
 
 void APlayerCharacterBase::Input_Move(const FInputActionValue& Value)
@@ -147,7 +151,6 @@ void APlayerCharacterBase::HandleDeath()
 	Super::HandleDeath();
 
 	GetCharacterMovement()->StopMovementImmediately();
-	GetController()->SetIgnoreMoveInput(true);
 }
 
 void APlayerCharacterBase::FinishDeath()

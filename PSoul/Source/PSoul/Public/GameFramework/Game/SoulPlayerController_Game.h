@@ -6,6 +6,7 @@
 #include "GameFramework/SoulPlayerController.h"
 #include "SoulPlayerController_Game.generated.h"
 
+class USoulInputConfig;
 enum class ESoulCharacterTeam : uint8;
 class USoulAbilitySystemComponent;
 /**
@@ -20,6 +21,10 @@ public:
 	USoulAbilitySystemComponent* GetAbilitySystemComponent() const;
 	void HandlePlayerDeath();
 	void HandlePlayerKill();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	TObjectPtr<USoulInputConfig> InputConfig;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
@@ -35,6 +40,8 @@ protected:
 	
 	UPROPERTY(ReplicatedUsing = OnRep_Team)
 	ESoulCharacterTeam Team;
+
+	void ToggleShowInventoryPanel();
 private:
 	UFUNCTION(Server, Reliable)
 	void SetTeam(ESoulCharacterTeam InTeam);

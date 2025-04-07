@@ -3,9 +3,29 @@
 
 #include "GAS/GameplayAbility/GameplayAbility_Sprint.h"
 
+#include "GAS/Attribute/SoulCharacterSet.h"
+
+void UGameplayAbility_Sprint::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+
+	if (const USoulCharacterSet* Set = GetAbilitySystemComponentFromActorInfo()->GetSet<USoulCharacterSet>())
+	{
+		if (!Set->OnStaminaEmpty.IsBoundToObject(this))
+		{
+			Set->OnStaminaEmpty.AddUObject(this, &ThisClass::HandleStaminaEmpty);
+		}
+	}
+}
+
 void UGameplayAbility_Sprint::InputReleased(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+                                            const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
+	StopSprint();
+}
+
+void UGameplayAbility_Sprint::HandleStaminaEmpty()
+{
 	StopSprint();
 }

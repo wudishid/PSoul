@@ -38,12 +38,11 @@ protected:
 	void PlayMontageAndWaitForEvent();
 	void HandleCombAttack();
 	
-	UFUNCTION(Server, Reliable)
-	void ServerHandleCombAttack();
-	
-	
 	UFUNCTION()
-	void HandleCombNotifyEvent(FGameplayEventData Payload);
+	void HandleOpenCombWindow(FGameplayEventData Payload);
+
+	UFUNCTION()
+	void HandleCloseCombWindow(FGameplayEventData Payload);
 
 	UFUNCTION()
 	void HandleMontageEnded();
@@ -62,8 +61,8 @@ protected:
 	TArray<FCombAttackInfo> CombAttackInfos;
 
 	UPROPERTY(Replicated)
-	int32 CurrentCombIndex;
+	mutable  int32 CurrentCombIndex;
 
 	UPROPERTY(Replicated)
-	bool bComb;
+	mutable  bool bComb;
 };

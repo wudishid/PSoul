@@ -5,8 +5,10 @@
 
 namespace SoulGameplayTags
 {
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Attack, "Ability.Attack", "Ability.Attack");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Jump, "Ability.Jump", "Ability.Jump");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Attack, "Ability.Action.Attack", "Ability.Action.Attack");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Jump, "Ability.Action.Jump", "Ability.Action.Jump");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Cost_Stamina, "Cost.Stamina", "Cost.Stamina");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Move, "InputTag.Move", "InputTag.Move");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Look, "InputTag.Look", "InputTag.Look");
@@ -17,11 +19,14 @@ namespace SoulGameplayTags
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Hit, "GameplayEvent.Hit", "GameplayEvent.Hit");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_CombWindow, "GameplayEvent.Montage.CombWindow", "GameplayEvent.Montage.CombWindow");
-
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_OpenCombWindow, "GameplayEvent.Montage.OpenCombWindow", "GameplayEvent.Montage.OpenCombWindow");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_CloseCombWindow, "GameplayEvent.Montage.CloseCombWindow", "GameplayEvent.Montage.CloseCombWindow");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_EquipWeapon, "Status.EquipWeapon", "Status.EquipWeapon");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Run, "Status.Run", "Status.Run");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Hit, "Status.Hit", "Status.Hit");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Status.Death");
-	
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Immune, "Buff.Immune", "Buff.Immune");
 }
+

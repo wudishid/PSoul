@@ -9,6 +9,7 @@
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnSoulCharacterDeath, AActor*/*Causer*/);
+DECLARE_MULTICAST_DELEGATE(FOnStaminaEmpty);
 
 UCLASS(BlueprintType)
 class PSOUL_API USoulCharacterSet : public USoulAttributeSet
@@ -29,6 +30,7 @@ public:
 	USoulCharacterSet();
 
 	mutable  FOnSoulCharacterDeath OnCharacterDeath;
+	mutable  FOnStaminaEmpty OnStaminaEmpty;
 	
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;

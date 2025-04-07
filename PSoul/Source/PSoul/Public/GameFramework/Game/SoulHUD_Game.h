@@ -17,6 +17,8 @@ class PSOUL_API ASoulHUD_Game : public ASoulHUD
 public:
 	virtual void BeginPlay() override;
 	void InitHUD();
+	void SetShowInventoryPanel(bool bShow);
+	bool IsShowingInventoryPanel() const;
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UPlayerPanel> PlayerPanelClass;

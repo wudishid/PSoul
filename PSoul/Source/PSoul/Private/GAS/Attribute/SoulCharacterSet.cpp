@@ -68,6 +68,10 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 	else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{
 		SetStamina(FMath::Clamp(GetStamina(), 0.f, GetMaxStamina()));
+		if(GetStamina() <= 0)
+		{
+			OnStaminaEmpty.Broadcast();
+		}
 	}
 }
 
