@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+class ULockPosComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
 class UEquipmentManagerComponent;
@@ -54,13 +55,15 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UWidgetComponent* HealthBarComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
 	TObjectPtr<UInventoryManagerComponent> InventoryManagerComponent;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment")
 	TObjectPtr<UEquipmentManagerComponent> EquipmentManagerComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
 	UDamageCheckComponent* DamageCheckComponent;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
+	ULockPosComponent* LockPosComp;
 };

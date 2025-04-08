@@ -4,6 +4,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "GameFramework/Character.h"
+#include "GAS/SoulAbilitySystemComponent.h"
 #include "PSoul/SoulGameplayTags.h"
 
 USoulCharacterMovementComponent::USoulCharacterMovementComponent()
@@ -15,12 +17,9 @@ USoulCharacterMovementComponent::USoulCharacterMovementComponent()
 
 float USoulCharacterMovementComponent::GetMaxSpeed() const
 {
-	if(UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner()))
+	if (ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_Run))
 	{
-		if(ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_Run))
-		{
-			return 600.f;
-		}
+		return 600.f;
 	}
 	
 	return Super::GetMaxSpeed();
@@ -29,6 +28,48 @@ float USoulCharacterMovementComponent::GetMaxSpeed() const
 void USoulCharacterMovementComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	ASC = Cast<USoulAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(GetOwner()));
+	check(ASC);
+	if (!ASC->RegisterGenericGameplayTagEvent().IsBoundToObject(this))
+	{
+		ASC->RegisterGenericGameplayTagEvent().AddUObject(this, &ThisClass::HandleGameplayTagChanged);
+	}
+}
+
+void USoulCharacterMovementComponent::HandleGameplayTagChanged(const FGameplayTag GameplayTag, int32 Count)
+{
+	if (GameplayTag == SoulGameplayTags::Status_Roll)
+	{
+		if (Count > 0)
+		{
+			if(ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
+			{
+				CharacterOwner->bUseControllerRotationYaw = false;
+			}
+		}
+		else
+		{
+			if(ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
+			{
+				CharacterOwner->bUseControllerRotationYaw = true;
+			}
+		}
+	}
+
+	if (GameplayTag == SoulGameplayTags::Status_LockTarget)
+	{
+		if (Count > 0)
+		{
+			CharacterOwner->bUseControllerRotationYaw = true;
+			bOrientRotationToMovement = false;
+		}
+		else
+		{
+			CharacterOwner->bUseControllerRotationYaw = false;
+			bOrientRotationToMovement = true;
+		}
+	}
+	
 }
 
 

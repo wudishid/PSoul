@@ -13,7 +13,9 @@
 #include "Input/SoulInputComponent.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
-
+#include "../../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockTargetComponent.h"
+#include "Camera/SoulCameraComponent.h"
+#include "Camera/SoulCameraMode_LockTarget.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -36,12 +38,15 @@ APlayerCharacterBase::APlayerCharacterBase()
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
+	Camera = CreateDefaultSubobject<USoulCameraComponent>(TEXT("Camera"));
+	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	Camera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
 	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
+
+	LockTargetComp = CreateDefaultSubobject<ULockTargetComponent>(TEXT("LockTargetComp"));
+	LockTargetComp->SetIsReplicated(true);
+	LockTargetComp->OnLockStateChange.AddDynamic(this, &ThisClass::HandleLockTargetStateChanged);
 }
 
 void APlayerCharacterBase::BeginPlay()
@@ -160,5 +165,17 @@ void APlayerCharacterBase::FinishDeath()
 	if (ASoulPlayerController_Game* PC = GetPlayerController())
 	{
 		PC->HandlePlayerDeath();
+	}
+}
+
+void APlayerCharacterBase::HandleLockTargetStateChanged(bool bLock)
+{
+	if (bLock)
+	{
+		AbilitySystemComponent->AddLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
+	}
+	else
+	{
+		AbilitySystemComponent->RemoveLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
 	}
 }

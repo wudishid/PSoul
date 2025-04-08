@@ -14,6 +14,7 @@
     <ProjectReference Include="..\..\..\..\..\..\UE5.4.4\UnrealEngine-release\Engine\Source\Programs\UnrealBuildTool\UnrealBuildTool.csproj"><Private>false</Private></ProjectReference>
   </ItemGroup>
   <ItemGroup>
+  <Compile Include="..\..\..\..\Plugins\LockTargetSystem\Source\LockTargetSystem\LockTargetSystem.Build.cs"><Link>Plugins\LockTargetSystem\Source\LockTargetSystem\LockTargetSystem.Build.cs</Link></Compile>
   <Compile Include="..\..\..\..\Source\PSoul.Target.cs"><Link>Source\PSoul.Target.cs</Link></Compile>
   <Compile Include="..\..\..\..\Source\PSoulEditor.Target.cs"><Link>Source\PSoulEditor.Target.cs</Link></Compile>
   <Compile Include="..\..\..\..\Source\PSoulServer.Target.cs"><Link>Source\PSoulServer.Target.cs</Link></Compile>

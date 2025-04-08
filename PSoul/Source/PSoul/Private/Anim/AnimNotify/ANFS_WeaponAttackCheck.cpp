@@ -13,10 +13,12 @@ void UANFS_WeaponAttackCheck::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	{
 		if (OwnerActor->HasAuthority())
 		{
-			DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>();
-			if(DamageCheckComponent)
+			if(UDamageCheckComponent* DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>())
 			{
-				DamageCheckComponent->StartCheck();
+				if(DamageCheckComponent)
+				{
+					DamageCheckComponent->StartCheck();
+				}
 			}
 		}
 	}
@@ -27,9 +29,15 @@ void UANFS_WeaponAttackCheck::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 {
 	Super::NotifyEnd(MeshComp, Animation, EventReference);
 
-	if (DamageCheckComponent)
+	if (AActor* OwnerActor = MeshComp->GetOwner())
 	{
-		DamageCheckComponent->EndCheck();
+		if (OwnerActor->HasAuthority())
+		{
+			if (UDamageCheckComponent* DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>())
+			{
+				DamageCheckComponent->EndCheck();
+			}
+		}
 	}
 }
 

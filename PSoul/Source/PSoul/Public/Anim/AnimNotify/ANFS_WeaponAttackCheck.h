@@ -19,7 +19,4 @@ class PSOUL_API UANFS_WeaponAttackCheck : public UAnimNotifyState
 public:
 	virtual void NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
 	virtual void NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference) override;
-protected:
-	UPROPERTY()
-	UDamageCheckComponent* DamageCheckComponent = nullptr;
 };

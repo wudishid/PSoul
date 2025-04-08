@@ -6,6 +6,9 @@
 #include "UI/SoulUserWidget.h"
 #include "LoginPanel.generated.h"
 
+class UOverlay;
+class UTextBlock;
+class UProgressBar;
 class UButton;
 class UCheckBox;
 /**
@@ -36,5 +39,17 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* Btn_EnterGame;
+
+	UPROPERTY(meta = (BindWidget))
+	UOverlay* Overlay_Loading;
+	
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* ProgressBar_Load;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TextBlock_LoadPercentage;
+	
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UWorld> MapToLoad;
 	
 };

@@ -79,8 +79,7 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDefence, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDefence;
-
-
+	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Damage, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
 	

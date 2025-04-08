@@ -1,5 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
+
+#include "../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockPosComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
 #include "Components/SoulCharacterMovementComponent.h"
@@ -38,6 +40,8 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	
 	DamageCheckComponent = CreateDefaultSubobject<UDamageCheckComponent>(TEXT("DamageCheckComponent"));
 	DamageCheckComponent->SetIsReplicated(true);
+
+	LockPosComp = CreateDefaultSubobject<ULockPosComponent>(TEXT("LockPosComp"));
 	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }

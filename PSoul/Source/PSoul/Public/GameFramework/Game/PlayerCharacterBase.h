@@ -9,6 +9,8 @@
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class ULockTargetComponent;
+class USoulCameraComponent;
 class UMotionWarpingComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
@@ -17,7 +19,6 @@ class UInventoryManagerComponent;
 class ASoulPlayerController_Game;
 class USoulInputConfig;
 class USpringArmComponent;
-class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -33,9 +34,12 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	USpringArmComponent* CameraBoom;
 
 	/** Follow camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USoulCameraComponent* Camera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	ULockTargetComponent* LockTargetComp;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UMotionWarpingComponent* MotionWarpComp;
 	
@@ -70,17 +74,13 @@ protected:
 	virtual void HandleDeath() override;
 	virtual void FinishDeath() override;
 
+	UFUNCTION()
+	void HandleLockTargetStateChanged(bool bLock);
+	
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
 	// To add mapping context
 	virtual void BeginPlay();
-
-public:
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-	/** Returns FollowCamera subobject **/
-	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 };
 

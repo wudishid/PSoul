@@ -3,7 +3,9 @@
 
 #include "Development/Soul_UISetting.h"
 
+#if WITH_EDITOR
 void USoul_UISetting::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
+#endif
