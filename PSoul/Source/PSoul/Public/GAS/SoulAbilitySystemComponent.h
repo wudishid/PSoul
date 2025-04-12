@@ -25,6 +25,9 @@ public:
 	void ProcessAbilityInput(float DeltaTime, bool bGamePaused);
 	void ClearAbilityInput();
 
+	UFUNCTION(Server, Reliable)
+	void Server_AddAttributePoint(FGameplayAttribute InAttribute);
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

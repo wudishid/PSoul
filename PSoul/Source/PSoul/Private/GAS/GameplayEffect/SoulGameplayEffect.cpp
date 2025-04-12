@@ -2,3 +2,7 @@
 
 
 #include "GAS/GameplayEffect/SoulGameplayEffect.h"
+
+USoulGameplayEffect::USoulGameplayEffect()
+{
+}

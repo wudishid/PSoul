@@ -38,7 +38,7 @@ public:
 	//向左方向切换锁定目标
 	void ServerRightSwitchLockTarget();
 
-	bool HasLockTarget() const;
+	bool IsLockingTarget() const;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnLockStateChange OnLockStateChange;
@@ -78,7 +78,18 @@ private:
 
 	UFUNCTION(Server, Reliable)
 	void ServerUnLockCurrentTarget();
+
+	UFUNCTION(Client, Reliable)
+	void ClientBindLockEndDelegate();
+
+	void BindLockEndDelegate();
+
+	UFUNCTION(Client, Reliable)
+	void ClientUnBindLockEndDelegate();
 	
+	void UnbindLockEndDelegate();
+	
+	void HandleLockEnd();
 private:
 	UPROPERTY(EditDefaultsOnly,Category="LockTarget",meta=(UIMin=0,ClampMin=0))
 	float CheckRadius=3000;
@@ -92,7 +103,5 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<ACharacter> OwnedCharacter=nullptr;
-
-public:
-	FORCEINLINE bool IsLockTarget() const {return CurrentLockedTarget!=nullptr;}
+	
 };

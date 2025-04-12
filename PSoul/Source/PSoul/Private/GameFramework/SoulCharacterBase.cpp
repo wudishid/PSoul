@@ -108,6 +108,7 @@ void ASoulCharacterBase::HandleDeath()
 	{
 		HealthBarComp->SetHiddenInGame(true);
 	}
+	LockPosComp->OnLockEnd.Broadcast();
 }
 
 

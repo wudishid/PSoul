@@ -4,6 +4,7 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 
 #include "GAS/SoulAbilitySet.h"
+#include "GAS/Attribute/SoulPlayerSet.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -162,6 +163,17 @@ void USoulAbilitySystemComponent::ClearAbilityInput()
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+}
+
+void USoulAbilitySystemComponent::Server_AddAttributePoint_Implementation(FGameplayAttribute InAttribute)
+{
+	TObjectPtr<const USoulPlayerSet> TempSet = GetSet<USoulPlayerSet>();
+	if (TObjectPtr<USoulPlayerSet> PlayerSet = ConstCast(TempSet))
+	{
+		if (PlayerSet->AddAttributePoint(InAttribute))
+		{
+		}
+	}
 }
 
 

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemComponent.h"
 #include "SoulAttributeSet.h"
 #include "SoulCharacterSet.generated.h"
 

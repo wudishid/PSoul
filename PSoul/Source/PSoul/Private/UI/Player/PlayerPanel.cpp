@@ -3,6 +3,7 @@
 #include "UI/Player/PlayerPanel.h"
 #include "UI/Character/StateBar.h"
 #include "UI/Inventory/InventoryList.h"
+#include "UI/Player/Attribute/AttributePanel.h"
 
 
 void UPlayerPanel::NativeConstruct()
@@ -22,10 +23,12 @@ void UPlayerPanel::SetShowInventoryPanel(bool bShow)
 	if (bShow)
 	{
 		InventoryList->SetVisibility(ESlateVisibility::Visible);
+		AttributePanel->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
 		InventoryList->SetVisibility(ESlateVisibility::Hidden);
+		AttributePanel->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
+#include "GAS/SoulAbilitySystemComponent.h"
 #include "SoulAttributeSet.generated.h"
 
 
@@ -34,6 +35,7 @@ class PSOUL_API USoulAttributeSet : public UAttributeSet
 	
 public:
 	USoulAttributeSet();
+	USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return Cast<USoulAbilitySystemComponent>(GetOwningAbilitySystemComponent()); }
 	float GetAttributeValue(FGameplayAttribute& InAttribute) const;
 	mutable  FOnSoulAttributeChanged OnSoulAttributeChanged;
 };

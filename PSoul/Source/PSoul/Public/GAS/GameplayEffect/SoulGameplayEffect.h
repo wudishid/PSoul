@@ -13,4 +13,6 @@ UCLASS()
 class PSOUL_API USoulGameplayEffect : public UGameplayEffect
 {
 	GENERATED_BODY()
+public:
+	USoulGameplayEffect();
 };

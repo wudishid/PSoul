@@ -7,6 +7,7 @@
 #include "PlayerPanel.generated.h"
 
 
+class UAttributePanel;
 class UInventoryList;
 class UStateBar;
 
@@ -25,6 +26,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UInventoryList* InventoryList;
+
+	UPROPERTY(meta = (BindWidget))
+	UAttributePanel* AttributePanel;
 public:
 	void InitPanel();
 	void SetShowInventoryPanel(bool bShow);

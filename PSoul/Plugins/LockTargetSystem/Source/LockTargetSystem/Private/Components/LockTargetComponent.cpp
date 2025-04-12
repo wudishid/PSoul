@@ -50,7 +50,7 @@ void ULockTargetComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProp
 
 void ULockTargetComponent::OnRep_CurrentLockTarget()
 {
-	if (HasLockTarget())
+	if (IsLockingTarget())
 	{
 		OnLockStateChange.Broadcast(true);
 	}
@@ -62,7 +62,7 @@ void ULockTargetComponent::OnRep_CurrentLockTarget()
 
 void ULockTargetComponent::ServerLockTarget_Implementation()
 {
-	if(!HasLockTarget())
+	if(!IsLockingTarget())
 	{
 		//找到能被锁定的范围内的所有Actor
 		TArray<AActor*> CanBeLockedTargets=FindCanBeLockedTargets();
@@ -95,9 +95,9 @@ void ULockTargetComponent::ServerRightSwitchLockTarget_Implementation()
 	}
 }
 
-bool ULockTargetComponent::HasLockTarget() const
+bool ULockTargetComponent::IsLockingTarget() const
 {
-	return CurrentLockedTarget != nullptr;
+	return IsValid(CurrentLockedTarget);
 }
 
 TArray<AActor*> ULockTargetComponent::FindCanBeLockedTargets()
@@ -344,6 +344,50 @@ void ULockTargetComponent::UpdateCameraLockTarget()
 	}
 }
 
+void ULockTargetComponent::ClientBindLockEndDelegate_Implementation()
+{
+	BindLockEndDelegate();
+}
+
+void ULockTargetComponent::BindLockEndDelegate()
+{
+	if(CurrentLockedTarget)
+	{
+		if(ULockPosComponent* LockPosComponent=Cast<ULockPosComponent>(CurrentLockedTarget->GetComponentByClass(ULockPosComponent::StaticClass())))
+		{
+			if(!LockPosComponent->OnLockEnd.IsBoundToObject(this))
+			{
+				LockPosComponent->OnLockEnd.AddUObject(this, &ULockTargetComponent::HandleLockEnd);
+			}
+		}
+	}
+}
+
+void ULockTargetComponent::ClientUnBindLockEndDelegate_Implementation()
+{
+	UnbindLockEndDelegate();
+}
+
+void ULockTargetComponent::UnbindLockEndDelegate()
+{
+	if(CurrentLockedTarget)
+	{
+		if(ULockPosComponent* LockPosComponent=Cast<ULockPosComponent>(CurrentLockedTarget->GetComponentByClass(ULockPosComponent::StaticClass())))
+		{
+			if(LockPosComponent->OnLockEnd.IsBoundToObject(this))
+			{
+				LockPosComponent->OnLockEnd.RemoveAll(this);
+			}
+		}
+	}
+}
+
+void ULockTargetComponent::HandleLockEnd()
+{
+	CurrentLockedTarget = nullptr;
+	OnLockStateChange.Broadcast(false);
+}
+
 void ULockTargetComponent::ServerSetActorToLock_Implementation(AActor* InActor)
 {
 	if(InActor)
@@ -354,7 +398,6 @@ void ULockTargetComponent::ServerSetActorToLock_Implementation(AActor* InActor)
 			{
 				SetActorShowLockPosIcon(CurrentLockedTarget,false);
 				CurrentLockedTarget=InActor;
-				SetActorShowLockPosIcon(CurrentLockedTarget,true);
 				OnLockStateChange.Broadcast(true);
 			}
 		}
@@ -362,6 +405,8 @@ void ULockTargetComponent::ServerSetActorToLock_Implementation(AActor* InActor)
 		{
 			CurrentLockedTarget=InActor;
 			SetActorShowLockPosIcon(CurrentLockedTarget,true);
+			BindLockEndDelegate();
+			ClientBindLockEndDelegate();
 			OnLockStateChange.Broadcast(true);
 		}
 	}
@@ -380,15 +425,9 @@ void ULockTargetComponent::SetActorShowLockPosIcon_Implementation(AActor* InActo
 
 void ULockTargetComponent::ServerCheckCanLockTarget_Implementation()
 {
-	if(CurrentLockedTarget&&OwnedCharacter)
+	if(CurrentLockedTarget)
 	{
 		if(CurrentLockedTarget->GetDistanceTo(OwnedCharacter)>CheckRadius)
-		{
-			ServerUnLockCurrentTarget();
-		}
-
-		//如果当前目标的锁敌位置组件无效则取消锁敌
-		if(!CurrentLockedTarget->GetComponentByClass(ULockPosComponent::StaticClass()))
 		{
 			ServerUnLockCurrentTarget();
 		}
@@ -397,12 +436,14 @@ void ULockTargetComponent::ServerCheckCanLockTarget_Implementation()
 
 void ULockTargetComponent::ServerUnLockCurrentTarget_Implementation()
 {
-	if(CurrentLockedTarget)
+	if (CurrentLockedTarget)
 	{
-		SetActorShowLockPosIcon(CurrentLockedTarget,false);
-		CurrentLockedTarget=nullptr;
-		OnLockStateChange.Broadcast(false);
+		SetActorShowLockPosIcon(CurrentLockedTarget, false);
 	}
+	UnbindLockEndDelegate();
+	ClientUnBindLockEndDelegate();
+	CurrentLockedTarget = nullptr;
+	OnLockStateChange.Broadcast(false);
 }
 
 
