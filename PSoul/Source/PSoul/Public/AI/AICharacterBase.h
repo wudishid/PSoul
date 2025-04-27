@@ -18,8 +18,6 @@ public:
 	AAICharacterBase();
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UMotionWarpingComponent* MotionWarpComp;
 	
 protected:
 	// Called when the game starts or when spawned

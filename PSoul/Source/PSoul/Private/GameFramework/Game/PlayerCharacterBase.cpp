@@ -12,10 +12,10 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
 #include "PSoul/SoulGameplayTags.h"
-#include "../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
 #include "../../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockTargetComponent.h"
 #include "Camera/SoulCameraComponent.h"
-#include "Camera/SoulCameraMode_LockTarget.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -42,11 +42,26 @@ APlayerCharacterBase::APlayerCharacterBase()
 	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	Camera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
-	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
-
 	LockTargetComp = CreateDefaultSubobject<ULockTargetComponent>(TEXT("LockTargetComp"));
 	LockTargetComp->SetIsReplicated(true);
 	LockTargetComp->OnLockStateChange.AddDynamic(this, &ThisClass::HandleLockTargetStateChanged);
+}
+
+FRotator APlayerCharacterBase::GetDesiredRotation() const
+{
+	if (HasAuthority())
+	{
+		
+	}
+	else if (IsLocallyControlled())
+	{
+		if (!GetCharacterMovement()->GetLastInputVector().IsZero())
+		{
+			return UKismetMathLibrary::Conv_VectorToRotator(GetCharacterMovement()->GetLastInputVector());
+		}
+	}
+
+	return Super::GetDesiredRotation();
 }
 
 void APlayerCharacterBase::BeginPlay()
@@ -172,10 +187,16 @@ void APlayerCharacterBase::HandleLockTargetStateChanged(bool bLock)
 {
 	if (bLock)
 	{
-		AbilitySystemComponent->AddLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
+		if (!AbilitySystemComponent->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
+		{
+			AbilitySystemComponent->AddLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
+		}
 	}
 	else
 	{
-		AbilitySystemComponent->RemoveLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
+		if (AbilitySystemComponent->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
+		{
+			AbilitySystemComponent->RemoveLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
+		}
 	}
 }

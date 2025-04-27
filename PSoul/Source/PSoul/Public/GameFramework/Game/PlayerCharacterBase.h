@@ -40,9 +40,6 @@ class APlayerCharacterBase : public ASoulCharacterBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	ULockTargetComponent* LockTargetComp;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	UMotionWarpingComponent* MotionWarpComp;
-	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -61,6 +58,7 @@ class APlayerCharacterBase : public ASoulCharacterBase
 
 public:
 	APlayerCharacterBase();
+	virtual FRotator GetDesiredRotation() const override;
 	FORCEINLINE ASoulPlayerController_Game* GetPlayerController() { return Cast<ASoulPlayerController_Game>(GetController()); };
 protected:
 	/** Called for movement input */

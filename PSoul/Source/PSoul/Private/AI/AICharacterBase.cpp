@@ -10,8 +10,6 @@ AAICharacterBase::AAICharacterBase()
 {
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
-
-	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
 }
 
 // Called when the game starts or when spawned

@@ -24,10 +24,13 @@ protected:
 	UFUNCTION()
 	void OnRep_CurrentLockTarget();
 public:
-	UFUNCTION(BlueprintCallable, Server, Reliable)
+	UFUNCTION(BlueprintCallable)
+	void TryLockTarget();
+	
+	UFUNCTION(Server, Reliable)
 	void ServerLockTarget();
 
-	UFUNCTION(BlueprintCallable, Server, Reliable)
+	UFUNCTION(Server, Reliable)
 	void ServerCancelLockTarget();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)

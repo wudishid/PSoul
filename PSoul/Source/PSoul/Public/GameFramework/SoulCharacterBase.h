@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+class UMotionWarpingComponent;
 class ULockPosComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
@@ -25,6 +26,7 @@ class PSOUL_API ASoulCharacterBase : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ASoulCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
 	UFUNCTION(Server, Reliable)
 	virtual void HandleKill();
 
@@ -33,7 +35,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void FinishDeath();
-
+	
+	virtual FRotator GetDesiredRotation() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -41,7 +44,7 @@ protected:
 
 	virtual  void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
 	virtual  void HandleUnEquip(EEquipmentType InEquipmentType);
-	
+
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
 
@@ -49,6 +52,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
 	USoulAbilitySystemComponent* AbilitySystemComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
+	UMotionWarpingComponent* MotionWarpComp;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UCharacterAttributeComponent* AttributeComponent;
 

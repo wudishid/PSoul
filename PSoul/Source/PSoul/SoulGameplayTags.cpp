@@ -28,7 +28,6 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Status.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Roll, "Status.Roll", "Status.Roll");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_LockTarget, "Status.LockTarget", "Status.LockTarget");
-
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Immune, "Buff.Immune", "Buff.Immune");
 }
-

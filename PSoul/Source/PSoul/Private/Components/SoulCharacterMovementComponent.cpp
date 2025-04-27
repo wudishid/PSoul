@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Components/SoulCharacterMovementComponent.h"
-
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "GameFramework/Character.h"

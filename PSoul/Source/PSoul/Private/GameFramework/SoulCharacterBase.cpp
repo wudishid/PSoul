@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
-
+#include "MotionWarpingComponent.h"
 #include "../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockPosComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
@@ -22,6 +22,8 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
 	
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
 	AttributeComponent->SetIsReplicated(true);
@@ -100,6 +102,11 @@ void ASoulCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 void ASoulCharacterBase::FinishDeath()
 {
 	
+}
+
+FRotator ASoulCharacterBase::GetDesiredRotation() const
+{
+	return FRotator::ZeroRotator;
 }
 
 void ASoulCharacterBase::HandleDeath()

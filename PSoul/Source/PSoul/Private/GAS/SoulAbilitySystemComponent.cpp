@@ -3,8 +3,10 @@
 
 #include "GAS/SoulAbilitySystemComponent.h"
 
+#include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySet.h"
 #include "GAS/Attribute/SoulPlayerSet.h"
+#include "GAS/GameplayAbility/GameplayAbility_Roll.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -109,8 +111,21 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 				}
 				else
 				{
-					const USoulGameplayAbility* SoulAbilityCDO = Cast<USoulGameplayAbility>(AbilitySpec->Ability);
+					if(AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_Roll::StaticClass()))
+					{
+						if (ASoulCharacterBase* Character = Cast<ASoulCharacterBase>(AbilityActorInfo->AvatarActor))
+						{
+							FGameplayAbilityTargetData_LocationInfo* TargetData = new FGameplayAbilityTargetData_LocationInfo();
+							TargetData->TargetLocation.LiteralTransform = FTransform(FRotator(Character->GetDesiredRotation()));
 
+							FGameplayEventData EventData;
+							EventData.TargetData.Add(TargetData);
+							InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
+							continue;
+						}
+					}
+					
+					const USoulGameplayAbility* SoulAbilityCDO = Cast<USoulGameplayAbility>(AbilitySpec->Ability);
 					if (SoulAbilityCDO && SoulAbilityCDO->GetActivationPolicy() == ESoulAbilityActivationPolicy::OnInputTriggered)
 					{
 						AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
@@ -128,7 +143,6 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 	for (const FGameplayAbilitySpecHandle& AbilitySpecHandle : AbilitiesToActivate)
 	{
 		TryActivateAbility(AbilitySpecHandle);
-		//UKismetSystemLibrary::PrintString(GetWorld(), "Input Trigger Ability!", true, true, FLinearColor::Yellow, 12.f);
 	}
 
 	//

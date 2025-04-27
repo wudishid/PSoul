@@ -60,6 +60,18 @@ void ULockTargetComponent::OnRep_CurrentLockTarget()
 	}
 }
 
+void ULockTargetComponent::TryLockTarget()
+{
+	if (IsLockingTarget())
+	{
+		ServerCancelLockTarget();
+	}
+	else
+	{
+		ServerLockTarget();
+	}
+}
+
 void ULockTargetComponent::ServerLockTarget_Implementation()
 {
 	if(!IsLockingTarget())
@@ -398,6 +410,7 @@ void ULockTargetComponent::ServerSetActorToLock_Implementation(AActor* InActor)
 			{
 				SetActorShowLockPosIcon(CurrentLockedTarget,false);
 				CurrentLockedTarget=InActor;
+				SetActorShowLockPosIcon(CurrentLockedTarget,true);
 				OnLockStateChange.Broadcast(true);
 			}
 		}
