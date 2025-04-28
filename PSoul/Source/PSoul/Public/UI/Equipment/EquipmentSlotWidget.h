@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UI/SoulUserWidget.h"
 #include "UI/Inventory/ItemOperationInterface.h"
-#include "EquipmentSlot.generated.h"
+#include "EquipmentSlotWidget.generated.h"
 
 class UInventoryManagerComponent;
 class UEquipmentManagerComponent;
@@ -16,7 +16,7 @@ enum class EEquipmentType : uint8;
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSlotRightMouseButtonDown, IItemOperationInterface*,  /**位置**/FVector2d);
 
 UCLASS(Abstract)
-class PSOUL_API UEquipmentSlot : public USoulUserWidget, public IItemOperationInterface
+class PSOUL_API UEquipmentSlotWidget : public USoulUserWidget, public IItemOperationInterface
 {
 	GENERATED_BODY()
 
@@ -29,7 +29,6 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
 	
 	void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
 	void HandleUnEquip(EEquipmentType InEquipmentType);

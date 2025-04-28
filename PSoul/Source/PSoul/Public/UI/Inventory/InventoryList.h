@@ -6,7 +6,8 @@
 #include "UI/SoulUserWidget.h"
 #include "InventoryList.generated.h"
 
-class UEquipmentSlot;
+class UCanvasPanel;
+class UEquipmentSlotWidget;
 class IItemOperationInterface;
 class UEquipmentManagerComponent;
 class UInventoryManagerComponent;
@@ -39,13 +40,7 @@ protected:
 	UUniformGridPanel* UGP_InventoryPanel;
 
 	UPROPERTY(meta = (BindWidget))
-	UEquipmentSlot* WeaponSlot;
-
-	UPROPERTY(meta = (BindWidget))
-	UEquipmentSlot* ArmorSlot;
-
-	UPROPERTY(meta = (BindWidget))
-	UEquipmentSlot* RingSlot;
+	UCanvasPanel* EquipmentPanel;
 	
 	UPROPERTY()
 	TArray<UInventorySlot*> InventorySlots;

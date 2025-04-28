@@ -6,6 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "SoulAnimInstance.generated.h"
 
+class USoulAbilitySystemComponent;
+class UCharacterMovementComponent;
 /**
  * 
  */
@@ -15,6 +17,7 @@ class PSOUL_API USoulAnimInstance : public UAnimInstance
 	GENERATED_BODY()
 
 public:
+	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
 
 protected:
@@ -23,9 +26,18 @@ protected:
 	float Direction;
 
 	//0-1
-	UPROPERTY(EditDefaultsOnly, BlueprintreadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float Speed;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintreadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintreadOnly)
 	bool IsFalling;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintreadOnly)
+	bool IsBlocking;
+
+	UPROPERTY()
+	TObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
+
+	UPROPERTY()
+	TObjectPtr<USoulAbilitySystemComponent> ASC;
 };

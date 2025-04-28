@@ -22,6 +22,7 @@ enum class EEquipmentType : uint8
 {
 	Weapon,
 	Armor,
+	Shield,
 	Ring
 };
 

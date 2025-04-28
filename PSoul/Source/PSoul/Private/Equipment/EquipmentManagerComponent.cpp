@@ -6,6 +6,36 @@
 #include "Util/Util_Common.h"
 
 
+void FEquipmentSlotList::SetEquipmentSlot(EEquipmentType InEquipmentType, AEquipmentInstance* InEquipmentInstance)
+{
+	for (FEquipmentSlot& EquipmentSlot : Slots)
+	{
+		if (EquipmentSlot.EquipmentType == InEquipmentType)
+		{
+			EquipmentSlot.EquipmentInstance = InEquipmentInstance;
+			return;
+		}
+	}
+}
+
+AEquipmentInstance* FEquipmentSlotList::GetEquipmentByType(EEquipmentType InEquipmentType)
+{
+	for (FEquipmentSlot& EquipmentSlot : Slots)
+	{
+		if (EquipmentSlot.EquipmentType == InEquipmentType)
+		{
+			return EquipmentSlot.EquipmentInstance;
+		}
+	}
+	return nullptr;
+}
+
+
+void FEquipmentSlotList::AddEntry(FEquipmentSlot Entry)
+{
+	FEquipmentSlot& NewSlot = Slots.Add_GetRef(MoveTemp(Entry));
+}
+
 // Sets default values for this component's properties
 UEquipmentManagerComponent::UEquipmentManagerComponent()
 {
@@ -13,66 +43,20 @@ UEquipmentManagerComponent::UEquipmentManagerComponent()
 
 void UEquipmentManagerComponent::Drop_Implementation(EEquipmentType InEquipmentType)
 {
-	if(InEquipmentType == EEquipmentType::Weapon)
+	if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(InEquipmentType))
 	{
-		if(Weapon)
+		if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Equipment->GetItemInfo().ItemClass))
 		{
-			if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Weapon->GetItemInfo().ItemClass))
-			{
-				Weapon->UnEquip();
-				Weapon = nullptr;
-			}
-		}
-	}
-	else if(InEquipmentType == EEquipmentType::Armor)
-	{
-		if(Armor)
-		{
-			if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Armor->GetItemInfo().ItemClass))
-			{
-				Armor->UnEquip();
-				Armor = nullptr;
-			}
-		}
-	}
-	else if(InEquipmentType == EEquipmentType::Ring)
-	{
-		if(Ring)
-		{
-			if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Weapon->GetItemInfo().ItemClass))
-			{
-				Ring->UnEquip();
-				Ring = nullptr;
-			}
+			UnEquip(Equipment->GetClass());
 		}
 	}
 }
 
 bool UEquipmentManagerComponent::GetWearedEquipmentInof(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo)
 {
-	if(InEquipmentType == EEquipmentType::Weapon)
+	if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(InEquipmentType))
 	{
-		if(Weapon)
-		{
-			OutItemInfo = Weapon->GetItemInfo();
-			return true;
-		}
-	}
-	else if(InEquipmentType == EEquipmentType::Armor)
-	{
-		if(Armor)
-		{
-			OutItemInfo = Armor->GetItemInfo();
-			return true;
-		}
-	}
-	else if(InEquipmentType == EEquipmentType::Ring)
-	{
-		if(Ring)
-		{
-			OutItemInfo = Ring->GetItemInfo();
-			return true;
-		}
+		OutItemInfo = Equipment->GetItemInfo();
 	}
 	
 	return false;
@@ -80,17 +64,7 @@ bool UEquipmentManagerComponent::GetWearedEquipmentInof(EEquipmentType InEquipme
 
 AEquipmentInstance* UEquipmentManagerComponent::GetEquipmentInstance(EEquipmentType InEquipmentType)
 {
-	switch (InEquipmentType)
-	{
-	case EEquipmentType::Weapon:
-		return Weapon;
-	case EEquipmentType::Armor:
-		return Armor;
-	case EEquipmentType::Ring:
-		return Ring;
-	default:
-		return nullptr;
-	}
+	return EquipmentSlotList.GetEquipmentByType(InEquipmentType);
 }
 
 void UEquipmentManagerComponent::Equip_Implementation(TSubclassOf<AEquipmentInstance> EquipmentClass)
@@ -101,22 +75,9 @@ void UEquipmentManagerComponent::Equip_Implementation(TSubclassOf<AEquipmentInst
 		Sp.Owner = GetOwner();
 		if (AEquipmentInstance* Equipment = GetWorld()->SpawnActor<AEquipmentInstance>(EquipmentClass, Sp))
 		{
+			OnEquip.Broadcast(Equipment->GetEquipmentType(), Equipment);
+			EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), Equipment);
 			Equipment->Equip();
-			switch (Equipment->GetEquipmentType())
-			{
-			case EEquipmentType::Weapon:
-				Weapon = Equipment;
-				OnEquip.Broadcast(EEquipmentType::Weapon, Weapon);
-				break;
-			case EEquipmentType::Armor:
-				Armor = Equipment;
-				OnEquip.Broadcast(EEquipmentType::Armor, Armor);
-				break;
-			case EEquipmentType::Ring:
-				Ring = Equipment;
-				OnEquip.Broadcast(EEquipmentType::Ring, Ring);
-				break;
-			}
 		}
 	}
 }
@@ -125,23 +86,11 @@ void UEquipmentManagerComponent::UnEquip_Implementation(TSubclassOf<AEquipmentIn
 {
 	if (EquipmentClass)
 	{
-		switch (EquipmentClass.GetDefaultObject()->GetEquipmentType())
+		if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(EquipmentClass->GetDefaultObject<AEquipmentInstance>()->GetEquipmentType()))
 		{
-		case EEquipmentType::Weapon:
-			Weapon->UnEquip();
-			OnUnEquip.Broadcast(EEquipmentType::Weapon);
-			Weapon = nullptr;
-			break;
-		case EEquipmentType::Armor:
-			Armor->UnEquip();
-			OnUnEquip.Broadcast(EEquipmentType::Armor);
-			Armor = nullptr;
-			break;
-		case EEquipmentType::Ring:
-			Ring->UnEquip();
-			OnUnEquip.Broadcast(EEquipmentType::Ring);
-			Ring = nullptr;
-			break;
+			OnUnEquip.Broadcast(Equipment->GetEquipmentType());
+			EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), nullptr);
+			Equipment->UnEquip();
 		}
 	}
 }
@@ -150,51 +99,46 @@ void UEquipmentManagerComponent::UnEquip_Implementation(TSubclassOf<AEquipmentIn
 void UEquipmentManagerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if(GetOwner()->HasAuthority())
+	{
+		InitEquipmentSlotList();
+	}
 }
 
 void UEquipmentManagerComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME_CONDITION_NOTIFY(UEquipmentManagerComponent, Weapon, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UEquipmentManagerComponent, Armor, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UEquipmentManagerComponent, Ring, COND_None, REPNOTIFY_Always);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, EquipmentSlotList, COND_None, REPNOTIFY_Always);
 }
 
-void UEquipmentManagerComponent::OnRep_Weapon()
+
+void UEquipmentManagerComponent::InitEquipmentSlotList()
 {
-	if(Weapon != nullptr)
-	{
-		OnEquip.Broadcast(EEquipmentType::Weapon, Weapon);
-	}
-	else
-	{
-		OnUnEquip.Broadcast(EEquipmentType::Weapon);
-	}
+	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Weapon, nullptr));
+	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Armor, nullptr));
+	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Shield, nullptr));
+	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Ring, nullptr));
 }
 
-void UEquipmentManagerComponent::OnRep_Armor()
-{
-	if(Armor != nullptr)
-	{
-		OnEquip.Broadcast(EEquipmentType::Armor, Armor);
-	}
-	else
-	{
-		OnUnEquip.Broadcast(EEquipmentType::Armor);
-	}
-}
 
-void UEquipmentManagerComponent::OnRep_Ring()
+
+void UEquipmentManagerComponent::OnRep_EquipmentSlotList(const FEquipmentSlotList& OldEquipmentSlotList)
 {
-	if(Ring != nullptr)
+	for(int32 index = 0; index < OldEquipmentSlotList.Slots.Num(); index++)
 	{
-		OnEquip.Broadcast(EEquipmentType::Ring, Ring);
-	}
-	else
-	{
-		OnUnEquip.Broadcast(EEquipmentType::Ring);
+		if(EquipmentSlotList.Slots[index].EquipmentInstance != OldEquipmentSlotList.Slots[index].EquipmentInstance)
+		{
+			if(EquipmentSlotList.Slots[index].EquipmentInstance)
+			{
+				OnEquip.Broadcast(EquipmentSlotList.Slots[index].EquipmentType, EquipmentSlotList.Slots[index].EquipmentInstance);
+			}
+			else
+			{
+				OnUnEquip.Broadcast(EquipmentSlotList.Slots[index].EquipmentType);
+			}
+		}
 	}
 }
 

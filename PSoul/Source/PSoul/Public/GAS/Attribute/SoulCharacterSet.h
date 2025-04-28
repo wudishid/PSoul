@@ -23,7 +23,8 @@ public:
 
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalAttack);
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalDefence);
-
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Toughness);
+	
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Damage);
 public:
 	USoulCharacterSet();
@@ -57,6 +58,9 @@ protected:
 	void OnRep_PhysicalDefence(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
+	void OnRep_Toughness(const FGameplayAttributeData& OldValue);
+	
+	UFUNCTION()
 	void OnRep_Damage(const FGameplayAttributeData& OldValue);
 	
 	void ClampAttribute(const FGameplayAttribute& Attribute, float NewValue);
@@ -78,6 +82,9 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDefence, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDefence;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Toughness, Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Toughness;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Damage, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/Equipment/EquipmentSlot.h"
+#include "UI/Equipment/EquipmentSlotWidget.h"
 
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
@@ -10,7 +10,7 @@
 #include "Inventory/InventoryManagerComponent.h"
 
 
-EItemOpetaionType UEquipmentSlot::GetRulesForOperationType(EItemOpetaionType type)
+EItemOpetaionType UEquipmentSlotWidget::GetRulesForOperationType(EItemOpetaionType type)
 {
 	if(type == EItemOpetaionType::Equip)
 	{
@@ -19,7 +19,7 @@ EItemOpetaionType UEquipmentSlot::GetRulesForOperationType(EItemOpetaionType typ
 	return type;
 }
 
-void UEquipmentSlot::HandleItemOperation(EItemOpetaionType OpetaionType)
+void UEquipmentSlotWidget::HandleItemOperation(EItemOpetaionType OpetaionType)
 {
 	if(OpetaionType == EItemOpetaionType::Drop)
 	{
@@ -32,14 +32,14 @@ void UEquipmentSlot::HandleItemOperation(EItemOpetaionType OpetaionType)
 	}
 }
 
-FInventoryItemInfo UEquipmentSlot::GetItemInfo() const
+FInventoryItemInfo UEquipmentSlotWidget::GetItemInfo() const
 {
 	FInventoryItemInfo itemInfo;
 	EquipmentComponent->GetWearedEquipmentInof(EquipmentType, itemInfo);
 	return itemInfo;
 }
 
-void UEquipmentSlot::NativeConstruct()
+void UEquipmentSlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -52,7 +52,7 @@ void UEquipmentSlot::NativeConstruct()
 	EquipmentComponent->OnUnEquip.AddUObject(this, &ThisClass::HandleUnEquip);
 }
 
-FReply UEquipmentSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UEquipmentSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(InMouseEvent.IsMouseButtonDown(EKeys::RightMouseButton))
 	{
@@ -65,7 +65,7 @@ FReply UEquipmentSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UEquipmentSlot::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
+void UEquipmentSlotWidget::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
 	if (InEquipmentType == EquipmentType)
 	{
@@ -77,7 +77,7 @@ void UEquipmentSlot::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInsta
 	}
 }
 
-void UEquipmentSlot::HandleUnEquip(EEquipmentType InEquipmentType)
+void UEquipmentSlotWidget::HandleUnEquip(EEquipmentType InEquipmentType)
 {
 	if (InEquipmentType == EquipmentType)
 	{

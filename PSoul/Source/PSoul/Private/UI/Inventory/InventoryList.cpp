@@ -5,12 +5,13 @@
 #include <filesystem>
 
 #include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/UniformGridPanel.h"
 #include "Development/Soul_UISetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
-#include "UI/Equipment/EquipmentSlot.h"
+#include "UI/Equipment/EquipmentSlotWidget.h"
 #include "UI/Inventory/InventorySlot.h"
 #include "UI/Inventory/ItemOperationPanel.h"
 
@@ -40,9 +41,14 @@ void UInventoryList::NativeConstruct()
 	EquipmentManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
 	check(EquipmentManagerComponent);
 
-	WeaponSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
-	ArmorSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
-	RingSlot->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+	TArray<UWidget*>AllEquipmentSlots = EquipmentPanel->GetAllChildren();
+	for (UWidget* Widget : AllEquipmentSlots)
+	{
+		if(UEquipmentSlotWidget* EquipmentSlotWidget = Cast<UEquipmentSlotWidget>(Widget))
+		{
+			EquipmentSlotWidget->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+		}
+	}
 	
 	CreateInventoryPanel();
 }
