@@ -6,6 +6,7 @@
 #include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySet.h"
 #include "GAS/Attribute/SoulPlayerSet.h"
+#include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
 #include "GAS/GameplayAbility/GameplayAbility_Roll.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -106,6 +107,25 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 
 				if (AbilitySpec->IsActive())
 				{
+					if (AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_CombAttack::StaticClass()))
+					{
+						if (UGameplayAbility_CombAttack* Ability_CombAttack = Cast<UGameplayAbility_CombAttack>(AbilitySpec->GetPrimaryInstance()))
+						{
+							if (Ability_CombAttack->bComb)
+							{
+								Ability_CombAttack->bComb = false;
+
+								int32 CombIndex = Ability_CombAttack->CurrentCombIndex + 1;
+								FGameplayAbilityTargetData_LocationInfo* TargetData = new FGameplayAbilityTargetData_LocationInfo();
+								TargetData->TargetLocation.LiteralTransform = FTransform(FVector(CombIndex, 0, 0));
+
+								FGameplayEventData EventData;
+								EventData.TargetData.Add(TargetData);
+								InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
+							}
+						}
+						continue;
+					}
 					// Ability is active so pass along the input event.
 					AbilitySpecInputPressed(*AbilitySpec);
 				}

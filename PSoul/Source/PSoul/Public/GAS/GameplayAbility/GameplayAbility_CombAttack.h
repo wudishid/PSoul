@@ -30,13 +30,13 @@ class PSOUL_API UGameplayAbility_CombAttack : public USoulGameplayAbility
 	GENERATED_BODY()
 
 protected:
+	virtual void PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData) override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	void PlayMontageAndWaitForEvent();
-	void HandleCombAttack();
 	
 	UFUNCTION()
 	void HandleOpenCombWindow(FGameplayEventData Payload);
@@ -55,14 +55,14 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "CombAttack")
 	UAnimMontage* GetCurrentCombMontage();
-
-protected:
-	UPROPERTY(EditAnywhere)
-	TArray<FCombAttackInfo> CombAttackInfos;
-
+	
 	UPROPERTY(Replicated)
 	mutable  int32 CurrentCombIndex;
 
 	UPROPERTY(Replicated)
 	mutable  bool bComb;
+	
+protected:
+	UPROPERTY(EditAnywhere)
+	TArray<FCombAttackInfo> CombAttackInfos;
 };

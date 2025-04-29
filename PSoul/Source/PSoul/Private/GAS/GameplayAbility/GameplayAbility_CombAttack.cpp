@@ -8,6 +8,24 @@
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
+void UGameplayAbility_CombAttack::PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
+	FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
+{
+	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
+	
+	if (!TriggerEventData) return;
+
+	if (const FGameplayAbilityTargetData_LocationInfo* TargetData_LocationInfo = reinterpret_cast<const FGameplayAbilityTargetData_LocationInfo*>(TriggerEventData->TargetData.Get(0)))
+	{
+		FVector TempIndexVector = TargetData_LocationInfo->TargetLocation.LiteralTransform.GetLocation();
+		//用向量的X表示蒙太奇的索引
+		if (!TempIndexVector.IsZero())
+		{
+			CurrentCombIndex = TempIndexVector.X;
+		}
+	}
+}
+
 void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                                   const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                                   const FGameplayEventData* TriggerEventData)
@@ -33,9 +51,7 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	}
 	else
 	{
-		constexpr bool bReplicateEndAbility = true;
-		constexpr bool bWasCancelled = true;
-		EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
 	}
 }
 
@@ -43,30 +59,14 @@ bool UGameplayAbility_CombAttack::CanActivateAbility(const FGameplayAbilitySpecH
                                                      const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags,
                                                      const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
-	if(GetCurrentMontage())
-	{
-		if(bComb)
-		{
-			CurrentCombIndex++;
-			bComb = false;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-	else
-	{
-		return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
-	}
-	
+	return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 }
 
 void UGameplayAbility_CombAttack::InputPressed(const FGameplayAbilitySpecHandle Handle,
                                                const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+	
 	GetAbilitySystemComponentFromActorInfo()->TryActivateAbility(Handle);
 }
 
@@ -102,16 +102,6 @@ void UGameplayAbility_CombAttack::PlayMontageAndWaitForEvent()
 		WaitEventTask->ReadyForActivation();
 	}
 	
-}
-
-void UGameplayAbility_CombAttack::HandleCombAttack()
-{
-	if(bComb)
-	{
-		CurrentCombIndex++;
-		PlayMontageAndWaitForEvent();
-		bComb = false;
-	}
 }
 
 void UGameplayAbility_CombAttack::HandleOpenCombWindow(FGameplayEventData Payload)
