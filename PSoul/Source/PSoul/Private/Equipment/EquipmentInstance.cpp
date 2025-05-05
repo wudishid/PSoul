@@ -20,6 +20,19 @@ void AEquipmentInstance::UnEquip()
 	ASC->RemoveActiveGameplayEffect(EffectHandle);
 }
 
+EEquipmentType AEquipmentInstance::GetEquipmentType() const
+{
+	if(ItemInfo.IsValid())
+	{
+		return ItemInfo.EquipmentType;
+	}
+	else
+	{
+		Util_Inventory::GetItemInfoByName(ItemName, ItemInfo);
+		return ItemInfo.EquipmentType;
+	}
+}
+
 // Called when the game starts or when spawned
 void AEquipmentInstance::BeginPlay()
 {

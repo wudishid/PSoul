@@ -19,7 +19,6 @@ AInventoryItemInstance::AInventoryItemInstance()
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	BoxComp->SetupAttachment(GetRootComponent());
-	BoxComp->SetHiddenInGame(false);
 	
 	bReplicates = true;
 }

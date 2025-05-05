@@ -17,9 +17,9 @@ void ASoulGameState_Game::BeginPlay()
 		GetWorld()->GetTimerManager().SetTimer(Timer_GameTimeLength, [this]()
 		{
 			UpdatePlayerKillDeathNumber();
-			
+
 			GameTimeLength -= 1;
-			FMath::Clamp(GameTimeLength, 0, 120);
+			GameTimeLength = FMath::Max(GameTimeLength, 0);
 			if(GameTimeLength <= 0)
 			{
 				GetWorld()->GetTimerManager().ClearTimer(Timer_GameTimeLength);

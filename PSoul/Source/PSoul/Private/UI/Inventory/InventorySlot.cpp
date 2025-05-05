@@ -2,15 +2,16 @@
 
 
 #include "UI/Inventory/InventorySlot.h"
-
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Development/Soul_UISetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryItemDefinition.h"
 #include "Inventory/InventoryManagerComponent.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "UI/Inventory/ItemInfoWidget.h"
 
 void UInventorySlot::UpdateSlot()
 {
@@ -32,12 +33,24 @@ void UInventorySlot::UpdateSlot()
 				Text_Amount->SetText(UKismetTextLibrary::Conv_IntToText(ItemSlot.Amount));
 				Text_Amount->SetVisibility(ESlateVisibility::Visible);
 			}
+
+			//提示控件
+			if (UItemInfoWidget* InfoWidget = CreateWidget<UItemInfoWidget>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemInfoClass.LoadSynchronous()))
+			{
+				InfoWidget->UpdateItemInfo(GetItemInfo());
+				SetToolTip(InfoWidget);
+			}
+			
 			bEmpty = false;
 		}
 		else
 		{
 			Image_Icon->SetVisibility(ESlateVisibility::Collapsed);
 			Text_Amount->SetVisibility(ESlateVisibility::Collapsed);
+
+			//提示控件
+			SetToolTip(nullptr);
+			
 			bEmpty = true;
 		}
 	}
@@ -99,3 +112,4 @@ FReply UInventorySlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, cons
 	
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
+

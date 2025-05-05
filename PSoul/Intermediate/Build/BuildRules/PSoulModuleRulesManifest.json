@@ -1,6 +1,7 @@
 {
 	"SourceFiles": [
 		"E:\\PSoul\\PSoul\\Source\\PSoul\\PSoul.Build.cs",
+		"E:\\PSoul\\PSoul\\Plugins\\AdvanceProgressBar\\Source\\AdvanceProgressBar\\AdvanceProgressBar.Build.cs",
 		"E:\\PSoul\\PSoul\\Plugins\\LockTargetSystem\\Source\\LockTargetSystem\\LockTargetSystem.Build.cs",
 		"E:\\PSoul\\PSoul\\Source\\PSoul.Target.cs",
 		"E:\\PSoul\\PSoul\\Source\\PSoulEditor.Target.cs",
