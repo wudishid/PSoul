@@ -21,7 +21,7 @@ public:
 	AEquipmentInstance();
 	virtual void Equip();
 	virtual void UnEquip();
-	EEquipmentType GetEquipmentType() const { return ItemInfo.EquipmentType; };
+	EEquipmentType GetEquipmentType() const;
 	FInventoryItemInfo GetItemInfo() const { return ItemInfo; };
 protected:
 	// Called when the game starts or when spawned
@@ -36,7 +36,7 @@ protected:
 	UPROPERTY()
 	USoulAbilitySystemComponent* ASC = nullptr;
 	
-	FInventoryItemInfo ItemInfo;
+	mutable  FInventoryItemInfo ItemInfo;
 	FActiveGameplayEffectHandle EffectHandle;
 	
 };

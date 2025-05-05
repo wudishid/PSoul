@@ -6,6 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "Soul_UISetting.generated.h"
 
+class UItemInfoWidget;
 class UItemSingleOperation;
 class UItemOperationPanel;
 class UInventorySlot;
@@ -26,6 +27,9 @@ public:
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Inventory")
 	TSoftClassPtr<UItemSingleOperation> ItemSingleOperationClass;
 
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Inventory")
+	TSoftClassPtr<UItemInfoWidget> ItemInfoClass;
+	
 public:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;

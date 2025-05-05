@@ -72,8 +72,8 @@ void ULoginPanel::HandleEnterGameClicked()
 		
 		if(USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>())
 		{
-			//UGameplayStatics::OpenLevel(GetWorld(), "47.106.12.36");
-			UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), MapToLoad);
+			UGameplayStatics::OpenLevel(GetWorld(), "47.106.12.36");
+			//UGameplayStatics::OpenLevelBySoftObjectPtr(GetWorld(), MapToLoad);
 		}
 	}));
 	

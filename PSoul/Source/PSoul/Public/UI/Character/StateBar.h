@@ -8,8 +8,9 @@
 #include "StateBar.generated.h"
 
 
+class UAdvanceBar;
 class UCharacterAttributeComponent;
-class UProgressBar;
+
 /**
  * 
  */
@@ -19,6 +20,7 @@ class PSOUL_API UStateBar : public USoulUserWidget
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 
 	void Init(APawn* OwnerPawn);
@@ -30,16 +32,20 @@ public:
 	void UpdateBar();
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UProgressBar* StateBar;
-
-	UPROPERTY(EditAnywhere, Category = "StateBar")
-	FLinearColor BarFillColor = FLinearColor::Red;
+	UAdvanceBar* Bar;
 	
 	UPROPERTY(EditAnywhere, Category = "StateBar")
 	FGameplayAttribute Attribute;
 
 	UPROPERTY(EditAnywhere, Category = "StateBar")
 	FGameplayAttribute MaxAttribute;
+
+	UPROPERTY(EditAnywhere,Category="StateBar")
+	FLinearColor FrontBarColor=FLinearColor::Red;;
+
+	UPROPERTY(EditAnywhere,Category="StateBar")
+	FLinearColor BackBarColor=FLinearColor::Yellow;
+
 	
 	UPROPERTY()
 	UCharacterAttributeComponent* AttributeComponent;
