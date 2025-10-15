@@ -10,13 +10,13 @@ void ASoulHUD_Game::BeginPlay()
 
 void ASoulHUD_Game::InitHUD()
 {
-	if(PlayerPanel)
+	if (PlayerPanel)
 	{
 		PlayerPanel->InitPanel();
 	}
 	else
 	{
-		if(IsValid(PlayerPanelClass))
+		if (IsValid(PlayerPanelClass))
 		{
 			PlayerPanel = CreateWidget<UPlayerPanel>(GetOwningPlayerController(), PlayerPanelClass);
 			PlayerPanel->AddToViewport();
@@ -27,7 +27,7 @@ void ASoulHUD_Game::InitHUD()
 
 void ASoulHUD_Game::SetShowInventoryPanel(bool bShow)
 {
-	if(PlayerPanel)
+	if (PlayerPanel)
 	{
 		PlayerPanel->SetShowInventoryPanel(bShow);
 	}

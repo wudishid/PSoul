@@ -12,6 +12,7 @@ void UStateBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
+	Bar->SetBarWidth(BarWidth);
 	Bar->FrontBar->SetFillColorAndOpacity(FrontBarColor);
 	Bar->BackBar->SetFillColorAndOpacity(BackBarColor);
 }
@@ -71,5 +72,6 @@ void UStateBar::UpdateBar()
 	float CurValue = AttributeComponent->GetAttributeValue(Attribute);
 	float MaxValue = AttributeComponent->GetAttributeValue(MaxAttribute);
 	//UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Cur%f : Max%f"), CurValue, MaxValue), true, true, FLinearColor::Yellow, 5.f);
+	Bar->SetBarWidth(MaxValue);
 	Bar->UpdateBar(CurValue / MaxValue, EAdvanceBarUpdateStyle::Lerp);
 }

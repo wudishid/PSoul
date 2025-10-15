@@ -41,6 +41,9 @@ protected:
 	FGameplayAttribute MaxAttribute;
 
 	UPROPERTY(EditAnywhere,Category="StateBar")
+	float BarWidth = 150.f;
+	
+	UPROPERTY(EditAnywhere,Category="StateBar")
 	FLinearColor FrontBarColor=FLinearColor::Red;;
 
 	UPROPERTY(EditAnywhere,Category="StateBar")
