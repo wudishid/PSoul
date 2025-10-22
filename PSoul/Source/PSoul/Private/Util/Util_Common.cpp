@@ -5,7 +5,8 @@
 
 bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
 {
-	if(!OwnerActor) return false;
+	if (!OwnerActor) return false;
+	if (!ItemClass) return false;
 	UWorld* World = OwnerActor->GetWorld();
 	if(ItemClass)
 	{

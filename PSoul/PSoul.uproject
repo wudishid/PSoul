@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{9A3A1467-426E-E20E-A617-42A86899F551}",
+	"EngineAssociation": "{FF4E38AF-48CE-756E-1D08-50B4EA87A60F}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -31,8 +31,8 @@
 			"Enabled": true
 		},
 		{
-			"Name" : "AdvanceProgressBar",
-			"Enabled" : true
+			"Name": "AdvanceProgressBar",
+			"Enabled": true
 		}
 	]
 }

@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #include "AI/AICharacterBase.h"
-#include "../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
+
+#include "Data/AICharacterDataAsset.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "Util/Util_Common.h"
 
 
 // Sets default values
@@ -22,6 +23,10 @@ void AAICharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
 	Destroy();
+	if (AICharacterData)
+	{
+		Util_Common::SpawnInventroyItemInstance(this, AICharacterData->DropedItem);
+	}
 }
 
 

@@ -6,6 +6,7 @@
 #include "GameFramework/SoulCharacterBase.h"
 #include "AICharacterBase.generated.h"
 
+class UAICharacterDataAsset;
 class UMotionWarpingComponent;
 
 UCLASS()
@@ -18,10 +19,10 @@ public:
 	AAICharacterBase();
 
 protected:
-	
+	UPROPERTY(EditAnywhere, Category = "AICharcterData")
+	TObjectPtr<UAICharacterDataAsset> AICharacterData;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 	virtual void FinishDeath() override;
 };
