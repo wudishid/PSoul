@@ -31,19 +31,11 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	virtual void AcknowledgePossession(class APawn* P) override;
-
-	UFUNCTION()
-	void OnRep_Team();
-
+	
 	UFUNCTION(Server, Reliable)
 	void InitSoulPlayerState();
 	
-	UPROPERTY(ReplicatedUsing = OnRep_Team)
-	ESoulCharacterTeam Team;
-
 	void ToggleShowInventoryPanel();
 private:
-	UFUNCTION(Server, Reliable)
-	void SetTeam(ESoulCharacterTeam InTeam);
 	
 };

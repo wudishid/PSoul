@@ -19,11 +19,6 @@ void ASoulAIControllerBase::BeginPlay()
 void ASoulAIControllerBase::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
-	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
-	{
-		PS->InitPlayerState(0, 0, ESoulCharacterTeam::AI);
-	}
 }
 
 void ASoulAIControllerBase::InitPlayerState()

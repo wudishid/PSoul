@@ -16,10 +16,6 @@ class PSOUL_API UGameScorePanel : public USoulUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
-
-	void HandleRedPlayersScoreChanged(int32 InScore);
-	void HandleBluePlayersScoreChanged(int32 InScore);
-	void HandleGameTimeLengthChanged(float InRemainTime);
 	
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_RedPlayersScore;

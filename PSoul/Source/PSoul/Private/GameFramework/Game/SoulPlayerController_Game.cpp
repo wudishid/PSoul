@@ -55,11 +55,6 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 	}
 }
 
-void ASoulPlayerController_Game::OnRep_Team()
-{
-	InitSoulPlayerState();
-}
-
 void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 {
 	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
@@ -83,16 +78,8 @@ void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 
 void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
 {
-	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
-	{
-		PS->InitPlayerState(0, 0, Team);
-	}
 }
 
-void ASoulPlayerController_Game::SetTeam_Implementation(ESoulCharacterTeam InTeam)
-{
-	Team = InTeam;
-}
 
 USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemComponent() const
 {
@@ -107,11 +94,6 @@ USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemCompone
 
 void ASoulPlayerController_Game::HandlePlayerDeath()
 {
-	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
-	{
-		PS->AddDeathNumber();
-	}
-	
 	APawn* CurPawn = GetPawn();
 	CurPawn->DetachFromControllerPendingDestroy();
 	CurPawn->Destroy();
@@ -120,30 +102,17 @@ void ASoulPlayerController_Game::HandlePlayerDeath()
 
 void ASoulPlayerController_Game::HandlePlayerKill()
 {
-	if(ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
-	{
-		PS->AddKillNumber();
-	}
+	
 }
+
 
 void ASoulPlayerController_Game::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if(IsLocalController())
-	{
-		USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>();
-		if(ensureMsgf(GameInstance, TEXT("SoulGameInstance Is not Valid!")))
-		{
-			SetTeam(GameInstance->Team);
-		}
-	}
 }
 
 void ASoulPlayerController_Game::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME_CONDITION_NOTIFY(ASoulPlayerController_Game, Team, COND_None, REPNOTIFY_Always);
 }
 

@@ -33,10 +33,6 @@ void ULoginPanel::HandleRedTeamCheckBoxChecked(bool bIsChecked)
 	if(bIsChecked)
 	{
 		BlueTeamCheckBox->SetIsChecked(false);
-		if(USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>())
-		{
-			GameInstance->Team = ESoulCharacterTeam::RedPlayer;
-		}
 	}
 }
 
@@ -45,10 +41,6 @@ void ULoginPanel::HandleBlueTeamCheckBoxChecked(bool bIsChecked)
 	if(bIsChecked)
 	{
 		RedTeamCheckBox->SetIsChecked(false);
-		if(USoulGameInstance* GameInstance = GetGameInstance<USoulGameInstance>())
-		{
-			GameInstance->Team = ESoulCharacterTeam::BluePlayer;
-		}
 	}
 }
 

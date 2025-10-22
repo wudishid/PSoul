@@ -99,23 +99,7 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 
 						USoulAbilitySystemComponent* CauserASC = OwnerCharacter->GetAbilitySystemComponent();
 						if (!CauserASC) return;
-
-						if (ASoulCharacterBase* TargetCharacter = Cast<ASoulCharacterBase>(HitActor))
-						{
-							if (ASoulPlayerState_Game* OwnerPlayerState = OwnerCharacter->GetPlayerState<
-								ASoulPlayerState_Game>())
-							{
-								if (ASoulPlayerState_Game* TargetPlayerState = TargetCharacter->GetPlayerState<
-									ASoulPlayerState_Game>())
-								{
-									if (OwnerPlayerState->GetTeam() == TargetPlayerState->GetTeam())
-									{
-										continue;
-									}
-								}
-							}
-						}
-
+						
 						USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 							USoulAbilitySystemComponent>();
 						if (!TargetASC) continue;
@@ -171,23 +155,7 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 					ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(GetOwner());
 					USoulAbilitySystemComponent* CauserASC = OwnerCharacter->GetAbilitySystemComponent();
 					if (!CauserASC) return;
-
-					if (ASoulCharacterBase* TargetCharacter = Cast<ASoulCharacterBase>(HitActor))
-					{
-						if (ASoulPlayerState_Game* OwnerPlayerState = OwnerCharacter->GetPlayerState<
-							ASoulPlayerState_Game>())
-						{
-							if (ASoulPlayerState_Game* TargetPlayerState = TargetCharacter->GetPlayerState<
-								ASoulPlayerState_Game>())
-							{
-								if (OwnerPlayerState->GetTeam() == TargetPlayerState->GetTeam())
-								{
-									continue;
-								}
-							}
-						}
-					}
-
+					
 					USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 						USoulAbilitySystemComponent>();
 					if (!TargetASC) continue;

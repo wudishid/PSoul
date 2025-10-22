@@ -18,5 +18,4 @@ protected:
 	virtual void Init() override;
 public:
 	FString EnterGameMap;
-	ESoulCharacterTeam Team;
 };
