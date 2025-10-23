@@ -6,6 +6,8 @@
 #include "Engine/DeveloperSettings.h"
 #include "Soul_UISetting.generated.h"
 
+class USkillTreeNode;
+class USkillTreeNodeLine;
 class UItemInfoWidget;
 class UItemSingleOperation;
 class UItemOperationPanel;
@@ -29,6 +31,12 @@ public:
 
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Inventory")
 	TSoftClassPtr<UItemInfoWidget> ItemInfoClass;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | SkillTree")
+	TSoftClassPtr<USkillTreeNode> SkillTreeNodeClass;
+	
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | SkillTree")
+	TSoftClassPtr<USkillTreeNodeLine> SkillTreeNodeLineClass;
 	
 public:
 #if WITH_EDITOR
