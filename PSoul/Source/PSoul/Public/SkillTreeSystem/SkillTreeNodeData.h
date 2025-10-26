@@ -30,5 +30,5 @@ public:
 	int32 SkillPointCost;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
-	TSubclassOf<USoulSkillTreeAbility> ActivatedSkill;
+	TSubclassOf<USoulSkillTreeAbility> SkillClass;
 };

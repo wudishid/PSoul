@@ -1,36 +1,46 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "SkillTreeSystem/SkillTreeManager.h"
+#include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/Attribute/SoulPlayerSet.h"
+#include "Net/UnrealNetwork.h"
 #include "SkillTreeSystem/SkillTreeData.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
 #include "Util/Util_SkillTree.h"
+#include "SkillTreeSystem/SoulSkillTreeAbility.h"
 
 void USkillTreeManager::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	ASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
+	check(ASC);
+}
+
+void USkillTreeManager::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME_CONDITION(USkillTreeManager, LearnedSkills, COND_None);
 }
 
 bool USkillTreeManager::TryLearnSkill(FName InSkillID)
 {
-	for (auto& SkillTreeData : SkillTreeDatas)
+	if (USkillTreeNodeData* LearnedSkillNode = GetSkillTreeNodeData(InSkillID))
 	{
-		TArray<USkillTreeNodeData*> UnlockedSkillNodeDatas = Util_SkillTree::GetSkillUnlockedSkillNodeDatas(SkillTreeData, InSkillID);
-		if (UnlockedSkillNodeDatas.Num() > 0)
-		{
-			for (auto& UnlockedSkillNodeData : UnlockedSkillNodeDatas)
-			{
-				UnlockedSkills.AddUnique(UnlockedSkillNodeData->SkillID);
-			}
+		int32 CurrentLevel = ASC->GetSet<USoulPlayerSet>()->GetLevel() - 1;
+		int32 AvailableSkillPoints = CurrentLevel - GetCostedSkillPoints();
 
-			OnSkillUnlocked.Broadcast(UnlockedSkills);
+		if (AvailableSkillPoints >= LearnedSkillNode->SkillPointCost)
+		{
+			LearnSkill(InSkillID);
+			return true;
 		}
-			
-		return true;
 	}
 	
 	return false;
 }
 
-USkillTreeNodeData* USkillTreeManager::GetSkillTreeNodeData(FName InSkillID)
+USkillTreeNodeData* USkillTreeManager::GetSkillTreeNodeData(FName InSkillID) const
 {
 	if (SkillTreeDatas.Num() < 0) return nullptr;
 	
@@ -56,7 +66,62 @@ USkillTreeNodeData* USkillTreeManager::GetSkillTreeNodeData(FName InSkillID)
 	return nullptr;
 }
 
-bool USkillTreeManager::IsSkillUnlocked(FName InSkillID)
+bool USkillTreeManager::IsSkillLearned(FName InSkillID) const
+{
+	return LearnedSkills.Contains(InSkillID);
+}
+
+int32 USkillTreeManager::GetCostedSkillPoints() const
+{
+	if (LearnedSkills.IsEmpty()) return 0;
+
+	int32 ResultPoints = 0;
+	for (auto& LearnedSkill : LearnedSkills)
+	{
+		if (USkillTreeNodeData* SkillTreeNode = GetSkillTreeNodeData(LearnedSkill))
+		{
+			ResultPoints += SkillTreeNode->SkillPointCost;
+		}
+	}
+	return ResultPoints;
+}
+
+void USkillTreeManager::LearnSkill(FName InSkillID)
+{
+	ServerGiveSkill(InSkillID);
+	
+	//解锁该技能的后置技能
+	for (auto& SkillTreeData : SkillTreeDatas)
+	{
+		TArray<USkillTreeNodeData*> UnlockedSkillNodeDatas = Util_SkillTree::GetSkillUnlockedSkillNodeDatas(SkillTreeData, InSkillID);
+		if (UnlockedSkillNodeDatas.Num() > 0)
+		{
+			for (auto& UnlockedSkillNodeData : UnlockedSkillNodeDatas)
+			{
+				UnlockedSkills.AddUnique(UnlockedSkillNodeData->SkillID);
+			}
+
+			OnSkillUnlocked.Broadcast(UnlockedSkills);
+		}
+	}
+}
+
+void USkillTreeManager::ServerGiveSkill_Implementation(FName InSkillID)
+{
+	if (USkillTreeNodeData* LearnedSkillNode = GetSkillTreeNodeData(InSkillID))
+	{
+		FGameplayAbilitySpec AbilitySpec(LearnedSkillNode->SkillClass);
+		ASC->GiveAbility(AbilitySpec);
+		LearnedSkills.AddUnique(InSkillID);
+	}
+}
+
+void USkillTreeManager::OnRep_LearnedSkills()
+{
+	OnSkillLearned.Broadcast(LearnedSkills);
+}
+
+bool USkillTreeManager::IsSkillUnlocked(FName InSkillID) const
 {
 	return UnlockedSkills.Contains(InSkillID);
 }

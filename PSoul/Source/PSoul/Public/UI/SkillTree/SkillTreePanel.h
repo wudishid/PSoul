@@ -8,7 +8,7 @@
 class USkillTreeManager;
 class UHorizontalBox;
 
-UCLASS()
+UCLASS(Abstract)
 class PSOUL_API USkillTreePanel : public USoulUserWidget
 {
 	GENERATED_BODY()

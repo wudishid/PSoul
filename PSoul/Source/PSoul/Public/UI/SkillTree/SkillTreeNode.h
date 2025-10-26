@@ -27,11 +27,13 @@ public:
 	FVector2D GetNodePosition();
 protected:
 	void SetNodeUnlocked(bool bInUnlocked);
-
+	void SetNodeLearned(bool bInLearned);
+	
 	UFUNCTION()
 	void OnSkillBtnClicked();
 
 	void OnSkillUnlocked(TArray<FName> InUnlockedSkillsID);
+	void OnSkillLearned(TArray<FName> InLearnedSkillsID);
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* SkillButton;
@@ -40,6 +42,9 @@ protected:
 	UImage* SkillImage;
 
 	UPROPERTY(meta = (BindWidget))
+	UImage* Image_UnLearnedMask;
+	
+	UPROPERTY(meta = (BindWidget))
 	UBorder* Border_Lock;
 
 	TObjectPtr<USkillTreeManager> SkillTreeManagerComp = nullptr;
@@ -47,4 +52,5 @@ protected:
 	FName SkillID;
 
 	bool bUnlocked = false;
+	bool bLearned = false;
 };

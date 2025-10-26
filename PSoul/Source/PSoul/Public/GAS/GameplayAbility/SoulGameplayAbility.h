@@ -26,13 +26,11 @@ class PSOUL_API USoulGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 public:
 	USoulGameplayAbility();
-	
 	ESoulAbilityActivationPolicy GetActivationPolicy() const { return ActivationPolicy; };
-
+protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "ActivationPolicy")
 	ESoulAbilityActivationPolicy ActivationPolicy = ESoulAbilityActivationPolicy::OnInputTriggered;
 
-	
 	
 };

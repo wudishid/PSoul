@@ -1,8 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GameFramework/Game/SoulPlayerController_Game.h"
-
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
@@ -28,6 +25,10 @@ void ASoulPlayerController_Game::SetupInputComponent()
 	{
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenInventoryPanel, ETriggerEvent::Completed, this,
 		                         &ThisClass::ToggleShowInventoryPanel, /*bLogIfNotFound=*/ false);
+
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenSkillTreePanel, ETriggerEvent::Completed, this,
+								 &ThisClass::ToggleShowSkillTreePanel, /*bLogIfNotFound=*/ false);
+		
 	}
 }
 
@@ -76,6 +77,27 @@ void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 	}
 }
 
+void ASoulPlayerController_Game::ToggleShowSkillTreePanel()
+{
+	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
+	{
+		if(HUD->IsShowingSkillTreePanel())
+		{
+			HUD->SetShowSkillTreePanel(false);
+			SetShowMouseCursor(false);
+			SetIgnoreLookInput(false);
+			SetInputMode(FInputModeGameOnly());
+		}
+		else
+		{
+			HUD->SetShowSkillTreePanel(true);
+			SetShowMouseCursor(true);
+			SetIgnoreLookInput(true);
+			SetInputMode(FInputModeGameAndUI());
+		}
+	}
+}
+
 void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
 {
 }
@@ -104,7 +126,6 @@ void ASoulPlayerController_Game::HandlePlayerKill()
 {
 	
 }
-
 
 void ASoulPlayerController_Game::BeginPlay()
 {

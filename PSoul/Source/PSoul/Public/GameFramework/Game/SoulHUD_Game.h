@@ -18,7 +18,9 @@ public:
 	virtual void BeginPlay() override;
 	void InitHUD();
 	void SetShowInventoryPanel(bool bShow);
+	void SetShowSkillTreePanel(bool bShow);
 	bool IsShowingInventoryPanel() const;
+	bool IsShowingSkillTreePanel() const;
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UPlayerPanel> PlayerPanelClass;

@@ -48,6 +48,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	LockTargetComp->OnLockStateChange.AddDynamic(this, &ThisClass::HandleLockTargetStateChanged);
 
 	SkillTreeManagerComp = CreateDefaultSubobject<USkillTreeManager>(TEXT("SkillTreeManagerComp"));
+	SkillTreeManagerComp->SetIsReplicated(true);
 }
 
 FRotator APlayerCharacterBase::GetDesiredRotation() const

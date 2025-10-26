@@ -33,11 +33,28 @@ void ASoulHUD_Game::SetShowInventoryPanel(bool bShow)
 	}
 }
 
+void ASoulHUD_Game::SetShowSkillTreePanel(bool bShow)
+{
+	if (PlayerPanel)
+	{
+		PlayerPanel->SetShowSkillTreePanel(bShow);
+	}
+}
+
 bool ASoulHUD_Game::IsShowingInventoryPanel() const
 {
 	if (PlayerPanel)
 	{
 		return PlayerPanel->IsShowInventoryPanel();
+	}
+	return false;
+}
+
+bool ASoulHUD_Game::IsShowingSkillTreePanel() const
+{
+	if (PlayerPanel)
+	{
+		return PlayerPanel->IsShowSkillTreePanel();
 	}
 	return false;
 }

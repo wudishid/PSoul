@@ -23,6 +23,19 @@ void USoulAbilitySystemComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
+void USoulAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec)
+{
+	Super::OnGiveAbility(AbilitySpec);
+
+	if (USoulGameplayAbility* Ability = Cast<USoulGameplayAbility>(AbilitySpec.Ability))
+	{
+		if (Ability->GetActivationPolicy() == ESoulAbilityActivationPolicy::OnSpawn)
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
+	}
+}
+
 void USoulAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)
 {
 	bool bNewAvatatActor = AbilityActorInfo.Get()->AvatarActor != InAvatarActor;

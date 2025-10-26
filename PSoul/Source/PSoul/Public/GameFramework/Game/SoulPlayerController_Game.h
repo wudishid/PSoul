@@ -1,7 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/SoulPlayerController.h"
 #include "SoulPlayerController_Game.generated.h"
@@ -36,6 +34,7 @@ protected:
 	void InitSoulPlayerState();
 	
 	void ToggleShowInventoryPanel();
+	void ToggleShowSkillTreePanel();
 private:
 	
 };

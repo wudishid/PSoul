@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
 
@@ -21,6 +22,7 @@ void USkillTreeNode::InitNode(FName InSkillID)
 	SkillTreeManagerComp = GetOwningPlayerPawn()->FindComponentByClass<USkillTreeManager>();
 	checkf(SkillTreeManagerComp, TEXT("SkillTreeManagerComp Is not valid!"));
 	SkillTreeManagerComp->OnSkillUnlocked.AddUObject(this, &ThisClass::OnSkillUnlocked);
+	SkillTreeManagerComp->OnSkillLearned.AddUObject(this, &ThisClass::OnSkillLearned);
 	
 	SkillButton->OnClicked.AddDynamic(this, &ThisClass::OnSkillBtnClicked);
 	
@@ -58,11 +60,26 @@ void USkillTreeNode::SetNodeUnlocked(bool bInUnlocked)
 	}
 }
 
+void USkillTreeNode::SetNodeLearned(bool bInLearned)
+{
+	if (bInLearned)
+	{
+		Image_UnLearnedMask->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		Image_UnLearnedMask->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
 void USkillTreeNode::OnSkillBtnClicked()
 {
 	if (bUnlocked)
 	{
-		SkillTreeManagerComp->TryLearnSkill(SkillID);
+		if (!SkillTreeManagerComp->TryLearnSkill(SkillID))
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SkillPoints not enough!"));
+		}
 	}
 }
 
@@ -71,5 +88,13 @@ void USkillTreeNode::OnSkillUnlocked(TArray<FName> InUnlockedSkillsID)
 	if (InUnlockedSkillsID.Contains(SkillID))
 	{
 		SetNodeUnlocked(true);
+	}
+}
+
+void USkillTreeNode::OnSkillLearned(TArray<FName> InLearnedSkillsID)
+{
+	if (InLearnedSkillsID.Contains(SkillID))
+	{
+		SetNodeLearned(true);
 	}
 }

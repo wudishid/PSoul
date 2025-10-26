@@ -13,4 +13,5 @@ UCLASS()
 class PSOUL_API USoulSkillTreeAbility : public USoulGameplayAbility
 {
 	GENERATED_BODY()
+protected:
 };
