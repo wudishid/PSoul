@@ -28,9 +28,6 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	int32 SkillPointCost;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
-	bool bUnlocked = false;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	TSubclassOf<USoulSkillTreeAbility> ActivatedSkill;

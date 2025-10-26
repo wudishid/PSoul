@@ -9,6 +9,7 @@
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
+class USkillTreeManager;
 class ULockTargetComponent;
 class USoulCameraComponent;
 class UMotionWarpingComponent;
@@ -39,6 +40,9 @@ class APlayerCharacterBase : public ASoulCharacterBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	ULockTargetComponent* LockTargetComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	USkillTreeManager* SkillTreeManagerComp;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))

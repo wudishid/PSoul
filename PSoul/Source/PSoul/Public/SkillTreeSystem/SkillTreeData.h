@@ -17,7 +17,6 @@ struct FSkillTreeNodes
 	TArray<USkillTreeNodeData*> SkillTreeNodes;
 };
 
-
 UCLASS()
 class PSOUL_API USkillTreeData : public UPrimaryDataAsset
 {
@@ -31,8 +30,5 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "SkillTree")
 	TMap<FName, FSkillTreeNodes>  SkillNodeDatas;
-
-
-	USkillTreeNodeData* GetSkillTreeNodeData(FName SkillID);
 	
 };

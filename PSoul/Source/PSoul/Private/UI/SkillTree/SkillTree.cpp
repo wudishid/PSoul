@@ -5,6 +5,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Development/Soul_UISetting.h"
 #include "SkillTreeSystem/SkillTreeData.h"
+#include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
 #include "UI/SkillTree/SkillTreeNode.h"
 #include "UI/SkillTree/SkillTreeNodeLine.h"
@@ -13,6 +14,20 @@ void USkillTree::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 	
+	//InitSkillTree(PrewSkillTreeData);
+}
+
+void USkillTree::NativeConstruct()
+{
+	Super::NativeConstruct();
+	
+	SkillTreeManagerComp = GetOwningPlayerPawn()->FindComponentByClass<USkillTreeManager>();
+	checkf(SkillTreeManagerComp, TEXT("SkillTreeManagerComp Is not valid!"));
+}
+
+void USkillTree::InitSkillTree(USkillTreeData* InSkillTreeData)
+{
+	SkillTreeData = InSkillTreeData;
 	BuildSkillTree();
 }
 
@@ -28,10 +43,10 @@ void USkillTree::BuildSkillTree()
 
 USkillTreeNode* USkillTree::CreateSkillTreeNode(FName InSkillID, FVector2D InNodePosition)
 {
-	if (USkillTreeNode* TreeNode = CreateWidget<USkillTreeNode>(GetWorld(), GetDefault<USoul_UISetting>()->SkillTreeNodeClass.LoadSynchronous()))
+	if (USkillTreeNode* TreeNode = CreateWidget<USkillTreeNode>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillTreeNodeClass.LoadSynchronous()))
 	{
-		TreeNode->UpdateNode(InSkillID);
 		CP_SkillTree->AddChildToCanvas(TreeNode);
+		TreeNode->InitNode(InSkillID);
 		if (UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(TreeNode))
 		{
 			CanvasPanelSlot->SetAutoSize(true);
@@ -46,7 +61,7 @@ USkillTreeNode* USkillTree::CreateSkillTreeNode(FName InSkillID, FVector2D InNod
 
 USkillTreeNodeLine* USkillTree::CreateSkillTreeNodeLine(FVector2D InNodePosition)
 {
-	if (USkillTreeNodeLine* NodeLine = CreateWidget<USkillTreeNodeLine>(GetWorld(), GetDefault<USoul_UISetting>()->SkillTreeNodeLineClass.LoadSynchronous()))
+	if (USkillTreeNodeLine* NodeLine = CreateWidget<USkillTreeNodeLine>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillTreeNodeLineClass.LoadSynchronous()))
 	{
 		CP_SkillTree->AddChildToCanvas(NodeLine);
 		if (UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(NodeLine))

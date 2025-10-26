@@ -1,28 +1,38 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/SkillTree/SkillTreeNode.h"
-
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Border.h"
+#include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
-#include "Engine/AssetManager.h"
-#include "SkillTreeSystem/SkillTreeData.h"
+#include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
 
-void USkillTreeNode::UpdateNode(FName InSkillID)
+
+void USkillTreeNode::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
+
+void USkillTreeNode::InitNode(FName InSkillID)
 {
 	SkillID = InSkillID;
-	FSoftObjectPath path (TEXT("/Game/Data/SkillTree/Tree1/DA_SkillTree_Tree1.DA_SkillTree_Tree1"));
-	FSoftObjectPtr SkillTreeDataPath(path);
-	if (USkillTreeData* SkillTreeData = Cast<USkillTreeData>(SkillTreeDataPath.LoadSynchronous()))
+
+	SkillTreeManagerComp = GetOwningPlayerPawn()->FindComponentByClass<USkillTreeManager>();
+	checkf(SkillTreeManagerComp, TEXT("SkillTreeManagerComp Is not valid!"));
+	SkillTreeManagerComp->OnSkillUnlocked.AddUObject(this, &ThisClass::OnSkillUnlocked);
+	
+	SkillButton->OnClicked.AddDynamic(this, &ThisClass::OnSkillBtnClicked);
+	
+	UpdateNode();
+}
+
+void USkillTreeNode::UpdateNode()
+{
+	if (USkillTreeNodeData* NodeData = SkillTreeManagerComp->GetSkillTreeNodeData(SkillID))
 	{
-		if (USkillTreeNodeData* NodeData = SkillTreeData->GetSkillTreeNodeData(SkillID))
-		{
-			SkillImage->SetBrushFromTexture(NodeData->SkillIcon);
-			SetNodeUnlocked(NodeData->bUnlocked);
-		}
+		SkillImage->SetBrushFromTexture(NodeData->SkillIcon);
+		SetNodeUnlocked(SkillTreeManagerComp->IsSkillUnlocked(SkillID));
 	}
 }
 
@@ -45,5 +55,21 @@ void USkillTreeNode::SetNodeUnlocked(bool bInUnlocked)
 	else
 	{
 		Border_Lock->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void USkillTreeNode::OnSkillBtnClicked()
+{
+	if (bUnlocked)
+	{
+		SkillTreeManagerComp->TryLearnSkill(SkillID);
+	}
+}
+
+void USkillTreeNode::OnSkillUnlocked(TArray<FName> InUnlockedSkillsID)
+{
+	if (InUnlockedSkillsID.Contains(SkillID))
+	{
+		SetNodeUnlocked(true);
 	}
 }

@@ -5,21 +5,32 @@
 #include "CoreMinimal.h"
 #include "SkillTreeManager.generated.h"
 
+class USkillTreeNodeData;
 class USkillTreeData;
-/**
- * 
- */
+
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSkillUnlocked, TArray<FName>);
+
 UCLASS()
 class PSOUL_API USkillTreeManager : public UActorComponent
 {
 	GENERATED_BODY()
+protected:
+	virtual void BeginPlay() override;
 public:
+	TArray<USkillTreeData*> GetSkillTreeDatas() const { return SkillTreeDatas; }
 	
-	TArray<USkillTreeData*> GetSkillDatas() const
-	{
-		return SkillDatas;
-	}
+	bool TryLearnSkill(FName InSkillID);
+
+	USkillTreeNodeData* GetSkillTreeNodeData(FName InSkillID);
+
+	bool IsSkillUnlocked(FName InSkillID);
+	
+	FOnSkillUnlocked OnSkillUnlocked;
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SkillTreeManager")
-	TArray<USkillTreeData*> SkillDatas;
+	TArray<USkillTreeData*> SkillTreeDatas;
+
+	UPROPERTY(EditDefaultsOnly, Category = "SkillTreeManager")
+	TArray<FName> UnlockedSkills;
 };

@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "SkillTreeNode.generated.h"
 
+class USkillTreeManager;
 class UBorder;
 class UImage;
 class UButton;
@@ -16,13 +17,21 @@ UCLASS()
 class PSOUL_API USkillTreeNode : public USoulUserWidget
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void NativeConstruct() override;
 public:
-	void UpdateNode(FName InSkillID);
+	void InitNode(FName InSkillID);
+	void UpdateNode();
 	FName GetSkillID() const { return SkillID; }
 	FVector2D GetNodePosition();
 protected:
 	void SetNodeUnlocked(bool bInUnlocked);
 
+	UFUNCTION()
+	void OnSkillBtnClicked();
+
+	void OnSkillUnlocked(TArray<FName> InUnlockedSkillsID);
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* SkillButton;
@@ -32,6 +41,8 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UBorder* Border_Lock;
+
+	TObjectPtr<USkillTreeManager> SkillTreeManagerComp = nullptr;
 	
 	FName SkillID;
 

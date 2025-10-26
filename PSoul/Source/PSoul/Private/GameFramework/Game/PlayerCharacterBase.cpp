@@ -16,6 +16,7 @@
 #include "Camera/SoulCameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "SkillTreeSystem/SkillTreeManager.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,8 @@ APlayerCharacterBase::APlayerCharacterBase()
 	LockTargetComp = CreateDefaultSubobject<ULockTargetComponent>(TEXT("LockTargetComp"));
 	LockTargetComp->SetIsReplicated(true);
 	LockTargetComp->OnLockStateChange.AddDynamic(this, &ThisClass::HandleLockTargetStateChanged);
+
+	SkillTreeManagerComp = CreateDefaultSubobject<USkillTreeManager>(TEXT("SkillTreeManagerComp"));
 }
 
 FRotator APlayerCharacterBase::GetDesiredRotation() const
