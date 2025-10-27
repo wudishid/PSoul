@@ -122,11 +122,6 @@ void ASoulPlayerController_Game::HandlePlayerDeath()
 	GetWorld()->GetAuthGameMode()->RestartPlayer(this);
 }
 
-void ASoulPlayerController_Game::HandlePlayerKill()
-{
-	
-}
-
 void ASoulPlayerController_Game::BeginPlay()
 {
 	Super::BeginPlay();

@@ -34,6 +34,8 @@ void USoulCharacterSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Toughness, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Damage, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Soul, COND_None, REPNOTIFY_Always);
 }
 
 bool USoulCharacterSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data)
@@ -132,6 +134,11 @@ void USoulCharacterSet::OnRep_Toughness(const FGameplayAttributeData& OldValue)
 void USoulCharacterSet::OnRep_Damage(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, Damage, OldValue);
+}
+
+void USoulCharacterSet::OnRep_Soul(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, Soul, OldValue);
 }
 
 void USoulCharacterSet::ClampAttribute(const FGameplayAttribute& Attribute, float NewValue)

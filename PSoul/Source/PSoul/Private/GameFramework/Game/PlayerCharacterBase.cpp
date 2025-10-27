@@ -14,6 +14,10 @@
 #include "PSoul/SoulGameplayTags.h"
 #include "../../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockTargetComponent.h"
 #include "Camera/SoulCameraComponent.h"
+#include "Components/CharacterAttributeComponent.h"
+#include "GAS/Attribute/SoulCharacterSet.h"
+#include "GAS/Attribute/SoulPlayerSet.h"
+#include "GAS/GameplayEffect/SoulGameplayEffect.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
@@ -160,13 +164,15 @@ void APlayerCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 	AbilitySystemComponent->AbilityInputTagReleased(InputTag);
 }
 
-void APlayerCharacterBase::HandleKill()
+void APlayerCharacterBase::HandleKill(AActor* InKilled)
 {
-	Super::HandleKill();
-	
-	if (ASoulPlayerController_Game* PC = GetPlayerController())
+	Super::HandleKill(InKilled);
+
+	if (UCharacterAttributeComponent* KilledAttributeComponent = InKilled->FindComponentByClass<UCharacterAttributeComponent>())
 	{
-		PC->HandlePlayerKill();
+		//获取灵魂
+		int32 Soul = KilledAttributeComponent->GetAttributeValue(USoulCharacterSet::GetSoulAttribute());
+		GetAbilitySystemComponent()->ApplyModToAttribute(USoulPlayerSet::GetSoulAttribute(), EGameplayModOp::Additive, Soul);
 	}
 }
 

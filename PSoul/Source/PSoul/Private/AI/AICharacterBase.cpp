@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "AI/AICharacterBase.h"
-
 #include "Data/AICharacterDataAsset.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Util/Util_Common.h"
@@ -22,6 +21,9 @@ void AAICharacterBase::BeginPlay()
 void AAICharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
+
+
+	
 	Destroy();
 	if (AICharacterData)
 	{

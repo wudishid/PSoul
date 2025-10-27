@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "SkillInfoTip.generated.h"
 
+class UTextBlock;
 /**
  * 
  */
@@ -13,8 +14,10 @@ UCLASS()
 class PSOUL_API USkillInfoTip : public USoulUserWidget
 {
 	GENERATED_BODY()
-public:
-	
 
-	
+public:
+	void InitTip(FText InTip);
+protected:
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* TextBlock_Tip;
 };

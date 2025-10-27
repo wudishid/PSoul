@@ -5,14 +5,34 @@
 #include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
+#include "Development/Soul_UISetting.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
+#include "UI/SkillTree/SkillInfoTip.h"
 
 
 void USkillTreeNode::NativeConstruct()
 {
 	Super::NativeConstruct();
+}
+
+void USkillTreeNode::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+
+	if (USkillInfoTip* CurrentTip = Cast<USkillInfoTip>(GetToolTip()))
+	{
+		CurrentTip->InitTip(SkillTreeManagerComp->GetSkillTreeNodeData(SkillID)->SkillDescription);
+	}
+	else
+	{
+		if (USkillInfoTip* Tip = CreateWidget<USkillInfoTip>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillInfoTipClass.LoadSynchronous()))
+		{
+			Tip->InitTip(SkillTreeManagerComp->GetSkillTreeNodeData(SkillID)->SkillDescription);
+			SetToolTip(Tip);
+		}
+	}
 }
 
 void USkillTreeNode::InitNode(FName InSkillID)
@@ -97,4 +117,14 @@ void USkillTreeNode::OnSkillLearned(TArray<FName> InLearnedSkillsID)
 	{
 		SetNodeLearned(true);
 	}
+}
+
+UWidget* USkillTreeNode::OnGetTooltipWidget()
+{
+	if (USkillInfoTip* Tip = CreateWidget<USkillInfoTip>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillInfoTipClass.LoadSynchronous()))
+	{
+		Tip->InitTip(SkillTreeManagerComp->GetSkillTreeNodeData(SkillID)->SkillDescription);
+		return Tip;
+	}
+	return nullptr;
 }

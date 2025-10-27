@@ -48,7 +48,7 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
-void ASoulCharacterBase::HandleKill_Implementation()
+void ASoulCharacterBase::HandleKill_Implementation(AActor* InKilled)
 {
 	
 }

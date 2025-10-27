@@ -29,6 +29,8 @@ public:
 
 	bool IsSkillUnlocked(FName InSkillID) const;
 	bool IsSkillLearned(FName InSkillID) const;
+
+	int32 GetAvailableSkillPoint() const;
 	
 	FOnSkillUnlocked OnSkillUnlocked;
 	FOnSkillLearned OnSkillLearned;

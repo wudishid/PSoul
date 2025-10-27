@@ -20,6 +20,7 @@ class PSOUL_API USkillTreeNode : public USoulUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 public:
 	void InitNode(FName InSkillID);
 	void UpdateNode();
@@ -34,6 +35,8 @@ protected:
 
 	void OnSkillUnlocked(TArray<FName> InUnlockedSkillsID);
 	void OnSkillLearned(TArray<FName> InLearnedSkillsID);
+
+	UWidget* OnGetTooltipWidget();
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* SkillButton;

@@ -28,7 +28,7 @@ public:
 	ASoulCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(Server, Reliable)
-	virtual void HandleKill();
+	virtual void HandleKill(AActor* InKilled);
 
 	UFUNCTION()
 	virtual void HandleDeath();

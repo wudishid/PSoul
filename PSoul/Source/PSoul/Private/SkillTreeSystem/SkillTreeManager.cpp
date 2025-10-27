@@ -27,10 +27,7 @@ bool USkillTreeManager::TryLearnSkill(FName InSkillID)
 {
 	if (USkillTreeNodeData* LearnedSkillNode = GetSkillTreeNodeData(InSkillID))
 	{
-		int32 CurrentLevel = ASC->GetSet<USoulPlayerSet>()->GetLevel() - 1;
-		int32 AvailableSkillPoints = CurrentLevel - GetCostedSkillPoints();
-
-		if (AvailableSkillPoints >= LearnedSkillNode->SkillPointCost)
+		if (GetAvailableSkillPoint() >= LearnedSkillNode->SkillPointCost)
 		{
 			LearnSkill(InSkillID);
 			return true;
@@ -69,6 +66,13 @@ USkillTreeNodeData* USkillTreeManager::GetSkillTreeNodeData(FName InSkillID) con
 bool USkillTreeManager::IsSkillLearned(FName InSkillID) const
 {
 	return LearnedSkills.Contains(InSkillID);
+}
+
+int32 USkillTreeManager::GetAvailableSkillPoint() const
+{
+	int32 HoldSkillPoints = ASC->GetSet<USoulPlayerSet>()->GetLevel() - 1;
+	int32 AvailableSkillPoint = HoldSkillPoints - GetCostedSkillPoints();
+	return AvailableSkillPoint;
 }
 
 int32 USkillTreeManager::GetCostedSkillPoints() const

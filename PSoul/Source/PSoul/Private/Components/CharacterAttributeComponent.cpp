@@ -43,7 +43,7 @@ void UCharacterAttributeComponent::HandleCharacterDeath(AActor* InCauser)
 	}
 	if(ASoulCharacterBase* CauserCharacter = Cast<ASoulCharacterBase>(InCauser))
 	{
-		CauserCharacter->HandleKill();
+		CauserCharacter->HandleKill(GetOwner());
 	}
 }
 

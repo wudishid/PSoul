@@ -71,8 +71,8 @@ protected:
 	void Input_Look(const FInputActionValue& Value);
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
-	
-	virtual void HandleKill() override;
+
+	virtual void HandleKill(AActor* InKilled) override;
 	virtual void HandleDeath() override;
 	virtual void FinishDeath() override;
 

@@ -18,8 +18,7 @@ class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 public:
 	USoulAbilitySystemComponent* GetAbilitySystemComponent() const;
 	void HandlePlayerDeath();
-	void HandlePlayerKill();
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<USoulInputConfig> InputConfig;
 	

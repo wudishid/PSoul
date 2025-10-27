@@ -2,3 +2,10 @@
 
 
 #include "UI/SkillTree/SkillInfoTip.h"
+
+#include "Components/TextBlock.h"
+
+void USkillInfoTip::InitTip(FText InTip)
+{
+	TextBlock_Tip->SetText(InTip);
+}

@@ -26,6 +26,8 @@ public:
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Toughness);
 	
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Damage);
+
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Soul);
 public:
 	USoulCharacterSet();
 
@@ -62,6 +64,9 @@ protected:
 	
 	UFUNCTION()
 	void OnRep_Damage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_Soul(const FGameplayAttributeData& OldValue);
 	
 	void ClampAttribute(const FGameplayAttribute& Attribute, float NewValue);
 private:
@@ -88,5 +93,7 @@ private:
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Damage, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
-	
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Soul, Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Soul;
 };
