@@ -6,6 +6,10 @@
 #include "Engine/DeveloperSettings.h"
 #include "Soul_UISetting.generated.h"
 
+class USkillPicklQuickSlot;
+class USkillQuickSlot;
+class USkillQuickPickPanel;
+class USkillQuickPanel;
 class USkillInfoTip;
 class USkillTree;
 class USkillTreeNode;
@@ -34,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Inventory")
 	TSoftClassPtr<UItemInfoWidget> ItemInfoClass;
 
+
+	
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | SkillTree")
 	TSoftClassPtr<USkillTree> SkillTreeClass;
 	
@@ -45,8 +51,22 @@ public:
 
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | SkillTree")
 	TSoftClassPtr<USkillInfoTip> SkillInfoTipClass;
+
+
 	
-public:
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | QuickSkill")
+	TSoftClassPtr<USkillQuickPanel> SkillQuickPanelClass;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | QuickSkill")
+	TSoftClassPtr<USkillQuickPickPanel> SkillQuickPickPanelClass;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | QuickSkill")
+	TSoftClassPtr<USkillQuickSlot> SkillQuickSlotClass;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | QuickSkill")
+	TSoftClassPtr<USkillPicklQuickSlot> SkillPicklQuickSlotClass;
+	
+protected:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif

@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 #include "NativeGameplayTags.h"
 
@@ -20,6 +19,11 @@ namespace SoulGameplayTags
 	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_OpenInventoryPanel)
 	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_OpenSkillTreePanel)
 
+	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_QuickSkill1)
+	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_QuickSkill2)
+	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_QuickSkill3)
+	PSOUL_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(InputTag_QuickSkill4)
+	
 	PSOUL_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Hit);
 	PSOUL_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Death);
 	PSOUL_API	UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Montage_OpenCombWindow);

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "EnhancedInputSubsystems.h"
+#include "Components/QuickSkillManager.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SoulGameInstance.h"
@@ -11,6 +12,11 @@
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "PSoul/SoulLog.h"
+
+ASoulPlayerController_Game::ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
+{
+	QuickSkillManager = CreateDefaultSubobject<UQuickSkillManager>(TEXT("QuickSkillManager"));
+}
 
 void ASoulPlayerController_Game::SetupInputComponent()
 {
@@ -25,9 +31,17 @@ void ASoulPlayerController_Game::SetupInputComponent()
 	{
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenInventoryPanel, ETriggerEvent::Completed, this,
 		                         &ThisClass::ToggleShowInventoryPanel, /*bLogIfNotFound=*/ false);
-
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenSkillTreePanel, ETriggerEvent::Completed, this,
 								 &ThisClass::ToggleShowSkillTreePanel, /*bLogIfNotFound=*/ false);
+
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill1, ETriggerEvent::Completed, this,
+								 &ThisClass::PressSkill1, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill2, ETriggerEvent::Completed, this,
+								 &ThisClass::PressSkill2, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill3, ETriggerEvent::Completed, this,
+								 &ThisClass::PressSkill3, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill4, ETriggerEvent::Completed, this,
+								 &ThisClass::PressSkill4, /*bLogIfNotFound=*/ false);
 		
 	}
 }
@@ -54,6 +68,24 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 	{
 		HUD->InitHUD();
 	}
+
+	QuickSkillManager->OnSetPawn(P);
+}
+
+void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	QuickSkillManager->OnSetPawn(InPawn);
+}
+
+void ASoulPlayerController_Game::OnUnPossess()
+{
+	Super::OnUnPossess();
+	if (QuickSkillManager)
+	{
+		QuickSkillManager->OnSetPawn(nullptr);
+	}
+	
 }
 
 void ASoulPlayerController_Game::ToggleShowInventoryPanel()
@@ -98,10 +130,29 @@ void ASoulPlayerController_Game::ToggleShowSkillTreePanel()
 	}
 }
 
+void ASoulPlayerController_Game::PressSkill1()
+{
+	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill1);
+}
+
+void ASoulPlayerController_Game::PressSkill2()
+{
+	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill2);
+}
+
+void ASoulPlayerController_Game::PressSkill3()
+{
+	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill3);
+}
+
+void ASoulPlayerController_Game::PressSkill4()
+{
+	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill4);
+}
+
 void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
 {
 }
-
 
 USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemComponent() const
 {

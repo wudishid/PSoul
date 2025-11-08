@@ -9,6 +9,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
+#include "UI/QuickPanel/SkillQuickPanel.h"
+#include "UI/QuickPanel/SkillQuickPickPanel.h"
 #include "UI/SkillTree/SkillInfoTip.h"
 
 
@@ -82,7 +84,8 @@ void USkillTreeNode::SetNodeUnlocked(bool bInUnlocked)
 
 void USkillTreeNode::SetNodeLearned(bool bInLearned)
 {
-	if (bInLearned)
+	bLearned = bInLearned;
+	if (bLearned)
 	{
 		Image_UnLearnedMask->SetVisibility(ESlateVisibility::Hidden);
 	}
@@ -94,11 +97,26 @@ void USkillTreeNode::SetNodeLearned(bool bInLearned)
 
 void USkillTreeNode::OnSkillBtnClicked()
 {
-	if (bUnlocked)
+	if (bUnlocked && !bLearned)
 	{
 		if (!SkillTreeManagerComp->TryLearnSkill(SkillID))
 		{
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SkillPoints not enough!"));
+		}
+	}
+	//创建快捷技能设置面板
+	else if (bUnlocked && bLearned)
+	{
+		if (SkillTreeManagerComp->CanSkillRelease(SkillID))
+		{
+			if (USkillQuickPickPanel* SkillQuickPanel = CreateWidget<USkillQuickPickPanel>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillQuickPickPanelClass.LoadSynchronous()))
+			{
+				SkillQuickPanel->SetTargetSkillID(SkillID);
+				SkillQuickPanel->AddToViewport();
+				FVector2D Pos;
+				UWidgetLayoutLibrary::GetMousePositionScaledByDPI(GetOwningPlayer(), Pos.X, Pos.Y);
+				SkillQuickPanel->UpdatePanelPosition(Pos);
+			}
 		}
 	}
 }

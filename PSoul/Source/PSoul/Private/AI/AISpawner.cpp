@@ -24,7 +24,7 @@ void AAISpawner::BeginPlay()
 				{
 					FActorSpawnParameters sp;
 					sp.Owner = GetOwner();
-					GetWorld()->SpawnActor<AAICharacterBase>(AIClass, GetActorTransform(), sp);
+					GetWorld()->SpawnActor(AIClass, &GetActorTransform(), sp);
 				}, SpawnDelay, false);
 			}
 		}

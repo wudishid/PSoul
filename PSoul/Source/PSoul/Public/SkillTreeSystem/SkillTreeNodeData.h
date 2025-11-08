@@ -9,6 +9,15 @@ class USoulSkillTreeAbility;
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class ESkillType : uint8
+{
+	GainType				UMETA(DisplayName = "增益型"), 
+	ReleaseType				UMETA(DisplayName = "释放型")
+};
+
+
 UCLASS()
 class PSOUL_API USkillTreeNodeData : public UPrimaryDataAsset
 {
@@ -28,6 +37,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	int32 SkillPointCost;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
+	ESkillType SkillType;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	TSubclassOf<USoulSkillTreeAbility> SkillClass;

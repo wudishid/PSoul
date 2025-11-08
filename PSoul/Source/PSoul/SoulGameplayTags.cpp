@@ -19,7 +19,11 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_Sprint, "InputTag.Sprint", "InputTag.Sprint");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_OpenInventoryPanel, "InputTag.OpenInventoryPanel", "InputTag.OpenInventoryPanel");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_OpenSkillTreePanel, "InputTag.OpenSkillTreePanel", "InputTag.OpenSkillTreePanel");
-
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill1, "InputTag.QuickSkill1", "InputTag.QuickSkill1");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill2, "InputTag.QuickSkill2", "InputTag.QuickSkill2");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill3, "InputTag.QuickSkill3", "InputTag.QuickSkill3");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill4, "InputTag.QuickSkill4", "InputTag.QuickSkill4");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Hit, "GameplayEvent.Hit", "GameplayEvent.Hit");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_OpenCombWindow, "GameplayEvent.Montage.OpenCombWindow", "GameplayEvent.Montage.OpenCombWindow");

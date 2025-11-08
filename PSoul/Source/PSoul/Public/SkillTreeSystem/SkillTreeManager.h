@@ -30,6 +30,9 @@ public:
 	bool IsSkillUnlocked(FName InSkillID) const;
 	bool IsSkillLearned(FName InSkillID) const;
 
+	//技能是否可以释放
+	bool CanSkillRelease(FName InSkillID) const;
+	
 	int32 GetAvailableSkillPoint() const;
 	
 	FOnSkillUnlocked OnSkillUnlocked;
@@ -37,7 +40,8 @@ public:
 private:
 	int32 GetCostedSkillPoints() const;
 	void LearnSkill(FName InSkillID);
-
+	void UnlockSkillTreeRootSkill();
+	
 	UFUNCTION(Server, Reliable)
 	void ServerGiveSkill(FName InSkillID);
 
