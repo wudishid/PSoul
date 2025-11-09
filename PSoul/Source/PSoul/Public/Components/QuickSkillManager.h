@@ -11,6 +11,7 @@ class USoulAbilitySystemComponent;
 class USkillTreeManager;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnQuickSkillChanged, FGameplayTag);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnQuickSkillReleased, FGameplayTag);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UQuickSkillManager : public UActorComponent
@@ -21,6 +22,7 @@ public:
 	UQuickSkillManager();
 
 	FOnQuickSkillChanged OnQuickSkillChanged;
+	FOnQuickSkillReleased OnQuickSkillReleased;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -29,8 +31,11 @@ public:
 	void PressSkill(FGameplayTag InSkillInputTag);
 	
 	void SetQuickSkill(FGameplayTag InSkillInputTag, FName InSkillID);
-
 	const TMap<FGameplayTag, FName>& GetQuickSkillSlots() const { return QuickSkillSlots; }
+
+	float GetQuickSkillCooldownRemainTime(FGameplayTag InSkillInputTag) const;
+private:
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="QuickSkillManager")
 	TMap<FGameplayTag, FName> QuickSkillSlots;

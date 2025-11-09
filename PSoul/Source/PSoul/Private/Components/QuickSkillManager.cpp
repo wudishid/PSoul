@@ -47,7 +47,10 @@ void UQuickSkillManager::PressSkill(FGameplayTag InSkillInputTag)
 		{
 			if (USkillTreeNodeData* SkillTreeNodeData = SkillTreemanager->GetSkillTreeNodeData(SkillID))
 			{
-				ASC->TryActivateAbilityByClass(SkillTreeNodeData->SkillClass);
+				if (ASC->TryActivateAbilityByClass(SkillTreeNodeData->SkillClass))
+				{
+					OnQuickSkillReleased.Broadcast(InSkillInputTag);
+				}
 			}
 		}
 	}
@@ -57,9 +60,49 @@ void UQuickSkillManager::SetQuickSkill(FGameplayTag InSkillInputTag, FName InSki
 {
 	if (QuickSkillSlots.Contains(InSkillInputTag))
 	{
+		//处理技能被换掉
+		for (auto& pair : QuickSkillSlots)
+		{
+			if (pair.Value == InSkillID)
+			{
+				pair.Value = NAME_None;
+				OnQuickSkillChanged.Broadcast(pair.Key);
+			}
+		}
+		
 		*QuickSkillSlots.Find(InSkillInputTag) = InSkillID;
 		OnQuickSkillChanged.Broadcast(InSkillInputTag);
 	}
 }
+
+float UQuickSkillManager::GetQuickSkillCooldownRemainTime(FGameplayTag InSkillInputTag) const
+{
+	if (QuickSkillSlots.Contains(InSkillInputTag))
+	{
+		FName SkillID = *QuickSkillSlots.Find(InSkillInputTag);
+		if (!SkillID.IsNone())
+		{
+			if (USkillTreeNodeData* NodeData = SkillTreemanager->GetSkillTreeNodeData(SkillID))
+			{
+				TArray<FGameplayEffectSpec> Specs;
+				ASC->GetAllActiveGameplayEffectSpecs(Specs);
+				if (!Specs.IsEmpty())
+				{
+					for (auto& spec : Specs)
+					{
+						if (spec.Def.GetClass() == NodeData->SkillClass.GetDefaultObject()->GetCooldownGameplayEffect()->GetClass())
+						{
+							return spec.Duration;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return 0.f;
+}
+
+
 
 
