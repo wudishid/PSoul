@@ -1,7 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "UI/Player/PlayerPanel.h"
-
-#include "Subsystem/UIPopupManager.h"
 #include "UI/Character/StateBar.h"
 #include "UI/Inventory/InventoryList.h"
 #include "UI/Player/Attribute/AttributePanel.h"
@@ -44,7 +42,6 @@ void UPlayerPanel::SetShowSkillTreePanel(bool bShow)
 	else
 	{
 		SkillTreePanel->SetVisibility(ESlateVisibility::Hidden);
-		GetGameInstance()->GetSubsystem<UUIPopupManager>()->RemoveAllPopupWidgetsByLayer(EPopupWidgetLayer::SkillTree);
 	}
 }
 

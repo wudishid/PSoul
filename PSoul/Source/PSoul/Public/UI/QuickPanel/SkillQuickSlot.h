@@ -5,7 +5,6 @@
 #include "UI/SoulUserWidget.h"
 #include "SkillQuickSlot.generated.h"
 
-class UTextBlock;
 class USkillTreeManager;
 class UQuickSkillManager;
 class UImage;
@@ -23,20 +22,10 @@ public:
 	void InitSlot(FGameplayTag InSkillInputTag);
 private:
 	void OnQuickSkillChanged(FGameplayTag InSkillInputTag);
-	void OnQuickSkillReleased(FGameplayTag InSkillInputTag);
 protected:
 	UPROPERTY(meta = (BindWidget))
 	UImage* Image_SkillIcon;
 
-	UPROPERTY(meta = (BindWidget))
-	UImage* Image_CD;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_CD;
-
-	UPROPERTY(meta = (BindWidget))
-	UTextBlock* Text_SkillKey;
-	
 	FGameplayTag SkillInputTag;
 
 	UPROPERTY()
@@ -44,10 +33,4 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<USkillTreeManager> SkillTreeManager;
-
-private:
-	float CurrentTime = 0.f;
-	float SkillCDTime = 0.1f;
-	
-	FTimerHandle Timer_CD;
 };

@@ -9,7 +9,6 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
-#include "Subsystem/UIPopupManager.h"
 #include "UI/QuickPanel/SkillQuickPanel.h"
 #include "UI/QuickPanel/SkillQuickPickPanel.h"
 #include "UI/SkillTree/SkillInfoTip.h"
@@ -110,17 +109,14 @@ void USkillTreeNode::OnSkillBtnClicked()
 	{
 		if (SkillTreeManagerComp->CanSkillRelease(SkillID))
 		{
-			GetGameInstance()->GetSubsystem<UUIPopupManager>()->PopupPanelWidget<USkillQuickPickPanel>(this,
-				EPopupWidgetLayer::SkillTree,
-				GetDefault<USoul_UISetting>()->SkillQuickPickPanelClass.LoadSynchronous(),
-				[this](USkillQuickPickPanel* SkillQuickPanel)
+			if (USkillQuickPickPanel* SkillQuickPanel = CreateWidget<USkillQuickPickPanel>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->SkillQuickPickPanelClass.LoadSynchronous()))
 			{
-					SkillQuickPanel->SetTargetSkillID(SkillID);
-					SkillQuickPanel->AddToViewport();
-					FVector2D Pos;
-					UWidgetLayoutLibrary::GetMousePositionScaledByDPI(GetOwningPlayer(), Pos.X, Pos.Y);
-					SkillQuickPanel->UpdatePanelPosition(Pos);
-			});
+				SkillQuickPanel->SetTargetSkillID(SkillID);
+				SkillQuickPanel->AddToViewport();
+				FVector2D Pos;
+				UWidgetLayoutLibrary::GetMousePositionScaledByDPI(GetOwningPlayer(), Pos.X, Pos.Y);
+				SkillQuickPanel->UpdatePanelPosition(Pos);
+			}
 		}
 	}
 }
