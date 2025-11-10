@@ -59,7 +59,6 @@ public:
 				if (Index != INDEX_NONE)
 				{
 					ActivePopupWidgetsMap[Index].Children.Add(PopupWidget);
-					return PopupWidget;
 				}
 				else
 				{
@@ -68,9 +67,9 @@ public:
 					PopupWidgetInfo.Children.Add(PopupWidget);
 					
 					ActivePopupWidgetsMap.Add(PopupWidgetInfo);
-					
-					return PopupWidget;
 				}
+				
+				return PopupWidget;
 			}
 		}
 		return nullptr;

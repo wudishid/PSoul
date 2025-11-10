@@ -29,7 +29,6 @@ public class PSoul : ModuleRules
 		{
 			"DeveloperSettings",
 			"MotionWarping",
-			"LockTargetSystem",
 			"AdvanceProgressBar"
 		});
 		

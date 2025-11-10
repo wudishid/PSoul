@@ -6,20 +6,18 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "EnhancedInputSubsystems.h"
-#include "InputActionValue.h"
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
-#include "Input/SoulInputComponent.h"
-#include "PSoul/SoulGameplayTags.h"
-#include "../../../../../Plugins/LockTargetSystem/Source/LockTargetSystem/Public/Components/LockTargetComponent.h"
 #include "Camera/SoulCameraComponent.h"
 #include "Components/CharacterAttributeComponent.h"
+#include "Components/DamageCheckComponent.h"
+#include "Equipment/EquipmentManagerComponent.h"
+#include "Equipment/Equipment_Weapon.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
 #include "GAS/Attribute/SoulPlayerSet.h"
 #include "GAS/GameplayEffect/SoulGameplayEffect.h"
+#include "Inventory/InventoryManagerComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Kismet/KismetSystemLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 
 
@@ -46,11 +44,16 @@ APlayerCharacterBase::APlayerCharacterBase()
 	Camera = CreateDefaultSubobject<USoulCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	Camera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	
-	LockTargetComp = CreateDefaultSubobject<ULockTargetComponent>(TEXT("LockTargetComp"));
-	LockTargetComp->SetIsReplicated(true);
-	LockTargetComp->OnLockStateChange.AddDynamic(this, &ThisClass::HandleLockTargetStateChanged);
 
+
+	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("InventoryManagerComp"));
+	InventoryManagerComponent->SetIsReplicated(true);
+
+	EquipmentManagerComponent = CreateDefaultSubobject<UEquipmentManagerComponent>(TEXT("EquipmentManagerComp"));
+	EquipmentManagerComponent->SetIsReplicated(true);
+	EquipmentManagerComponent->OnEquip.AddUObject(this, &ThisClass::HandleEquip);
+	EquipmentManagerComponent->OnUnEquip.AddUObject(this, &ThisClass::HandleUnEquip);
+	
 	SkillTreeManagerComp = CreateDefaultSubobject<USkillTreeManager>(TEXT("SkillTreeManagerComp"));
 	SkillTreeManagerComp->SetIsReplicated(true);
 }
@@ -72,97 +75,31 @@ FRotator APlayerCharacterBase::GetDesiredRotation() const
 	return Super::GetDesiredRotation();
 }
 
-void APlayerCharacterBase::BeginPlay()
+void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
-	// Call the base class  
-	Super::BeginPlay();
-	
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Input
-
-void APlayerCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	// Add Input Mapping Context
-	if (ASoulPlayerController_Game* PC = GetPlayerController())
+	if(InEquipmentType == EEquipmentType::Weapon)
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
-			UEnhancedInputLocalPlayerSubsystem>(PC->GetLocalPlayer()))
+		if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
 		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-
-
-			USoulInputComponent* SoulIC = Cast<USoulInputComponent>(PlayerInputComponent);
-			if (ensureMsgf(
-				SoulIC,
-				TEXT(
-					"Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it."
-				)))
-			{
-				// Add the key mappings that may have been set by the player
-				SoulIC->AddInputMappings(PC->InputConfig, Subsystem);
-
-				// This is where we actually bind and input action to a gameplay tag, which means that Gameplay Ability Blueprints will
-				// be triggered directly by these input actions Triggered events. 
-				TArray<uint32> BindHandles;
-				SoulIC->BindAbilityActions(PC->InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
-				                           &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
-
-				SoulIC->BindNativeAction(PC->InputConfig, SoulGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this,
-				                         &ThisClass::Input_Move, /*bLogIfNotFound=*/ false);
-				SoulIC->BindNativeAction(PC->InputConfig, SoulGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this,
-				                         &ThisClass::Input_Look, /*bLogIfNotFound=*/ false);
-			}
+			DamageCheckComponent->SetCheckByMesh(Weapon->GetWeaponMesh());
 		}
 	}
 }
 
-void APlayerCharacterBase::Input_Move(const FInputActionValue& Value)
+void APlayerCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 {
-	// input is a Vector2D
-	FVector2D MovementVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
+	if(InEquipmentType == EEquipmentType::Weapon)
 	{
-		// find out which way is forward
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-		// get forward vector
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
-		// get right vector 
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-
-		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		DamageCheckComponent->SetCheckByBoxTrace();
 	}
 }
 
-void APlayerCharacterBase::Input_Look(const FInputActionValue& Value)
+void APlayerCharacterBase::BeginPlay()
 {
-	// input is a Vector2D
-	FVector2D LookAxisVector = Value.Get<FVector2D>();
-
-	if (Controller != nullptr)
-	{
-		// add yaw and pitch input to controller
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
-	}
+	// Call the base class  
+	Super::BeginPlay();
 }
 
-void APlayerCharacterBase::Input_AbilityInputTagPressed(FGameplayTag InputTag)
-{
-	AbilitySystemComponent->AbilityInputTagPressed(InputTag);
-}
-
-void APlayerCharacterBase::Input_AbilityInputTagReleased(FGameplayTag InputTag)
-{
-	AbilitySystemComponent->AbilityInputTagReleased(InputTag);
-}
 
 void APlayerCharacterBase::HandleKill(AActor* InKilled)
 {
@@ -193,20 +130,3 @@ void APlayerCharacterBase::FinishDeath()
 	}
 }
 
-void APlayerCharacterBase::HandleLockTargetStateChanged(bool bLock)
-{
-	if (bLock)
-	{
-		if (!AbilitySystemComponent->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
-		{
-			AbilitySystemComponent->AddLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
-		}
-	}
-	else
-	{
-		if (AbilitySystemComponent->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
-		{
-			AbilitySystemComponent->RemoveLooseGameplayTag(SoulGameplayTags::Status_LockTarget);
-		}
-	}
-}

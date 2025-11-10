@@ -4,6 +4,9 @@
 #include "GameFramework/SoulPlayerController.h"
 #include "SoulPlayerController_Game.generated.h"
 
+struct FGameplayTag;
+struct FInputActionValue;
+class UInputMappingContext;
 class UQuickSkillManager;
 class USoulInputConfig;
 enum class ESoulCharacterTeam : uint8;
@@ -19,8 +22,13 @@ class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 public:
 	ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer);
 	
-	USoulAbilitySystemComponent* GetAbilitySystemComponent() const;
 	void HandlePlayerDeath();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputMappingContext* UIMappingContext;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<USoulInputConfig> InputConfig;
@@ -36,6 +44,11 @@ protected:
 	UFUNCTION(Server, Reliable)
 	void InitSoulPlayerState();
 	
+	void Input_Move(const FInputActionValue& Value);
+	void Input_Look(const FInputActionValue& Value);
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+	
 	void ToggleShowInventoryPanel();
 	void ToggleShowSkillTreePanel();
 
@@ -43,8 +56,14 @@ protected:
 	void PressSkill2();
 	void PressSkill3();
 	void PressSkill4();
-	
+
+	void SetInputMappingContext(UInputMappingContext* InputMappingContext);
+	void SetInputModeGame();
+	void SetInputModeUI();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuickSkillManager")
 	TObjectPtr<UQuickSkillManager> QuickSkillManager;
+
+	TWeakObjectPtr<USoulAbilitySystemComponent> ASC;
 };

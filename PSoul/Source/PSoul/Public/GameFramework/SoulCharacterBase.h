@@ -1,5 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,7 +6,6 @@
 #include "SoulCharacterBase.generated.h"
 
 class UMotionWarpingComponent;
-class ULockPosComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
 class UEquipmentManagerComponent;
@@ -41,13 +39,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void NotifyRestarted() override;
-
-	virtual  void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
-	virtual  void HandleUnEquip(EEquipmentType InEquipmentType);
-
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
-
+	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
 	USoulAbilitySystemComponent* AbilitySystemComponent;
@@ -60,16 +54,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AttributeComp")
 	UWidgetComponent* HealthBarComp;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Inventory")
-	TObjectPtr<UInventoryManagerComponent> InventoryManagerComponent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment")
-	TObjectPtr<UEquipmentManagerComponent> EquipmentManagerComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
 	UDamageCheckComponent* DamageCheckComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
-	ULockPosComponent* LockPosComp;
 };

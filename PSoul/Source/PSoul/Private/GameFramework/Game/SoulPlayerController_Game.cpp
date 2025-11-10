@@ -21,7 +21,7 @@ ASoulPlayerController_Game::ASoulPlayerController_Game(const FObjectInitializer&
 void ASoulPlayerController_Game::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
+	
 	USoulInputComponent* SoulIC = Cast<USoulInputComponent>(InputComponent);
 	if (ensureMsgf(
 		SoulIC,
@@ -29,11 +29,27 @@ void ASoulPlayerController_Game::SetupInputComponent()
 			"Unexpected Input Component class! The Gameplay Abilities will not be bound to their inputs. Change the input component to USoulInputComponent or a subclass of it."
 		)))
 	{
+		// This is where we actually bind and input action to a gameplay tag, which means that Gameplay Ability Blueprints will
+		// be triggered directly by these input actions Triggered events. 
+		TArray<uint32> BindHandles;
+		SoulIC->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
+								   &ThisClass::Input_AbilityInputTagReleased, /*out*/ BindHandles);
+
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Move, ETriggerEvent::Triggered, this,
+								 &ThisClass::Input_Move, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_Look, ETriggerEvent::Triggered, this,
+								 &ThisClass::Input_Look, /*bLogIfNotFound=*/ false);
+
+		
+		//背包面板
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenInventoryPanel, ETriggerEvent::Completed, this,
 		                         &ThisClass::ToggleShowInventoryPanel, /*bLogIfNotFound=*/ false);
+
+		//技能树面板
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_OpenSkillTreePanel, ETriggerEvent::Completed, this,
 								 &ThisClass::ToggleShowSkillTreePanel, /*bLogIfNotFound=*/ false);
 
+		//技能快捷面板
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill1, ETriggerEvent::Completed, this,
 								 &ThisClass::PressSkill1, /*bLogIfNotFound=*/ false);
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill2, ETriggerEvent::Completed, this,
@@ -50,7 +66,7 @@ void ASoulPlayerController_Game::PostProcessInput(const float DeltaTime, const b
 {
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 
-	if(USoulAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	if(ASC.IsValid())
 	{
 		ASC->ProcessAbilityInput(DeltaTime, bGamePaused);
 	}
@@ -60,9 +76,7 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 {
 	Super::AcknowledgePossession(P);
 
-	FInputModeGameOnly ModeGameOnly;
-	SetShowMouseCursor(false);
-	SetInputMode(ModeGameOnly);
+	SetInputModeGame();
 	
 	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
 	{
@@ -70,12 +84,17 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 	}
 
 	QuickSkillManager->OnSetPawn(P);
+
+	ASC = P->FindComponentByClass<USoulAbilitySystemComponent>();
 }
 
 void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+	
 	QuickSkillManager->OnSetPawn(InPawn);
+
+	ASC = InPawn->FindComponentByClass<USoulAbilitySystemComponent>();
 }
 
 void ASoulPlayerController_Game::OnUnPossess()
@@ -88,6 +107,58 @@ void ASoulPlayerController_Game::OnUnPossess()
 	
 }
 
+void ASoulPlayerController_Game::Input_Move(const FInputActionValue& Value)
+{
+	// input is a Vector2D
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	if (GetPawn() != nullptr)
+	{
+		// find out which way is forward
+		const FRotator Rotation = GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		// get forward vector
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	
+		// get right vector 
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		// add movement 
+		GetPawn()->AddMovementInput(ForwardDirection, MovementVector.Y);
+		GetPawn()->AddMovementInput(RightDirection, MovementVector.X);
+	}
+}
+
+void ASoulPlayerController_Game::Input_Look(const FInputActionValue& Value)
+{
+	// input is a Vector2D
+	FVector2D LookAxisVector = Value.Get<FVector2D>();
+
+	if (GetPawn() != nullptr)
+	{
+		// add yaw and pitch input to controller
+		GetPawn()->AddControllerYawInput(LookAxisVector.X);
+		GetPawn()->AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void ASoulPlayerController_Game::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if (ASC.IsValid())
+	{
+		ASC->AbilityInputTagPressed(InputTag);
+	}
+}
+
+void ASoulPlayerController_Game::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if (ASC.IsValid())
+	{
+		ASC->AbilityInputTagReleased(InputTag);
+	}
+}
+
 void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 {
 	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
@@ -95,16 +166,12 @@ void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 		if(HUD->IsShowingInventoryPanel())
 		{
 			HUD->SetShowInventoryPanel(false);
-			SetShowMouseCursor(false);
-			SetIgnoreLookInput(false);
-			SetInputMode(FInputModeGameOnly());
+			SetInputModeGame();
 		}
 		else
 		{
 			HUD->SetShowInventoryPanel(true);
-			SetShowMouseCursor(true);
-			SetIgnoreLookInput(true);
-			SetInputMode(FInputModeGameAndUI());
+			SetInputModeUI();
 		}
 	}
 }
@@ -116,16 +183,12 @@ void ASoulPlayerController_Game::ToggleShowSkillTreePanel()
 		if(HUD->IsShowingSkillTreePanel())
 		{
 			HUD->SetShowSkillTreePanel(false);
-			SetShowMouseCursor(false);
-			SetIgnoreLookInput(false);
-			SetInputMode(FInputModeGameOnly());
+			SetInputModeGame();
 		}
 		else
 		{
 			HUD->SetShowSkillTreePanel(true);
-			SetShowMouseCursor(true);
-			SetIgnoreLookInput(true);
-			SetInputMode(FInputModeGameAndUI());
+			SetInputModeUI();
 		}
 	}
 }
@@ -150,19 +213,32 @@ void ASoulPlayerController_Game::PressSkill4()
 	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill4);
 }
 
-void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
+void ASoulPlayerController_Game::SetInputMappingContext(UInputMappingContext* InputMappingContext)
 {
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+		UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->ClearAllMappings();
+		Subsystem->AddMappingContext(InputMappingContext, 0);
+	}
 }
 
-USoulAbilitySystemComponent* ASoulPlayerController_Game::GetAbilitySystemComponent() const
+void ASoulPlayerController_Game::SetInputModeGame()
 {
-	static USoulAbilitySystemComponent* ASC = nullptr;
-	if (!ASC && GetCharacter())
-	{
-		return GetCharacter()->FindComponentByClass<USoulAbilitySystemComponent>();
-	}
-	
-	return ASC;
+	SetShowMouseCursor(false);
+	SetInputMode(FInputModeGameOnly());
+	SetInputMappingContext(DefaultMappingContext);
+}
+
+void ASoulPlayerController_Game::SetInputModeUI()
+{
+	SetShowMouseCursor(true);
+	SetInputMode(FInputModeGameAndUI());
+	SetInputMappingContext(UIMappingContext);
+}
+
+void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
+{
 }
 
 void ASoulPlayerController_Game::HandlePlayerDeath()
