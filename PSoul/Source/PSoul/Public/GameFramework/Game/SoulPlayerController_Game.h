@@ -11,9 +11,18 @@ class UQuickSkillManager;
 class USoulInputConfig;
 enum class ESoulCharacterTeam : uint8;
 class USoulAbilitySystemComponent;
-/**
- * 
- */
+
+
+UENUM(BlueprintType)
+enum class EInputMappingContextMode : uint8
+{
+	Default					UMETA(DisplayName = "Default"),
+	Inventory				UMETA(DisplayName = "Inventory"),
+	SkillTree				UMETA(DisplayName = "SkillTree")
+};
+
+
+
 UCLASS()
 class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 {
@@ -25,10 +34,7 @@ public:
 	void HandlePlayerDeath();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputMappingContext* UIMappingContext;
+	TMap<EInputMappingContextMode, TObjectPtr<UInputMappingContext>> InputMappingContexts;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
 	TObjectPtr<USoulInputConfig> InputConfig;
@@ -57,9 +63,9 @@ protected:
 	void PressSkill3();
 	void PressSkill4();
 
-	void SetInputMappingContext(UInputMappingContext* InputMappingContext);
+	void SetInputMappingContextMode(EInputMappingContextMode InContextMode);
 	void SetInputModeGame();
-	void SetInputModeUI();
+	void SetInputModeUI(EInputMappingContextMode InContextMode);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuickSkillManager")

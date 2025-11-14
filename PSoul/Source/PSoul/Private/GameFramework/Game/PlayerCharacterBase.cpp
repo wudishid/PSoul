@@ -58,23 +58,6 @@ APlayerCharacterBase::APlayerCharacterBase()
 	SkillTreeManagerComp->SetIsReplicated(true);
 }
 
-FRotator APlayerCharacterBase::GetDesiredRotation() const
-{
-	if (HasAuthority())
-	{
-		
-	}
-	else if (IsLocallyControlled())
-	{
-		if (!GetCharacterMovement()->GetLastInputVector().IsZero())
-		{
-			return UKismetMathLibrary::Conv_VectorToRotator(GetCharacterMovement()->GetLastInputVector());
-		}
-	}
-
-	return Super::GetDesiredRotation();
-}
-
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
 	if(InEquipmentType == EEquipmentType::Weapon)
@@ -124,7 +107,7 @@ void APlayerCharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
 
-	if (ASoulPlayerController_Game* PC = GetPlayerController())
+	if (ASoulPlayerController_Game* PC = Cast<ASoulPlayerController_Game>(GetController()))
 	{
 		PC->HandlePlayerDeath();
 	}

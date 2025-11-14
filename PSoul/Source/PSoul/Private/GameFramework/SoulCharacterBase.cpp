@@ -5,11 +5,8 @@
 #include "Components/DamageCheckComponent.h"
 #include "Components/SoulCharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Equipment/EquipmentManagerComponent.h"
-#include "Equipment/Equipment_Weapon.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
-#include "Inventory/InventoryManagerComponent.h"
 #include "UI/Character/StateBar.h"
 
 
@@ -63,11 +60,6 @@ void ASoulCharacterBase::BeginPlay()
 	}
 }
 
-void ASoulCharacterBase::NotifyRestarted()
-{
-	Super::NotifyRestarted();
-}
-
 void ASoulCharacterBase::FinishDeath()
 {
 	
@@ -75,7 +67,7 @@ void ASoulCharacterBase::FinishDeath()
 
 FRotator ASoulCharacterBase::GetDesiredRotation() const
 {
-	return FRotator::ZeroRotator;
+	return GetActorRotation();
 }
 
 void ASoulCharacterBase::HandleDeath()

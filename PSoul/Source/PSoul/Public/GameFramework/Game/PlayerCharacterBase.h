@@ -48,8 +48,6 @@ protected:
 	
 public:
 	APlayerCharacterBase();
-	virtual FRotator GetDesiredRotation() const override;
-	FORCEINLINE ASoulPlayerController_Game* GetPlayerController() { return Cast<ASoulPlayerController_Game>(GetController()); };
 protected:
 	virtual void BeginPlay() override;
 	

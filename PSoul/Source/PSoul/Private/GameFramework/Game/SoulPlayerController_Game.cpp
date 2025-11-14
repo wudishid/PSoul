@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "EnhancedInputSubsystems.h"
+#include "InputMappingContext.h"
 #include "Components/QuickSkillManager.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/GameModeBase.h"
@@ -171,7 +172,7 @@ void ASoulPlayerController_Game::ToggleShowInventoryPanel()
 		else
 		{
 			HUD->SetShowInventoryPanel(true);
-			SetInputModeUI();
+			SetInputModeUI(EInputMappingContextMode::Inventory);
 		}
 	}
 }
@@ -188,7 +189,7 @@ void ASoulPlayerController_Game::ToggleShowSkillTreePanel()
 		else
 		{
 			HUD->SetShowSkillTreePanel(true);
-			SetInputModeUI();
+			SetInputModeUI(EInputMappingContextMode::SkillTree);
 		}
 	}
 }
@@ -213,13 +214,17 @@ void ASoulPlayerController_Game::PressSkill4()
 	QuickSkillManager->PressSkill(SoulGameplayTags::InputTag_QuickSkill4);
 }
 
-void ASoulPlayerController_Game::SetInputMappingContext(UInputMappingContext* InputMappingContext)
+void ASoulPlayerController_Game::SetInputMappingContextMode(EInputMappingContextMode InContextMode)
 {
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
-		UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	UInputMappingContext* Context = *InputMappingContexts.Find(InContextMode);
+	if (ensureMsgf(Context, TEXT("Could not find context, check context is setted..")))
 	{
-		Subsystem->ClearAllMappings();
-		Subsystem->AddMappingContext(InputMappingContext, 0);
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
+		UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			Subsystem->ClearAllMappings();
+			Subsystem->AddMappingContext(Context, 0);
+		}
 	}
 }
 
@@ -227,14 +232,14 @@ void ASoulPlayerController_Game::SetInputModeGame()
 {
 	SetShowMouseCursor(false);
 	SetInputMode(FInputModeGameOnly());
-	SetInputMappingContext(DefaultMappingContext);
+	SetInputMappingContextMode(EInputMappingContextMode::Default);
 }
 
-void ASoulPlayerController_Game::SetInputModeUI()
+void ASoulPlayerController_Game::SetInputModeUI(EInputMappingContextMode InContextMode)
 {
 	SetShowMouseCursor(true);
 	SetInputMode(FInputModeGameAndUI());
-	SetInputMappingContext(UIMappingContext);
+	SetInputMappingContextMode(InContextMode);
 }
 
 void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()

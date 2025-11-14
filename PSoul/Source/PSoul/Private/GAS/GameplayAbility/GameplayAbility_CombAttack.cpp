@@ -4,8 +4,7 @@
 #include "../../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
-#include "GameFramework/Character.h"
-#include "Net/UnrealNetwork.h"
+#include "GameFramework/SoulCharacterBase.h"
 #include "PSoul/SoulGameplayTags.h"
 
 void UGameplayAbility_CombAttack::PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -35,12 +34,13 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	if(CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		//更新角色攻击旋转方向
-		if (ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwningActorFromActorInfo()))
+		if (ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo()))
 		{
 			if (UMotionWarpingComponent* MotionWrapComp = OwnerCharacter->FindComponentByClass<
 				UMotionWarpingComponent>())
 			{
-				FRotator TargetRotation = FRotator(OwnerCharacter->GetActorRotation().Pitch, OwnerCharacter->GetControlRotation().Yaw, OwnerCharacter->GetActorRotation().Roll);
+				FRotator CharacterRotation = OwnerCharacter->GetActorRotation();
+				FRotator TargetRotation = FRotator(CharacterRotation.Pitch, OwnerCharacter->GetDesiredRotation().Yaw, CharacterRotation.Roll);
 				
 				MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
 					TEXT("AttackRotate"), FVector::Zero(),  TargetRotation);

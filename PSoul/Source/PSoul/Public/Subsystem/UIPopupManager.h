@@ -16,7 +16,6 @@ enum class EPopupWidgetLayer : uint8
 };
 
 
-
 USTRUCT()
 struct FPopupWidgetInfo
 {
