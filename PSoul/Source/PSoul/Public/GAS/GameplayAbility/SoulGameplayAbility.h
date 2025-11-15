@@ -10,12 +10,14 @@
 UENUM(BlueprintType)
 enum class ESoulAbilityActivationPolicy : uint8
 {
+	Normal,
+	
 	// Try to activate the ability when the input is triggered.
 	OnInputTriggered,
 
 	// Continually try to activate the ability while the input is active.
 	WhileInputActive,
-
+	
 	// Try to activate the ability when an avatar is assigned.
 	OnSpawn
 };
@@ -30,7 +32,7 @@ public:
 protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "ActivationPolicy")
-	ESoulAbilityActivationPolicy ActivationPolicy = ESoulAbilityActivationPolicy::OnInputTriggered;
+	ESoulAbilityActivationPolicy ActivationPolicy = ESoulAbilityActivationPolicy::Normal;
 
 	
 };

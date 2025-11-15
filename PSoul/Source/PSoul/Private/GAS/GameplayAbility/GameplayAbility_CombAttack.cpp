@@ -51,7 +51,7 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	}
 	else
 	{
-		EndAbility(Handle, ActorInfo, ActivationInfo, true, false);
+		EndAbility(Handle, ActorInfo, ActivationInfo, true, true);
 	}
 }
 
@@ -131,6 +131,7 @@ void UGameplayAbility_CombAttack::HandleAttackCancelled()
 UGameplayAbility_CombAttack::UGameplayAbility_CombAttack()
 	: CurrentCombIndex(0), bComb(false)
 {
+	ActivationPolicy = ESoulAbilityActivationPolicy::OnInputTriggered;
 	bRetriggerInstancedAbility = true;
 }
 

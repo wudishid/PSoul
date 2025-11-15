@@ -15,7 +15,6 @@ enum class EPopupWidgetLayer : uint8
 	SkillTree		UMETA(DisplayName = "技能树面板"),
 };
 
-
 USTRUCT()
 struct FPopupWidgetInfo
 {

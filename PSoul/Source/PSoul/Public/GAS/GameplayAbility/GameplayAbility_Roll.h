@@ -10,17 +10,19 @@ UCLASS()
 class PSOUL_API UGameplayAbility_Roll : public USoulGameplayAbility
 {
 	GENERATED_BODY()
-public:
+protected:
 	virtual void PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData) override;
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Ability_Roll")
-	UAnimMontage* GetRollMontage() const;
+	void PlayMontageAndWaitForEvent();
+
+	UFUNCTION()
+	void HandleMontageEnded();
+
+	UFUNCTION()
+	void HandleAttackCancelled();
 protected:
 	UPROPERTY(EditAnywhere, Category = "Roll")
 	UAnimMontage* RollMontage;
-
-	UPROPERTY(EditAnywhere, Category = "Roll")
-	UAnimMontage* SkipMontage;
-
-	bool HasRollRotation;
+	
 };

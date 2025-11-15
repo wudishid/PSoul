@@ -13,15 +13,6 @@
 void UAdvanceBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	
-	//前景条的背景透明度设为0
-	FProgressBarStyle FrontBarStyle=FrontBar->GetWidgetStyle();
-	FrontBarStyle.BackgroundImage.TintColor=FSlateColor(FColor(0,0,0,0));
-	FrontBar->SetPercent(1);
-	FrontBar->SetFillColorAndOpacity(FrontBarColor);
-	FrontBar->SetWidgetStyle(FrontBarStyle);
-	BackBar->SetPercent(1);
-	BackBar->SetFillColorAndOpacity(BackBarColor);
 }
 
 void UAdvanceBar::NativeConstruct()

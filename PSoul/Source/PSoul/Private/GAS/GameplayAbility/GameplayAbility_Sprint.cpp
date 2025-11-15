@@ -5,6 +5,11 @@
 
 #include "GAS/Attribute/SoulCharacterSet.h"
 
+UGameplayAbility_Sprint::UGameplayAbility_Sprint()
+{
+	ActivationPolicy = ESoulAbilityActivationPolicy::WhileInputActive;
+}
+
 void UGameplayAbility_Sprint::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);

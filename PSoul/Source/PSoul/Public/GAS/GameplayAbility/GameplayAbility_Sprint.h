@@ -13,7 +13,8 @@ UCLASS()
 class PSOUL_API UGameplayAbility_Sprint : public USoulGameplayAbility
 {
 	GENERATED_BODY()
-
+public:
+	UGameplayAbility_Sprint();
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
