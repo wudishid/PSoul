@@ -21,8 +21,6 @@ void AAICharacterBase::BeginPlay()
 void AAICharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
-
-
 	
 	Destroy();
 	if (AICharacterData)

@@ -21,6 +21,5 @@ void USoulDamageEffectExecution::Execute_Implementation(const FGameplayEffectCus
 		float RealDamage = FMath::Max(CauserPhysicalAttack - TargetPhysicalDefence, 0.f);
 		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(USoulCharacterSet::GetDamageAttribute(), EGameplayModOp::Additive, RealDamage));
 	}
-	
 #endif
 }

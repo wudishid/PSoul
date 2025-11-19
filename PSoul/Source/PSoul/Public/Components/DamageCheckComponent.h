@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "DamageCheckComponent.generated.h"
 
+struct FDamageInfo;
 class UGameplayEffect;
 struct FGameplayTag;
 
@@ -29,6 +31,7 @@ public:
 	void SetCheckByBoxTrace();
 	void StartCheck();
 	void EndCheck();
+	void SetDamageInfo(const FDamageInfo& InDamageInfo) { DamageInfo = InDamageInfo; }
 protected:
 	void CheckDamage();
 	void CheckDamageByBoxTrace();
@@ -38,9 +41,10 @@ protected:
 	
 	UFUNCTION(Server, Reliable)
 	void Server_CheckDamge(const TArray<FVector>& InSocketsLocations);
+private:
 protected:
-	UPROPERTY(EditAnywhere, Category = "DamageCheck")
-	TSubclassOf<UGameplayEffect> EffectToApply;
+	UPROPERTY()
+	FDamageInfo DamageInfo;
 	
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	FVector BoxHalfSize = FVector(50, 50, 50);

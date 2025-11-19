@@ -32,9 +32,12 @@ protected:
 	void CreateInventoryPanel();
 
 	void HandleSlotRightMouseButtonDown(IItemOperationInterface* InOperatedSlot, FVector2d InPosition);
+
+	UPROPERTY(EditAnywhere)
+	int32 MaxRow = 8;
 	
 	UPROPERTY(EditAnywhere)
-	int32 MaxColumn = 5;
+	int32 MaxColumn = 8;
 	
 	UPROPERTY(meta = (BindWidget))
 	UUniformGridPanel* UGP_InventoryPanel;

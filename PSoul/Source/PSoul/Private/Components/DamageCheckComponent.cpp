@@ -4,6 +4,7 @@
 #include "GameFramework/SoulCharacterBase.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
@@ -79,8 +80,10 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 {
 	if (ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(GetOwner()))
 	{
-		FVector StartPos = OwnerCharacter->GetActorLocation();
-		FVector EndPos = OwnerCharacter->GetActorLocation() + OwnerCharacter->GetActorForwardVector();
+		FVector OwnerLocation = OwnerCharacter->GetActorLocation();
+		//检测盒子向前偏移
+		FVector StartPos = OwnerLocation + (OwnerCharacter->GetActorForwardVector() * (BoxHalfSize.X / 2));
+		FVector EndPos = StartPos + OwnerCharacter->GetActorForwardVector();
 		TArray<AActor*> ActorsToIgnore{OwnerCharacter};
 		TArray<FHitResult> Hits;
 		UKismetSystemLibrary::BoxTraceMultiForObjects(OwnerCharacter->GetWorld(), StartPos, EndPos, BoxHalfSize,
@@ -89,6 +92,9 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 
 		if (!Hits.IsEmpty())
 		{
+			USoulAbilitySystemComponent* CauserASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
+			if (!CauserASC) return;
+			
 			for (const FHitResult& Hit : Hits)
 			{
 				if (AActor* HitActor = Hit.GetActor())
@@ -97,16 +103,18 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 					{
 						HitActors.AddUnique(HitActor);
 
-						USoulAbilitySystemComponent* CauserASC = OwnerCharacter->GetAbilitySystemComponent();
-						if (!CauserASC) return;
-						
 						USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 							USoulAbilitySystemComponent>();
 						if (!TargetASC) continue;
-						
-						UGameplayEffect* GameplayEffect = EffectToApply.GetDefaultObject();
-						CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
-						
+
+						if (DamageInfo.DamageEffect)
+						{
+							UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
+							UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
+								FindOrAddComponent<UDamageGameplayEffectComponent>();
+							DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
+							CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+						}
 					}
 				}
 			}
@@ -130,7 +138,7 @@ void UDamageCheckComponent::CheckDamageByMesh_Implementation()
 
 void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVector>& InSocketsLocations)
 {
-	TArray<FHitResult> HitResults;
+	TArray<FHitResult> Hits;
 	TArray ActorsToIgnore{CheckMeshComp->GetOwner()};
 	for (int i = 0; i <InSocketsLocations.Num(); i++)
 	{
@@ -139,12 +147,15 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 														  SocketLocation,
 														  MeshCheckRadius, MeshCheckHalfHeight,
 														  TraceObjectType, false, ActorsToIgnore,
-														  DrawDebugTraceType, HitResults, true);
+														  DrawDebugTraceType, Hits, true);
 	}
 
-	if (!HitResults.IsEmpty())
+	if (!Hits.IsEmpty())
 	{
-		for (const FHitResult& Hit : HitResults)
+		USoulAbilitySystemComponent* CauserASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
+		if (!CauserASC) return;
+		
+		for (const FHitResult& Hit : Hits)
 		{
 			if (AActor* HitActor = Hit.GetActor())
 			{
@@ -152,15 +163,18 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 				{
 					HitActors.AddUnique(HitActor);
 
-					ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(GetOwner());
-					USoulAbilitySystemComponent* CauserASC = OwnerCharacter->GetAbilitySystemComponent();
-					if (!CauserASC) return;
-					
 					USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
-						USoulAbilitySystemComponent>();
+							USoulAbilitySystemComponent>();
 					if (!TargetASC) continue;
-					UGameplayEffect* GameplayEffect = EffectToApply.GetDefaultObject();
-					CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+
+					if (DamageInfo.DamageEffect)
+					{
+						UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
+						UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
+							FindOrAddComponent<UDamageGameplayEffectComponent>();
+						DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
+						CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+					}
 				}
 			}
 		}

@@ -12,6 +12,7 @@ void USkillQuickSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	Image_SkillIcon->SetVisibility(ESlateVisibility::Hidden);
 	Image_CD->SetVisibility(ESlateVisibility::Hidden);
 	Text_CD->SetVisibility(ESlateVisibility::Hidden);
 }
@@ -53,12 +54,13 @@ void USkillQuickSlot::OnQuickSkillChanged(FGameplayTag InSkillInputTag)
 		{
 			if (USkillTreeNodeData* NodeData = SkillTreeManager->GetSkillTreeNodeData(SkillID))
 			{
+				Image_SkillIcon->SetVisibility(ESlateVisibility::Visible);
 				Image_SkillIcon->SetBrushFromTexture(NodeData->SkillIcon);
 			}
 		}
 		else
 		{
-			Image_SkillIcon->SetBrushFromTexture(nullptr);
+			Image_SkillIcon->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }

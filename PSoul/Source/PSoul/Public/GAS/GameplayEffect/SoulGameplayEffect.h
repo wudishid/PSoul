@@ -6,6 +6,11 @@
 #include "GameplayEffect.h"
 #include "SoulGameplayEffect.generated.h"
 
+
+
+
+
+
 /**
  * 
  */

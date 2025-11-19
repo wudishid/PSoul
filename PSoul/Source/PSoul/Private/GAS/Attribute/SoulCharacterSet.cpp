@@ -61,12 +61,6 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 		{
 			OnCharacterDeath.Broadcast(Causer);
 		}
-		else
-		{
-			FGameplayEventData Payload;
-			Payload.EventTag = SoulGameplayTags::GameplayEvent_Hit;
-			GetOwningAbilitySystemComponent()->HandleGameplayEvent(Payload.EventTag, &Payload);
-		}
 	}
 	else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())
 	{
