@@ -5,6 +5,7 @@
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
+#include "Misc/SoulGameFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 
@@ -99,6 +100,8 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 			{
 				if (AActor* HitActor = Hit.GetActor())
 				{
+					if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+					
 					if (!HitActors.Contains(HitActor))
 					{
 						HitActors.AddUnique(HitActor);
@@ -159,6 +162,8 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 		{
 			if (AActor* HitActor = Hit.GetActor())
 			{
+				if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+				
 				if (!HitActors.Contains(HitActor))
 				{
 					HitActors.AddUnique(HitActor);

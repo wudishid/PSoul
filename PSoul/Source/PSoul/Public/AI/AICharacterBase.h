@@ -17,7 +17,7 @@ class PSOUL_API AAICharacterBase : public ASoulCharacterBase
 public:
 	// Sets default values for this character's properties
 	AAICharacterBase();
-
+	virtual FRotator GetDesiredRotation() const override;
 protected:
 	UPROPERTY(EditAnywhere, Category = "AICharcterData")
 	TObjectPtr<UAICharacterDataAsset> AICharacterData;

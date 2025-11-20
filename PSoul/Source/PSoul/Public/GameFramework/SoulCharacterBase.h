@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
@@ -16,8 +17,16 @@ class USoulCharacterSet;
 class UCharacterAttributeComponent;
 class USoulAbilitySystemComponent;
 
+UENUM(BlueprintType)
+enum class ECharacterTeam : uint8
+{
+	AI UMETA(DisplayName = "AI"),
+	Player UMETA(DisplayName = "玩家")
+};
+
+
 UCLASS()
-class PSOUL_API ASoulCharacterBase : public ACharacter
+class PSOUL_API ASoulCharacterBase : public ACharacter, public IGenericTeamAgentInterface 
 {
 	GENERATED_BODY()
 
@@ -35,6 +44,9 @@ public:
 	virtual void FinishDeath();
 	
 	virtual FRotator GetDesiredRotation() const;
+
+	virtual FGenericTeamId GetGenericTeamId() const override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -56,4 +68,8 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
 	UDamageCheckComponent* DamageCheckComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Team")
+	ECharacterTeam CharacterTeam;
+	
 };

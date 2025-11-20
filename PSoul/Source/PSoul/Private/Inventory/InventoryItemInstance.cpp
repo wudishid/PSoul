@@ -16,7 +16,8 @@ AInventoryItemInstance::AInventoryItemInstance()
 	
 	ItemMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMeshComp"));
 	ItemMeshComp->SetupAttachment(GetRootComponent());
-
+	
+	
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	BoxComp->SetupAttachment(GetRootComponent());
 	
@@ -28,6 +29,8 @@ AInventoryItemInstance::AInventoryItemInstance()
 void AInventoryItemInstance::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ItemMeshComp->SetRenderCustomDepth(true);
 	
 	if(Util_Inventory::GetItemInfoByName(ItemName, ItemInfo))
 	{

@@ -1,5 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
+
+#include <filesystem>
+
 #include "MotionWarpingComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
@@ -68,6 +71,11 @@ void ASoulCharacterBase::FinishDeath()
 FRotator ASoulCharacterBase::GetDesiredRotation() const
 {
 	return GetActorRotation();
+}
+
+FGenericTeamId ASoulCharacterBase::GetGenericTeamId() const
+{
+	return FGenericTeamId(static_cast<uint8>(CharacterTeam));
 }
 
 void ASoulCharacterBase::HandleDeath()

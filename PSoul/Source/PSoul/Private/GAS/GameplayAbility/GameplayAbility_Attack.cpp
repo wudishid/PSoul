@@ -3,7 +3,9 @@
 
 #include "GAS/GameplayAbility/GameplayAbility_Attack.h"
 
+#include "MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
+#include "GameFramework/SoulCharacterBase.h"
 
 void UGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -13,6 +15,17 @@ void UGameplayAbility_Attack::ActivateAbility(const FGameplayAbilitySpecHandle H
 
 	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
+		ASoulCharacterBase* SoulCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo());
+		if (!SoulCharacter) return;
+		FRotator TargetRotation = SoulCharacter->GetDesiredRotation();
+
+		if (UMotionWarpingComponent* MotionWrapComp = GetOwningActorFromActorInfo()->FindComponentByClass<
+			UMotionWarpingComponent>())
+		{
+			MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
+				TEXT("AttackRotate"), FVector::Zero(), TargetRotation);
+		}
+
 		PlayMontageAndWaitForEvent();
 	}
 	else

@@ -58,6 +58,16 @@ APlayerCharacterBase::APlayerCharacterBase()
 	SkillTreeManagerComp->SetIsReplicated(true);
 }
 
+FRotator APlayerCharacterBase::GetDesiredRotation() const
+{
+	FVector LastInputVector = GetLastMovementInputVector();
+	if (!LastInputVector.IsZero())
+	{
+		return LastInputVector.Rotation();
+	}
+	return Super::GetDesiredRotation();
+}
+
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
 	if(InEquipmentType == EEquipmentType::Weapon)

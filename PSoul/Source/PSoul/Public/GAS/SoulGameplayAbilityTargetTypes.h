@@ -28,10 +28,45 @@ struct FGameplayAbilityTargetData_DamageInfo : public FGameplayAbilityTargetData
 };
 
 template<>
-struct TStructOpsTypeTraits<FGameplayAbilityTargetData_DamageInfo> : public TStructOpsTypeTraitsBase2<FGameplayAbilityTargetData_LocationInfo>
+struct TStructOpsTypeTraits<FGameplayAbilityTargetData_DamageInfo> : public TStructOpsTypeTraitsBase2<FGameplayAbilityTargetData_DamageInfo>
 {
 	enum
 	{
 		WithNetSerializer = true	// For now this is REQUIRED for FGameplayAbilityTargetDataHandle net serialization to work
 	};
 };
+
+
+USTRUCT(BlueprintType)
+struct FGameplayAbilityTargetData_AttackInfo : public FGameplayAbilityTargetData
+{
+	GENERATED_USTRUCT_BODY()
+	
+	UPROPERTY()
+	int32 CombAttackIndex = 0;
+
+	UPROPERTY()
+	FVector InputVector;
+	
+	virtual UScriptStruct* GetScriptStruct() const override
+	{
+		return FGameplayAbilityTargetData_AttackInfo::StaticStruct();
+	}
+
+	virtual FString ToString() const override
+	{
+		return TEXT("FGameplayAbilityTargetData_AttackInfo");
+	}
+	
+	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess);
+};
+
+template<>
+struct TStructOpsTypeTraits<FGameplayAbilityTargetData_AttackInfo> : public TStructOpsTypeTraitsBase2<FGameplayAbilityTargetData_AttackInfo>
+{
+	enum
+	{
+		WithNetSerializer = true	// For now this is REQUIRED for FGameplayAbilityTargetDataHandle net serialization to work
+	};
+};
+

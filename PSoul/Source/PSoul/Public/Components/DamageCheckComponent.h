@@ -41,7 +41,6 @@ protected:
 	
 	UFUNCTION(Server, Reliable)
 	void Server_CheckDamge(const TArray<FVector>& InSocketsLocations);
-private:
 protected:
 	UPROPERTY()
 	FDamageInfo DamageInfo;

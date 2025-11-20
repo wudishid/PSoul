@@ -10,7 +10,7 @@ bool USoulAbilitySystemBlueprintLibrary::GetTargetData_DamageInfoFromTargetData(
 	{
 		for (int32 i = 0; i < TargetData.Data.Num(); i++)
 		{
-			if (FGameplayAbilityTargetData_DamageInfo* TargetData_DamageInfo = (FGameplayAbilityTargetData_DamageInfo*)(TargetData.Data[i].Get()))
+			if (FGameplayAbilityTargetData_DamageInfo* TargetData_DamageInfo = reinterpret_cast<FGameplayAbilityTargetData_DamageInfo*>(TargetData.Data[i].Get()))
 			{
 				OutTargetData_DamageInfo = *TargetData_DamageInfo;
 				return true;

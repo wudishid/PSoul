@@ -5,6 +5,7 @@
 
 #include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySet.h"
+#include "GAS/SoulGameplayAbilityTargetTypes.h"
 #include "GAS/Attribute/SoulPlayerSet.h"
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
 #include "GAS/GameplayAbility/GameplayAbility_Roll.h"
@@ -129,11 +130,14 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 								Ability_CombAttack->bComb = false;
 
 								int32 CombIndex = Ability_CombAttack->CurrentCombIndex + 1;
-								FGameplayAbilityTargetData_LocationInfo* TargetData = new FGameplayAbilityTargetData_LocationInfo();
-								TargetData->TargetLocation.LiteralTransform = FTransform(FVector(CombIndex, 0, 0));
-
+								FGameplayAbilityTargetData_AttackInfo* AttackInfo = new FGameplayAbilityTargetData_AttackInfo();
+								AttackInfo->CombAttackIndex = CombIndex;
+								if (APawn* OwnerPawn = Cast<APawn>(GetAvatarActor()))
+								{
+									AttackInfo->InputVector = OwnerPawn->GetLastMovementInputVector();
+								}
 								FGameplayEventData EventData;
-								EventData.TargetData.Add(TargetData);
+								EventData.TargetData.Add(AttackInfo);
 								InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
 							}
 						}
@@ -144,6 +148,19 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 				}
 				else
 				{
+					if (AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_CombAttack::StaticClass()))
+					{
+						FGameplayAbilityTargetData_AttackInfo* AttackInfo = new FGameplayAbilityTargetData_AttackInfo();
+						if (APawn* OwnerPawn = Cast<APawn>(GetAvatarActor()))
+						{
+							AttackInfo->InputVector = OwnerPawn->GetLastMovementInputVector();
+						}
+						FGameplayEventData EventData;
+						EventData.TargetData.Add(AttackInfo);
+						InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
+						continue;
+					}
+					
 					if(AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_Roll::StaticClass()))
 					{
 						if (ASoulCharacterBase* Character = Cast<ASoulCharacterBase>(AbilityActorInfo->AvatarActor))

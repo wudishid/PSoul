@@ -5,6 +5,7 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/SoulCharacterBase.h"
+#include "GAS/SoulGameplayAbilityTargetTypes.h"
 #include "PSoul/SoulGameplayTags.h"
 
 void UGameplayAbility_CombAttack::PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
@@ -13,15 +14,9 @@ void UGameplayAbility_CombAttack::PreActivate(const FGameplayAbilitySpecHandle H
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 	
 	if (!TriggerEventData) return;
-
-	if (const FGameplayAbilityTargetData_LocationInfo* TargetData_LocationInfo = reinterpret_cast<const FGameplayAbilityTargetData_LocationInfo*>(TriggerEventData->TargetData.Get(0)))
+	if (const FGameplayAbilityTargetData_AttackInfo* AttackInfo = reinterpret_cast<const FGameplayAbilityTargetData_AttackInfo*>(TriggerEventData->TargetData.Get(0)))
 	{
-		FVector TempIndexVector = TargetData_LocationInfo->TargetLocation.LiteralTransform.GetLocation();
-		//用向量的X表示蒙太奇的索引
-		if (!TempIndexVector.IsZero())
-		{
-			CurrentCombIndex = TempIndexVector.X;
-		}
+		CurrentCombIndex = AttackInfo->CombAttackIndex;
 	}
 }
 
@@ -34,19 +29,27 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	if(CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
 		//更新角色攻击旋转方向
-		if (ASoulCharacterBase* OwnerCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo()))
+		if (TriggerEventData)
 		{
-			if (UMotionWarpingComponent* MotionWrapComp = OwnerCharacter->FindComponentByClass<
-				UMotionWarpingComponent>())
+			if (const FGameplayAbilityTargetData_AttackInfo* AttackInfo = reinterpret_cast<const
+				FGameplayAbilityTargetData_AttackInfo*>(TriggerEventData->TargetData.Get(0)))
 			{
-				FRotator CharacterRotation = OwnerCharacter->GetActorRotation();
-				FRotator TargetRotation = FRotator(CharacterRotation.Pitch, OwnerCharacter->GetDesiredRotation().Yaw, CharacterRotation.Roll);
-				
-				MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
-					TEXT("AttackRotate"), FVector::Zero(),  TargetRotation);
+				ASoulCharacterBase* SoulCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo());
+				if (!SoulCharacter) return;
+				FRotator TargetRotation = SoulCharacter->GetDesiredRotation();
+				if (!AttackInfo->InputVector.IsZero())
+				{
+					//GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Red, FString::Printf(TEXT("InputVector: %s"), *AttackInfo->InputVector.ToString()));
+					TargetRotation.Yaw = AttackInfo->InputVector.Rotation().Yaw;
+				}
+				if (UMotionWarpingComponent* MotionWrapComp = GetOwningActorFromActorInfo()->FindComponentByClass<
+					UMotionWarpingComponent>())
+				{
+					MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
+						TEXT("AttackRotate"), FVector::Zero(), TargetRotation);
+				}
 			}
 		}
-		
 		PlayMontageAndWaitForEvent();
 	}
 	else

@@ -2,7 +2,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SoulPlayerController_Game.h"
 #include "GameFramework/SoulCharacterBase.h"
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
@@ -48,6 +47,7 @@ protected:
 	
 public:
 	APlayerCharacterBase();
+	virtual FRotator GetDesiredRotation() const override;
 protected:
 	virtual void BeginPlay() override;
 	

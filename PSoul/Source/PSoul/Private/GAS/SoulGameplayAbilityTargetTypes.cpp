@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GAS/SoulGameplayAbilityTargetTypes.h"
+
+
 
 bool FGameplayAbilityTargetData_DamageInfo::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
@@ -16,4 +16,11 @@ bool FGameplayAbilityTargetData_DamageInfo::NetSerialize(FArchive& Ar, class UPa
 		ReadFixedCompressedFloat<1, 16>(Impulse, Ar);
 		return true;
 	}
+}
+
+bool FGameplayAbilityTargetData_AttackInfo::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+{
+	Ar << CombAttackIndex;
+	bOutSuccess = SerializePackedVector<1, 20>(InputVector, Ar);
+	return bOutSuccess;
 }

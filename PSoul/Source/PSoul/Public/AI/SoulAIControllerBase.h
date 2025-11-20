@@ -14,7 +14,8 @@ class PSOUL_API ASoulAIControllerBase : public AAIController
 public:
 	// Sets default values for this actor's properties
 	ASoulAIControllerBase();
-
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	AActor* GetCurrentAttackTarget() const;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
