@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "PSoul/SoulGameplayTags.h"
 #include "UI/Character/StateBar.h"
 
 
@@ -25,13 +26,13 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	
 	AttributeComponent = CreateDefaultSubobject<UCharacterAttributeComponent>(TEXT("AttributeComponent"));
 	AttributeComponent->SetIsReplicated(true);
-	AttributeComponent->OnCharacterDeath.AddDynamic(this, &ThisClass::HandleDeath);
+	AttributeComponent->OnAttributeChanged.AddDynamic(this, &ThisClass::HandleAttributeChanged);
 	
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarComp->SetupAttachment(GetMesh());
 	
-	DamageCheckComponent = CreateDefaultSubobject<UDamageCheckComponent>(TEXT("DamageCheckComponent"));
-	DamageCheckComponent->SetIsReplicated(true);
+	DamageCheckComp = CreateDefaultSubobject<UDamageCheckComponent>(TEXT("DamageCheckComp"));
+	DamageCheckComp->SetIsReplicated(true);
 	
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
@@ -41,11 +42,12 @@ void ASoulCharacterBase::HandleKill_Implementation(AActor* InKilled)
 	
 }
 
+
 // Called when the game starts or when spawned
 void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
 
@@ -61,11 +63,31 @@ void ASoulCharacterBase::BeginPlay()
 	{
 		HealthBarComp->SetHiddenInGame(true);
 	}
+	
 }
 
-void ASoulCharacterBase::FinishDeath()
+void ASoulCharacterBase::HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue)
 {
+	if (Attribute == USoulCharacterSet::GetHealthAttribute())
+	{
+		if (CurrentValue <= 0)
+		{
+			OnDeath();
+		}
+	}
+}
+
+void ASoulCharacterBase::OnDeath_Implementation()
+{
+	if (HasAuthority())
+	{
+		GetAbilitySystemComponent()->TryActivateAbilitiesByTag(FGameplayTagContainer(SoulGameplayTags::Ability_Action_Died));
+	}
 	
+	if (!HasAuthority() && !IsLocallyControlled())
+	{
+		HealthBarComp->SetHiddenInGame(true);
+	}
 }
 
 FRotator ASoulCharacterBase::GetDesiredRotation() const
@@ -78,13 +100,6 @@ FGenericTeamId ASoulCharacterBase::GetGenericTeamId() const
 	return FGenericTeamId(static_cast<uint8>(CharacterTeam));
 }
 
-void ASoulCharacterBase::HandleDeath()
-{
-	if (!HasAuthority() && !IsLocallyControlled())
-	{
-		HealthBarComp->SetHiddenInGame(true);
-	}
-}
 
 
 

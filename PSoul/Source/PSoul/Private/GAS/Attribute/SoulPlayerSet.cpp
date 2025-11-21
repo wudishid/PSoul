@@ -68,6 +68,12 @@ void USoulPlayerSet::PostGameplayEffectExecute(const struct FGameplayEffectModCa
 	Super::PostGameplayEffectExecute(Data);
 }
 
+void USoulPlayerSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	OnSoulAttributeChanged.Broadcast(GetLevelAttribute(), NewValue, OldValue);
+}
+
 void USoulPlayerSet::OnRep_Level(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulPlayerSet, Level, OldValue);

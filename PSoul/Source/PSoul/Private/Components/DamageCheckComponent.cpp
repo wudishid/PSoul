@@ -5,6 +5,8 @@
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
+#include "Interface/SoulDamageInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Misc/SoulGameFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
@@ -100,12 +102,18 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 			{
 				if (AActor* HitActor = Hit.GetActor())
 				{
-					if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
-					
 					if (!HitActors.Contains(HitActor))
 					{
 						HitActors.AddUnique(HitActor);
 
+						if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(HitActor))
+						{
+							GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Red, FString::Printf(TEXT("DamageActor: %s"), *HitActor->GetName()));
+							DamageInterface->Execute_TakeDamage(HitActor);
+						}
+						
+						if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+						
 						USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 							USoulAbilitySystemComponent>();
 						if (!TargetASC) continue;
@@ -125,21 +133,7 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 	}
 }
 
-void UDamageCheckComponent::CheckDamageByMesh_Implementation()
-{
-	if (CheckMeshComp)
-	{
-		TArray<FName> AllSocketNames = CheckMeshComp->GetAllSocketNames();
-		TArray<FVector>SocketsLocations;
-		for (FName SocketName : AllSocketNames)
-		{
-			SocketsLocations.Add(CheckMeshComp->GetSocketLocation(SocketName));
-		}
-		Server_CheckDamge(SocketsLocations);
-	}
-}
-
-void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVector>& InSocketsLocations)
+void UDamageCheckComponent::Server_CheckDamge_Implementation(const TArray<FVector>& InSocketsLocations)
 {
 	TArray<FHitResult> Hits;
 	TArray ActorsToIgnore{CheckMeshComp->GetOwner()};
@@ -162,12 +156,17 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 		{
 			if (AActor* HitActor = Hit.GetActor())
 			{
-				if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
-				
 				if (!HitActors.Contains(HitActor))
 				{
 					HitActors.AddUnique(HitActor);
+					
+					if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(HitActor))
+					{
+						DamageInterface->Execute_TakeDamage(HitActor);
+					}
 
+					if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+					
 					USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
 							USoulAbilitySystemComponent>();
 					if (!TargetASC) continue;
@@ -185,6 +184,21 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const  TArray<FVect
 		}
 	}
 }
+
+void UDamageCheckComponent::CheckDamageByMesh_Implementation()
+{
+	if (CheckMeshComp)
+	{
+		TArray<FName> AllSocketNames = CheckMeshComp->GetAllSocketNames();
+		TArray<FVector>SocketsLocations;
+		for (FName SocketName : AllSocketNames)
+		{
+			SocketsLocations.Add(CheckMeshComp->GetSocketLocation(SocketName));
+		}
+		Server_CheckDamge(SocketsLocations);
+	}
+}
+
 
 
 

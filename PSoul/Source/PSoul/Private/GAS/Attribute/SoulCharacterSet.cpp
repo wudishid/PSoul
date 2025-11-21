@@ -1,12 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GAS/Attribute/SoulCharacterSet.h"
-
 #include "GameplayEffectExtension.h"
+#include "GameFramework/SoulCharacterBase.h"
 #include "Net/UnrealNetwork.h"
-#include "PSoul/SoulGameplayTags.h"
-#include "PSoul/SoulLog.h"
 
 USoulCharacterSet::USoulCharacterSet()
 :Health(100),
@@ -50,16 +47,19 @@ bool USoulCharacterSet::PreGameplayEffectExecute(struct FGameplayEffectModCallba
 void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-	const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
-	AActor* Causer = EffectContext.GetEffectCauser();
-
+	
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), 0, GetMaxHealth()));
 		SetDamage(0.f);
-		if(GetHealth() <= 0)
+		if (GetHealth() <= 0)
 		{
-			OnCharacterDeath.Broadcast(Causer);
+			const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
+			AActor* Causer = EffectContext.GetEffectCauser();
+			if (ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwningActor()))
+			{
+				CharacterBase->HandleKill(Causer);
+			}
 		}
 	}
 	else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())
@@ -70,6 +70,7 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			OnStaminaEmpty.Broadcast();
 		}
 	}
+	
 }
 
 void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -81,6 +82,7 @@ void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 void USoulCharacterSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	OnSoulAttributeChanged.Broadcast(Attribute, NewValue, OldValue);
 }
 
 void USoulCharacterSet::OnRep_Health(const FGameplayAttributeData& OldValue)

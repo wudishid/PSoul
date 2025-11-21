@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "SoulGameFunctionLibrary.generated.h"
 
+class AInventoryItemInstance;
 /**
  * 
  */
@@ -17,5 +18,7 @@ class PSOUL_API USoulGameFunctionLibrary : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure, Category = "SoulGameFunctionLibrary")
 	static bool IsSameTeam(AActor* InActor1, AActor* InActor2);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "SoulGameFunctionLibrary")
+	static bool SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass);
 };

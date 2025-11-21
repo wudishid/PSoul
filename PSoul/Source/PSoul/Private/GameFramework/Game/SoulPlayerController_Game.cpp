@@ -246,7 +246,7 @@ void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
 {
 }
 
-void ASoulPlayerController_Game::HandlePlayerDeath()
+void ASoulPlayerController_Game::Rebirth()
 {
 	APawn* CurPawn = GetPawn();
 	CurPawn->DetachFromControllerPendingDestroy();

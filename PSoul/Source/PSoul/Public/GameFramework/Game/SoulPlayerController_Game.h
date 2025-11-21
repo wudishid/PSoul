@@ -30,8 +30,9 @@ class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 
 public:
 	ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer);
-	
-	void HandlePlayerDeath();
+
+	UFUNCTION(BlueprintCallable, Category = "SoulPlayerController_Game")
+	void Rebirth();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TMap<EInputMappingContextMode, TObjectPtr<UInputMappingContext>> InputMappingContexts;

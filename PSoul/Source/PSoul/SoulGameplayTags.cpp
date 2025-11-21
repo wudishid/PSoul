@@ -9,6 +9,7 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Hit, "Ability.Action.Hit", "Ability.Action.Hit");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Block, "Ability.Action.Block", "Ability.Action.Block");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Jump, "Ability.Action.Jump", "Ability.Action.Jump");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Died, "Ability.Action.Died", "Ability.Action.Died");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Dash, "Ability.Skill.Dash", "Ability.Skill.Dash");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Skill_Light, "Ability.Skill.Light", "Ability.Skill.Light");

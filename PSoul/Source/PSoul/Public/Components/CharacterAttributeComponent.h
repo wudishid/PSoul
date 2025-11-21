@@ -10,9 +10,7 @@
 class USoulAbilitySystemComponent;
 class USoulCharacterSet;
 
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAttrributeChanged, FGameplayAttribute, GameplayAttribute, float, CurrentValue, float, OldValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDeath);
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UCharacterAttributeComponent : public UActorComponent
@@ -28,29 +26,18 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
-	void HandleCharacterDeath(AActor* InCauser);
 
-	UFUNCTION()
-	void OnRep_bDeath();
-	
 public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttrributeChanged OnAttributeChanged;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnCharacterDeath OnCharacterDeath;
 	
 	void InitWithAbilitySystemComponent(USoulAbilitySystemComponent* InASC);
 	
 	float GetAttributeValue(FGameplayAttribute Attribute) const;
-	
 protected:
 	UPROPERTY()
 	const USoulCharacterSet* CharacterSet;
 
 	UPROPERTY()
 	USoulAbilitySystemComponent* ASC;
-
-	UPROPERTY(ReplicatedUsing = OnRep_bDeath)
-	bool bDeath;
 };

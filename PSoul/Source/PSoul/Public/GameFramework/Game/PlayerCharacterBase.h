@@ -47,17 +47,12 @@ protected:
 	
 public:
 	APlayerCharacterBase();
+	virtual void HandleKill(AActor* InKilled) override;
 	virtual FRotator GetDesiredRotation() const override;
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
 	virtual void HandleUnEquip(EEquipmentType InEquipmentType);
-	
-	virtual void HandleKill(AActor* InKilled) override;
-	virtual void HandleDeath() override;
-	virtual void FinishDeath() override;
-protected:
-	
 };
 

@@ -38,7 +38,7 @@ protected:
 	
 	UFUNCTION(Client, Reliable)
 	void CheckDamageByMesh();
-	
+
 	UFUNCTION(Server, Reliable)
 	void Server_CheckDamge(const TArray<FVector>& InSocketsLocations);
 protected:
@@ -53,9 +53,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "AttackCheck")
 	float MeshCheckRadius = 20.f;
-	
+
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
-	TArray<TEnumAsByte<EObjectTypeQuery> > TraceObjectType;
+	TArray<TEnumAsByte<EObjectTypeQuery>> TraceObjectType
+	{
+		EObjectTypeQuery::ObjectTypeQuery3, EObjectTypeQuery::ObjectTypeQuery6
+	};
 
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugTraceType;

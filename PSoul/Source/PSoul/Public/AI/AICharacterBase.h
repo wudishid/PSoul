@@ -18,11 +18,13 @@ public:
 	// Sets default values for this character's properties
 	AAICharacterBase();
 	virtual FRotator GetDesiredRotation() const override;
+
+	
+	
 protected:
 	UPROPERTY(EditAnywhere, Category = "AICharcterData")
 	TObjectPtr<UAICharacterDataAsset> AICharacterData;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void FinishDeath() override;
 };

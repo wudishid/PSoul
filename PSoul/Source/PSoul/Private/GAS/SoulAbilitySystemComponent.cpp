@@ -43,14 +43,11 @@ void USoulAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AAc
 
 	Super::InitAbilityActorInfo(InOwnerActor, InAvatarActor);
 
-	if (GetOwner()->HasAuthority())
+	if (bNewAvatatActor)
 	{
-		if (bNewAvatatActor)
+		if (AbilitySet)
 		{
-			if (AbilitySet)
-			{
-				AbilitySet->GiveToAbilitySystem(this);
-			}
+			AbilitySet->GiveToAbilitySystem(this);
 		}
 	}
 }

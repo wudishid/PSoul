@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "SoulCharacterBase.generated.h"
 
+struct FGameplayAttribute;
 class UMotionWarpingComponent;
 class AEquipmentInstance;
 enum class EEquipmentType : uint8;
@@ -37,11 +38,8 @@ public:
 	UFUNCTION(Server, Reliable)
 	virtual void HandleKill(AActor* InKilled);
 
-	UFUNCTION()
-	virtual void HandleDeath();
-
-	UFUNCTION(BlueprintCallable)
-	virtual void FinishDeath();
+	UFUNCTION(BlueprintNativeEvent, Category = "SoulCharacterBase")
+	void OnDeath();
 	
 	virtual FRotator GetDesiredRotation() const;
 
@@ -50,9 +48,13 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	UFUNCTION()
+	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
+	
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
-	
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
 	USoulAbilitySystemComponent* AbilitySystemComponent;
@@ -67,7 +69,7 @@ protected:
 	UWidgetComponent* HealthBarComp;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "DamageCheckComp")
-	UDamageCheckComponent* DamageCheckComponent;
+	TObjectPtr<UDamageCheckComponent> DamageCheckComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Team")
 	ECharacterTeam CharacterTeam;

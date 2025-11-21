@@ -74,7 +74,7 @@ void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmen
 	{
 		if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
 		{
-			DamageCheckComponent->SetCheckByMesh(Weapon->GetWeaponMesh());
+			DamageCheckComp->SetCheckByMesh(Weapon->GetWeaponMesh());
 		}
 	}
 }
@@ -83,7 +83,7 @@ void APlayerCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 {
 	if(InEquipmentType == EEquipmentType::Weapon)
 	{
-		DamageCheckComponent->SetCheckByBoxTrace();
+		DamageCheckComp->SetCheckByBoxTrace();
 	}
 }
 
@@ -92,7 +92,6 @@ void APlayerCharacterBase::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 }
-
 
 void APlayerCharacterBase::HandleKill(AActor* InKilled)
 {
@@ -103,23 +102,6 @@ void APlayerCharacterBase::HandleKill(AActor* InKilled)
 		//获取灵魂
 		int32 Soul = KilledAttributeComponent->GetAttributeValue(USoulCharacterSet::GetSoulAttribute());
 		GetAbilitySystemComponent()->ApplyModToAttribute(USoulPlayerSet::GetSoulAttribute(), EGameplayModOp::Additive, Soul);
-	}
-}
-
-void APlayerCharacterBase::HandleDeath()
-{
-	Super::HandleDeath();
-
-	GetCharacterMovement()->StopMovementImmediately();
-}
-
-void APlayerCharacterBase::FinishDeath()
-{
-	Super::FinishDeath();
-
-	if (ASoulPlayerController_Game* PC = Cast<ASoulPlayerController_Game>(GetController()))
-	{
-		PC->HandlePlayerDeath();
 	}
 }
 

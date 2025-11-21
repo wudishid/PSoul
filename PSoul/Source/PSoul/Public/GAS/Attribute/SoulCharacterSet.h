@@ -6,8 +6,6 @@
 #include "SoulAttributeSet.h"
 #include "SoulCharacterSet.generated.h"
 
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSoulCharacterDeath, AActor*/*Causer*/);
 DECLARE_MULTICAST_DELEGATE(FOnStaminaEmpty);
 
 UCLASS(BlueprintType)
@@ -30,8 +28,7 @@ public:
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Soul);
 public:
 	USoulCharacterSet();
-
-	mutable  FOnSoulCharacterDeath OnCharacterDeath;
+	
 	mutable  FOnStaminaEmpty OnStaminaEmpty;
 	
 protected:

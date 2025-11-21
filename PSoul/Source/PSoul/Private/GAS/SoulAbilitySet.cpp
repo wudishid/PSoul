@@ -1,8 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GAS/SoulAbilitySet.h"
-
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
 #include "PSoul/SoulLog.h"
