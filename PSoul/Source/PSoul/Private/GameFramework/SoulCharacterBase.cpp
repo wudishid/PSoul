@@ -10,6 +10,7 @@
 #include "Components/WidgetComponent.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "GAS/Attribute/SoulPlayerSet.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "UI/Character/StateBar.h"
 
@@ -37,9 +38,15 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 }
 
-void ASoulCharacterBase::HandleKill_Implementation(AActor* InKilled)
+void ASoulCharacterBase::HandleKill_Implementation(AActor* InCauser)
 {
-	
+	if (USoulAbilitySystemComponent* CauserASC = InCauser->FindComponentByClass<USoulAbilitySystemComponent>())
+	{
+		if (CauserASC->GetSet<USoulPlayerSet>())
+		{
+			CauserASC->ApplyModToAttribute(USoulPlayerSet::GetSoulAttribute(), EGameplayModOp::Additive, AttributeComponent->GetAttributeValue(USoulCharacterSet::GetSoulAttribute()));
+		}
+	}
 }
 
 
@@ -49,8 +56,10 @@ void ASoulCharacterBase::BeginPlay()
 	Super::BeginPlay();
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	AbilitySystemComponent->GetSet<USoulCharacterSet>()->OnDied.AddUObject(this, &ThisClass::HandleKill);
+	
 	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
-
+	
 	if (!HasAuthority() && !IsLocallyControlled())
 	{
 		HealthBarComp->SetHiddenInGame(false);
@@ -77,7 +86,7 @@ void ASoulCharacterBase::HandleAttributeChanged(FGameplayAttribute Attribute, fl
 	}
 }
 
-void ASoulCharacterBase::OnDeath_Implementation()
+void ASoulCharacterBase::OnDeath()
 {
 	if (HasAuthority())
 	{

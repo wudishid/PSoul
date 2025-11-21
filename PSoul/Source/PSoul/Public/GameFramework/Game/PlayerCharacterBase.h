@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SoulCharacterBase.h"
+#include "Interface/InteractInterface.h"
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
@@ -23,7 +24,7 @@ struct FInputActionValue;
 
 
 UCLASS(config=Game)
-class APlayerCharacterBase : public ASoulCharacterBase
+class APlayerCharacterBase : public ASoulCharacterBase, public IInteractInterface
 {
 	GENERATED_BODY()
 
@@ -47,8 +48,8 @@ protected:
 	
 public:
 	APlayerCharacterBase();
-	virtual void HandleKill(AActor* InKilled) override;
 	virtual FRotator GetDesiredRotation() const override;
+	virtual void PickUpItem(const FInventoryItemInfo& ItemInfo) override;
 protected:
 	virtual void BeginPlay() override;
 	

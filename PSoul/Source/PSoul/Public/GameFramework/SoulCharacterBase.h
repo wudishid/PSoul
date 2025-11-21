@@ -37,9 +37,8 @@ public:
 	
 	UFUNCTION(Server, Reliable)
 	virtual void HandleKill(AActor* InKilled);
-
-	UFUNCTION(BlueprintNativeEvent, Category = "SoulCharacterBase")
-	void OnDeath();
+	
+	virtual void OnDeath();
 	
 	virtual FRotator GetDesiredRotation() const;
 

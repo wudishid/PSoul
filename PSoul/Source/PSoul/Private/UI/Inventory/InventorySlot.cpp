@@ -13,6 +13,7 @@
 #include "Kismet/KismetTextLibrary.h"
 #include "UI/Inventory/ItemInfoWidget.h"
 
+
 void UInventorySlot::UpdateSlot()
 {
 	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();

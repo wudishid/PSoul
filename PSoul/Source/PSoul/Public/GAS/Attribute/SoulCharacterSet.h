@@ -7,6 +7,7 @@
 #include "SoulCharacterSet.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnStaminaEmpty);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDied, AActor*);
 
 UCLASS(BlueprintType)
 class PSOUL_API USoulCharacterSet : public USoulAttributeSet
@@ -29,7 +30,8 @@ public:
 public:
 	USoulCharacterSet();
 	
-	mutable  FOnStaminaEmpty OnStaminaEmpty;
+	mutable FOnStaminaEmpty OnStaminaEmpty;
+	mutable FOnDied OnDied;
 	
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;

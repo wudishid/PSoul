@@ -55,11 +55,7 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 		if (GetHealth() <= 0)
 		{
 			const FGameplayEffectContextHandle& EffectContext = Data.EffectSpec.GetEffectContext();
-			AActor* Causer = EffectContext.GetEffectCauser();
-			if (ASoulCharacterBase* CharacterBase = Cast<ASoulCharacterBase>(GetOwningActor()))
-			{
-				CharacterBase->HandleKill(Causer);
-			}
+			OnDied.Broadcast(EffectContext.GetEffectCauser());
 		}
 	}
 	else if(Data.EvaluatedData.Attribute == GetStaminaAttribute())

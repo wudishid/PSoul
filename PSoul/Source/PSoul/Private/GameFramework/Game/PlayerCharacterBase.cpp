@@ -11,6 +11,7 @@
 #include "Camera/SoulCameraComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
+#include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
@@ -68,6 +69,15 @@ FRotator APlayerCharacterBase::GetDesiredRotation() const
 	return Super::GetDesiredRotation();
 }
 
+void APlayerCharacterBase::PickUpItem(const FInventoryItemInfo& ItemInfo)
+{
+	InventoryManagerComponent->AddItem(ItemInfo);
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		PlayerController->ClientPlaySoundAtLocation(GetDefault<USoul_CommonSetting>()->PickItemSound.LoadSynchronous(), GetActorLocation());
+	}
+}
+
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
 	if(InEquipmentType == EEquipmentType::Weapon)
@@ -91,17 +101,5 @@ void APlayerCharacterBase::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-}
-
-void APlayerCharacterBase::HandleKill(AActor* InKilled)
-{
-	Super::HandleKill(InKilled);
-
-	if (UCharacterAttributeComponent* KilledAttributeComponent = InKilled->FindComponentByClass<UCharacterAttributeComponent>())
-	{
-		//获取灵魂
-		int32 Soul = KilledAttributeComponent->GetAttributeValue(USoulCharacterSet::GetSoulAttribute());
-		GetAbilitySystemComponent()->ApplyModToAttribute(USoulPlayerSet::GetSoulAttribute(), EGameplayModOp::Additive, Soul);
-	}
 }
 

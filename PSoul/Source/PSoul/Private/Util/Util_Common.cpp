@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Util/Util_Common.h"
+#include "Development/Soul_CommonSetting.h"
 #include "Inventory/InventoryItemInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
 {
@@ -44,3 +46,14 @@ bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AIn
 
 	return false;
 }
+
+void Util_Common::PlayOpenPanelSound(UWorld* InWorld)
+{
+	UGameplayStatics::PlaySound2D(InWorld, GetDefault<USoul_CommonSetting>()->OpenPanelSound.LoadSynchronous());
+}
+
+void Util_Common::PlayClosePanelSound(UWorld* InWorld)
+{
+	UGameplayStatics::PlaySound2D(InWorld, GetDefault<USoul_CommonSetting>()->ClosePanelSound.LoadSynchronous());
+}
+

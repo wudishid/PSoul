@@ -2,12 +2,12 @@
 
 
 #include "UI/Equipment/EquipmentSlotWidget.h"
-
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
 #include "Equipment/EquipmentInstance.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
+
 
 
 EItemOpetaionType UEquipmentSlotWidget::GetRulesForOperationType(EItemOpetaionType type)

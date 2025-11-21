@@ -87,9 +87,7 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	void InitEquipmentSlotList();
-	void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* InEquipmentInstance);
-	void HandleUnEquip(EEquipmentType InEquipmentType);
-
+	
 	UFUNCTION()
 	void OnRep_EquipmentSlotList(const FEquipmentSlotList& OldEquipmentSlotList);
 	

@@ -8,6 +8,7 @@
 void USkillPicklQuickSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
 }
 
 FReply USkillPicklQuickSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -55,12 +56,14 @@ void USkillPicklQuickSlot::UpdateSlot()
 		{
 			if (USkillTreeNodeData* NodeData = SkillTreeManager->GetSkillTreeNodeData(QuickSkillData.Value))
 			{
+				Image_SkillIcon->SetVisibility(ESlateVisibility::Visible);
 				Image_SkillIcon->SetBrushFromTexture(NodeData->SkillIcon);
 			}
 		}
 	}
 	else
 	{
+		Image_SkillIcon->SetVisibility(ESlateVisibility::Hidden);
 		Image_SkillIcon->SetBrushFromTexture(nullptr);
 	}
 }

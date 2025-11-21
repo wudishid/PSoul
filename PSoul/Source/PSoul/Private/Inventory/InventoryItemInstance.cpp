@@ -2,8 +2,11 @@
 
 #include "Inventory/InventoryItemInstance.h"
 #include "Components/BoxComponent.h"
+#include "Development/Soul_CommonSetting.h"
 #include "GAS/SoulAbilitySystemComponent.h"
+#include "Interface/InteractInterface.h"
 #include "Inventory/InventoryManagerComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulLog.h"
 #include "Util/Util_Inventory.h"
@@ -63,12 +66,19 @@ void AInventoryItemInstance::OnBoxCompOverlap(UPrimitiveComponent* OverlappedCom
 {
 	if(HasAuthority())
 	{
-		if(UInventoryManagerComponent* InventoryManagerComponent = OtherActor->FindComponentByClass<UInventoryManagerComponent>())
+		if(IInteractInterface* InteractInterface = Cast<IInteractInterface>(OtherActor))
 		{
-			InventoryManagerComponent->AddItem(ItemInfo);
+			InteractInterface->PickUpItem(ItemInfo);
 			Destroy();
 		}
 	}
+}
+
+void AInventoryItemInstance::ClientPlayPickItemSound_Implementation()
+{
+	UGameplayStatics::PlaySoundAtLocation(
+		GetWorld(), GetDefault<USoul_CommonSetting>()->PickItemSound.LoadSynchronous(),
+		GetActorLocation(), FRotator::ZeroRotator);
 }
 
 

@@ -18,8 +18,10 @@ public:
 	// Sets default values for this character's properties
 	AAICharacterBase();
 	virtual FRotator GetDesiredRotation() const override;
-
+	virtual void OnDeath() override;
 	
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category="AICharacterBase")
+	void DropItem();
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "AICharcterData")
