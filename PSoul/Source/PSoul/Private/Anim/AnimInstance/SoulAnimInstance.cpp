@@ -12,7 +12,6 @@ void USoulAnimInstance::NativeBeginPlay()
 	Super::NativeBeginPlay();
 
 	CharacterMovementComponent = TryGetPawnOwner()->FindComponentByClass<UCharacterMovementComponent>();
-	ASC = TryGetPawnOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
 }
 
 void USoulAnimInstance::NativeUpdateAnimation(float DeltaTime)
@@ -31,9 +30,5 @@ void USoulAnimInstance::NativeUpdateAnimation(float DeltaTime)
 	{
 		IsFalling = CharacterMovementComponent->IsFalling();
 	}
-
-	if(ASC)
-	{
-		IsBlocking = ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_Block);
-	}
+	
 }

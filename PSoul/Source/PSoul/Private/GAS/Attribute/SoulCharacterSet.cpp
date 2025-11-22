@@ -12,7 +12,7 @@ Stamina(50),
 MaxStamina(50),
 PhysicalAttack(30),
 PhysicalDefence(0),
-Toughness(0),
+MagicDefence(0),
 Damage(0)
 {
 	
@@ -28,7 +28,6 @@ void USoulCharacterSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, MaxStamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, PhysicalAttack, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, PhysicalDefence, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Toughness, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Damage, COND_None, REPNOTIFY_Always);
 
@@ -66,7 +65,6 @@ void USoulCharacterSet::PostGameplayEffectExecute(const struct FGameplayEffectMo
 			OnStaminaEmpty.Broadcast();
 		}
 	}
-	
 }
 
 void USoulCharacterSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -117,10 +115,10 @@ void USoulCharacterSet::OnRep_PhysicalDefence(const FGameplayAttributeData& OldV
 	OnSoulAttributeChanged.Broadcast(GetPhysicalDefenceAttribute(), GetPhysicalDefence(), OldValue.GetCurrentValue());
 }
 
-void USoulCharacterSet::OnRep_Toughness(const FGameplayAttributeData& OldValue)
+void USoulCharacterSet::OnRep_MagicDefence(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, Toughness, OldValue);
-	OnSoulAttributeChanged.Broadcast(GetToughnessAttribute(), GetToughness(), OldValue.GetCurrentValue());
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, MagicDefence, OldValue);
+	OnSoulAttributeChanged.Broadcast(GetMagicDefenceAttribute(), GetMagicDefence(), OldValue.GetCurrentValue());
 }
 
 void USoulCharacterSet::OnRep_Damage(const FGameplayAttributeData& OldValue)

@@ -10,16 +10,10 @@ void USoulDamageEffectExecution::Execute_Implementation(const FGameplayEffectCus
 #if WITH_SERVER_CODE
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
 
-	if(ExecutionParams.GetTargetAbilitySystemComponent()->HasMatchingGameplayTag(SoulGameplayTags::Status_Block))
-	{
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(USoulCharacterSet::GetDamageAttribute(), EGameplayModOp::Additive, 5));
-	}
-	else
-	{
-		float CauserPhysicalAttack = ExecutionParams.GetSourceAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalAttack();
-		float TargetPhysicalDefence = ExecutionParams.GetTargetAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalDefence();
-		float RealDamage = FMath::Max(CauserPhysicalAttack - TargetPhysicalDefence, 0.f);
-		OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(USoulCharacterSet::GetDamageAttribute(), EGameplayModOp::Additive, RealDamage));
-	}
+	float CauserPhysicalAttack = ExecutionParams.GetSourceAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalAttack();
+	float TargetPhysicalDefence = ExecutionParams.GetTargetAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalDefence();
+	float RealDamage = FMath::Max(CauserPhysicalAttack - TargetPhysicalDefence, 0.f);
+	OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(USoulCharacterSet::GetDamageAttribute(), EGameplayModOp::Additive, RealDamage));
+	
 #endif
 }

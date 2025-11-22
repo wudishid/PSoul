@@ -16,9 +16,10 @@ struct FDamageInfo
 
 	UPROPERTY(EditAnywhere, Category = "DamageInfo")
 	TSubclassOf<USoulGameplayEffect_Damage> DamageEffect;
-
+	
+	//击退敌人的冲量
 	UPROPERTY(EditAnywhere, Category = "DamageInfo")
-	float DamageImpulse;
+	float DamageImpulse = 100.f;
 };
 
 UCLASS()

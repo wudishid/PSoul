@@ -6,7 +6,7 @@ namespace SoulGameplayTags
 {
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Attack, "Ability.Action.Attack", "Ability.Action.Attack");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Hit, "Ability.Action.Hit", "Ability.Action.Hit");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Block, "Ability.Action.Block", "Ability.Action.Block");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Stiff, "Ability.Action.Stiff", "Ability.Action.Stiff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Roll, "Ability.Action.Roll", "Ability.Action.Roll");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Action_Died, "Ability.Action.Died", "Ability.Action.Died");
 
@@ -29,6 +29,7 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill4, "InputTag.QuickSkill4", "InputTag.QuickSkill4");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Hit, "GameplayEvent.Hit", "GameplayEvent.Hit");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Stiff, "GameplayEvent.Stiff", "GameplayEvent.Stiff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_OpenCombWindow, "GameplayEvent.Montage.OpenCombWindow", "GameplayEvent.Montage.OpenCombWindow");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_CloseCombWindow, "GameplayEvent.Montage.CloseCombWindow", "GameplayEvent.Montage.CloseCombWindow");
@@ -36,7 +37,7 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_EquipWeapon, "Status.EquipWeapon", "Status.EquipWeapon");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Run, "Status.Run", "Status.Run");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Hit, "Status.Hit", "Status.Hit");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Block, "Status.Block", "Status.Block");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Stiff, "Status.Stiff", "Status.Stiff");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Status.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Roll, "Status.Roll", "Status.Roll");
 	

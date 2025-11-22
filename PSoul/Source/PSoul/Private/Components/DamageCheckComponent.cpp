@@ -108,7 +108,6 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 
 						if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(HitActor))
 						{
-							GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Red, FString::Printf(TEXT("DamageActor: %s"), *HitActor->GetName()));
 							DamageInterface->Execute_TakeDamage(HitActor);
 						}
 						

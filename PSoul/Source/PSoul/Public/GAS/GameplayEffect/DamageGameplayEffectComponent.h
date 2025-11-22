@@ -18,5 +18,6 @@ public:
 	
 	//伤害冲量
 	UPROPERTY(EditDefaultsOnly, Category = Damage)
-	mutable float Impulse = 100.f;
+	float Impulse = 100.f;
+	
 };

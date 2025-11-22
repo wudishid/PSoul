@@ -5,17 +5,19 @@
 
 bool FGameplayAbilityTargetData_DamageInfo::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
 {
-	if (Ar.IsSaving())
-	{
-		bool success = true;
-		success &= WriteFixedCompressedFloat<1, 16>(Impulse, Ar);
-		return success;
-	}
-	else
-	{
-		ReadFixedCompressedFloat<1, 16>(Impulse, Ar);
-		return true;
-	}
+	// if (Ar.IsSaving())
+	// {
+	// 	bool success = true;
+	// 	success &= WriteFixedCompressedFloat<1, 16>(Impulse, Ar);
+	// 	return success;
+	// }
+	// else
+	// {
+	// 	ReadFixedCompressedFloat<1, 16>(Impulse, Ar);
+	// 	return true;
+	// }
+	Ar << Impulse;
+	return true;
 }
 
 bool FGameplayAbilityTargetData_AttackInfo::NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)

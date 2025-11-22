@@ -22,7 +22,7 @@ public:
 
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalAttack);
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalDefence);
-	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Toughness);
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, MagicDefence);
 	
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Damage);
 
@@ -59,7 +59,7 @@ protected:
 	void OnRep_PhysicalDefence(const FGameplayAttributeData& OldValue);
 
 	UFUNCTION()
-	void OnRep_Toughness(const FGameplayAttributeData& OldValue);
+	void OnRep_MagicDefence(const FGameplayAttributeData& OldValue);
 	
 	UFUNCTION()
 	void OnRep_Damage(const FGameplayAttributeData& OldValue);
@@ -68,6 +68,7 @@ protected:
 	void OnRep_Soul(const FGameplayAttributeData& OldValue);
 	
 	void ClampAttribute(const FGameplayAttribute& Attribute, float NewValue);
+	
 private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
@@ -87,8 +88,8 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDefence, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDefence;
 
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Toughness, Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Toughness;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDefence, Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MagicDefence;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Damage, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;

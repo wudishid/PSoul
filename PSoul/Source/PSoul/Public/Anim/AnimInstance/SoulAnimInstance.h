@@ -31,13 +31,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintreadOnly)
 	bool IsFalling;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintreadOnly)
-	bool IsBlocking;
-
+	
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
-
-	UPROPERTY()
-	TObjectPtr<USoulAbilitySystemComponent> ASC;
 };
