@@ -7,7 +7,7 @@
 #include "GameplayAbilitySpecHandle.h"
 #include "Equipment_Weapon.generated.h"
 
-class UGameplayAbility_CombAttack;
+class USoulGameplayAbility;
 
 UCLASS(Abstract)
 class PSOUL_API AEquipment_Weapon : public AEquipmentInstance
@@ -33,7 +33,7 @@ protected:
 	FName SocketName;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
-	TSubclassOf<UGameplayAbility_CombAttack> CombAttackAbilityToGive;
+	TArray<TSubclassOf<USoulGameplayAbility>> AbilitiesToGive;
 
-	FGameplayAbilitySpecHandle CombAttackAbilitySpecHandle;
+	TArray<FGameplayAbilitySpecHandle> AbilitiesSpecHandle;
 };

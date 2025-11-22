@@ -37,37 +37,6 @@ void USoulCharacterMovementComponent::BeginPlay()
 
 void USoulCharacterMovementComponent::HandleGameplayTagChanged(const FGameplayTag GameplayTag, int32 Count)
 {
-	if (GameplayTag == SoulGameplayTags::Status_Roll)
-	{
-		if (Count > 0)
-		{
-			if(ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
-			{
-				CharacterOwner->bUseControllerRotationYaw = false;
-			}
-		}
-		else
-		{
-			if(ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_LockTarget))
-			{
-				CharacterOwner->bUseControllerRotationYaw = true;
-			}
-		}
-	}
-
-	if (GameplayTag == SoulGameplayTags::Status_LockTarget)
-	{
-		if (Count > 0)
-		{
-			CharacterOwner->bUseControllerRotationYaw = true;
-			bOrientRotationToMovement = false;
-		}
-		else
-		{
-			CharacterOwner->bUseControllerRotationYaw = false;
-			bOrientRotationToMovement = true;
-		}
-	}
 	
 }
 

@@ -28,28 +28,32 @@ void UGameplayAbility_CombAttack::ActivateAbility(const FGameplayAbilitySpecHand
 	
 	if(CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
-		//更新角色攻击旋转方向
+		ASoulCharacterBase* SoulCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo());
+		if (!SoulCharacter) return;
+		FRotator TargetRotation = SoulCharacter->GetDesiredRotation();
+		
 		if (TriggerEventData)
 		{
 			if (const FGameplayAbilityTargetData_AttackInfo* AttackInfo = reinterpret_cast<const
 				FGameplayAbilityTargetData_AttackInfo*>(TriggerEventData->TargetData.Get(0)))
 			{
-				ASoulCharacterBase* SoulCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo());
-				if (!SoulCharacter) return;
-				FRotator TargetRotation = SoulCharacter->GetDesiredRotation();
+				
 				if (!AttackInfo->InputVector.IsZero())
 				{
 					//GEngine->AddOnScreenDebugMessage(-1, 8.f, FColor::Red, FString::Printf(TEXT("InputVector: %s"), *AttackInfo->InputVector.ToString()));
 					TargetRotation.Yaw = AttackInfo->InputVector.Rotation().Yaw;
 				}
-				if (UMotionWarpingComponent* MotionWrapComp = GetOwningActorFromActorInfo()->FindComponentByClass<
-					UMotionWarpingComponent>())
-				{
-					MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
-						TEXT("AttackRotate"), FVector::Zero(), TargetRotation);
-				}
 			}
 		}
+
+		//更新角色攻击旋转方向
+		if (UMotionWarpingComponent* MotionWrapComp = GetOwningActorFromActorInfo()->FindComponentByClass<
+					UMotionWarpingComponent>())
+		{
+			MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
+				TEXT("AttackRotate"), FVector::Zero(), TargetRotation);
+		}
+		
 		PlayMontageAndWaitForEvent();
 	}
 	else

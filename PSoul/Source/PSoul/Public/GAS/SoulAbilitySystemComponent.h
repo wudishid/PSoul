@@ -29,11 +29,12 @@ public:
 	UFUNCTION(Server, Reliable)
 	void Server_AddAttributePoint(FGameplayAttribute InAttribute);
 	
+	void ConsumeInputBuffer();
 protected:
-	// Called when the game starts
-	
 	virtual void BeginPlay() override;
 	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
+
+private:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "AbilitySet")
 	USoulAbilitySet* AbilitySet;
@@ -47,5 +48,7 @@ protected:
 	// Handles to abilities that have their input held.
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 
+	FGameplayTagContainer LastInputBufferAbilityTags;
 public:
 };
+

@@ -10,6 +10,9 @@ UCLASS()
 class PSOUL_API UGameplayAbility_Roll : public USoulGameplayAbility
 {
 	GENERATED_BODY()
+public:
+	UGameplayAbility_Roll();
+	
 protected:
 	virtual void PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData) override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
@@ -23,6 +26,6 @@ protected:
 	void HandleAttackCancelled();
 protected:
 	UPROPERTY(EditAnywhere, Category = "Roll")
-	UAnimMontage* RollMontage;
+	TObjectPtr<UAnimMontage> RollMontage;
 	
 };

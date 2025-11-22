@@ -61,11 +61,6 @@ APlayerCharacterBase::APlayerCharacterBase()
 
 FRotator APlayerCharacterBase::GetDesiredRotation() const
 {
-	FVector LastInputVector = GetLastMovementInputVector();
-	if (!LastInputVector.IsZero())
-	{
-		return LastInputVector.Rotation();
-	}
 	return Super::GetDesiredRotation();
 }
 

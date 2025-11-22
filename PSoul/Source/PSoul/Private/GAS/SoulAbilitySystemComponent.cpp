@@ -1,21 +1,25 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "GAS/SoulAbilitySystemComponent.h"
-
-#include "GameFramework/SoulCharacterBase.h"
 #include "GAS/SoulAbilitySet.h"
 #include "GAS/SoulGameplayAbilityTargetTypes.h"
 #include "GAS/Attribute/SoulPlayerSet.h"
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
-#include "GAS/GameplayAbility/GameplayAbility_Roll.h"
 #include "GAS/GameplayAbility/SoulGameplayAbility.h"
-#include "Kismet/KismetSystemLibrary.h"
+#include "PSoul/SoulGameplayTags.h"
 
 
 // Sets default values for this component's properties
 USoulAbilitySystemComponent::USoulAbilitySystemComponent()
 {
+}
+
+void USoulAbilitySystemComponent::ConsumeInputBuffer()
+{
+	if (LastInputBufferAbilityTags.IsValid())
+	{
+		TryActivateAbilitiesByTag(LastInputBufferAbilityTags);
+		LastInputBufferAbilityTags.Reset();
+	}
 }
 
 // Called when the game starts
@@ -87,6 +91,11 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 	static TArray<FGameplayAbilitySpecHandle> AbilitiesToActivate;
 	AbilitiesToActivate.Reset();
 	
+	if (HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("InputBuffer"))))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, DeltaTime, FColor::Red, TEXT("has buffer"));
+	}
+	
 	//
 	// Process all abilities that activate when the input is held.
 	//
@@ -140,12 +149,29 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 						}
 						continue;
 					}
+					
 					// Ability is active so pass along the input event.
 					AbilitySpecInputPressed(*AbilitySpec);
 				}
 				else
 				{
-					if (AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_CombAttack::StaticClass()))
+					//输入缓冲
+					if (HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("InputBuffer"))))
+
+					{
+						if (UGameplayAbility* AnimatingAbility = GetAnimatingAbility())
+						{
+							if (AnimatingAbility->IsBlockingOtherAbilities())
+							{
+								LastInputBufferAbilityTags = AbilitySpec->Ability->AbilityTags;
+							}
+						}
+					}
+
+
+					if (AbilitySpec->Ability->AbilityTags.HasTag(SoulGameplayTags::Ability_Action_Attack) ||
+						AbilitySpec->Ability->AbilityTags.HasTag(SoulGameplayTags::Ability_Action_Roll)
+						)
 					{
 						FGameplayAbilityTargetData_AttackInfo* AttackInfo = new FGameplayAbilityTargetData_AttackInfo();
 						if (APawn* OwnerPawn = Cast<APawn>(GetAvatarActor()))
@@ -156,20 +182,6 @@ void USoulAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bGam
 						EventData.TargetData.Add(AttackInfo);
 						InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
 						continue;
-					}
-					
-					if(AbilitySpec->Ability.GetClass()->IsChildOf(UGameplayAbility_Roll::StaticClass()))
-					{
-						if (ASoulCharacterBase* Character = Cast<ASoulCharacterBase>(AbilityActorInfo->AvatarActor))
-						{
-							FGameplayAbilityTargetData_LocationInfo* TargetData = new FGameplayAbilityTargetData_LocationInfo();
-							TargetData->TargetLocation.LiteralTransform = FTransform(FRotator(Character->GetDesiredRotation()));
-
-							FGameplayEventData EventData;
-							EventData.TargetData.Add(TargetData);
-							InternalTryActivateAbility(AbilitySpec->Handle, FPredictionKey(), nullptr, nullptr, &EventData);
-							continue;
-						}
 					}
 					
 					const USoulGameplayAbility* SoulAbilityCDO = Cast<USoulGameplayAbility>(AbilitySpec->Ability);

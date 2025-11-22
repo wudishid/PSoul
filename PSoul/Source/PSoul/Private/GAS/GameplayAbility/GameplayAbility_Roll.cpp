@@ -3,25 +3,18 @@
 #include "MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "GameFramework/SoulCharacterBase.h"
+#include "GAS/SoulGameplayAbilityTargetTypes.h"
 
+
+UGameplayAbility_Roll::UGameplayAbility_Roll()
+{
+	ActivationPolicy = ESoulAbilityActivationPolicy::OnInputTriggered;
+}
 
 void UGameplayAbility_Roll::PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                         FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
 {
 	Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
-
-	if (!TriggerEventData) return;
-
-	if (const FGameplayAbilityTargetData_LocationInfo* TargetData_LocationInfo = reinterpret_cast<const FGameplayAbilityTargetData_LocationInfo*>(TriggerEventData->TargetData.Get(0)))
-	{
-		FRotator RollRotation = TargetData_LocationInfo->TargetLocation.LiteralTransform.Rotator();
-		
-		//更新motionWarping组件
-		if (UMotionWarpingComponent* MontionWarpingComponent = GetOwningActorFromActorInfo()->FindComponentByClass<UMotionWarpingComponent>())
-		{
-			MontionWarpingComponent->AddOrUpdateWarpTargetFromLocationAndRotation("RollRotate", FVector::Zero(), RollRotation);
-		}
-	}
 }
 
 void UGameplayAbility_Roll::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -32,6 +25,31 @@ void UGameplayAbility_Roll::ActivateAbility(const FGameplayAbilitySpecHandle Han
 
 	if (CommitAbility(Handle, ActorInfo, ActivationInfo))
 	{
+		ASoulCharacterBase* SoulCharacter = Cast<ASoulCharacterBase>(GetOwningActorFromActorInfo());
+		if (!SoulCharacter) return;
+		FRotator TargetRotation = SoulCharacter->GetDesiredRotation();
+		
+		if (TriggerEventData)
+		{
+			if (const FGameplayAbilityTargetData_AttackInfo* AttackInfo = reinterpret_cast<const
+				FGameplayAbilityTargetData_AttackInfo*>(TriggerEventData->TargetData.Get(0)))
+			{
+				
+				if (!AttackInfo->InputVector.IsZero())
+				{
+					TargetRotation.Yaw = AttackInfo->InputVector.Rotation().Yaw;
+				}
+			}
+		}
+
+		//更新角色攻击旋转方向
+		if (UMotionWarpingComponent* MotionWrapComp = GetOwningActorFromActorInfo()->FindComponentByClass<
+					UMotionWarpingComponent>())
+		{
+			MotionWrapComp->AddOrUpdateWarpTargetFromLocationAndRotation(
+				TEXT("RollRotate"), FVector::Zero(), TargetRotation);
+		}
+		
 		PlayMontageAndWaitForEvent();
 	}
 	else
@@ -53,6 +71,10 @@ void UGameplayAbility_Roll::PlayMontageAndWaitForEvent()
 
 		Task->ReadyForActivation();
 	}
+
+	
+
+	
 }
 
 void UGameplayAbility_Roll::HandleMontageEnded()

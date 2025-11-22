@@ -29,15 +29,27 @@ void AEquipment_Weapon::Equip()
 		GetRootComponent()->AttachToComponent(SkeMeshComp, FAttachmentTransformRules::SnapToTargetIncludingScale, SocketName);
 	}
 
-	FGameplayAbilitySpec Spec(CombAttackAbilityToGive);
-	Spec.DynamicAbilityTags.AddTag(SoulGameplayTags::InputTag_Attack);
-	CombAttackAbilitySpecHandle = ASC->GiveAbility(Spec);
+	for (auto& Ability : AbilitiesToGive)
+	{
+		FGameplayAbilitySpec Spec(Ability);
+		if (Ability->GetDefaultObject<USoulGameplayAbility>()->GetActivationPolicy() == ESoulAbilityActivationPolicy::OnInputTriggered)
+		{
+			Spec.DynamicAbilityTags.AddTag(SoulGameplayTags::InputTag_Attack);
+		}
+		AbilitiesSpecHandle.Add(ASC->GiveAbility(Spec));
+	}
+	
 }
 
 void AEquipment_Weapon::UnEquip()
 {
 	Super::UnEquip();
-	ASC->ClearAbility(CombAttackAbilitySpecHandle);
+
+	for (auto& AbilityHandle : AbilitiesSpecHandle)
+	{
+		ASC->ClearAbility(AbilityHandle);
+	}
+	
 	Destroy();
 }
 
