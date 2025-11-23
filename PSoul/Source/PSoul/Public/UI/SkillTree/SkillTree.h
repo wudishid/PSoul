@@ -29,14 +29,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	USkillTreeData* PrewSkillTreeData;
 
-	USkillTreeData* SkillTreeData;
-	
-	TObjectPtr<USkillTreeManager> SkillTreeManagerComp = nullptr;
+	UPROPERTY()
+	USkillTreeData* SkillTreeData = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<USkillTreeManager> SkillTreeManagerComp;
 public:
 	void InitSkillTree(USkillTreeData* InSkillTreeData);
 private:
 	void BuildSkillTree();
-	void UpdateSkillTree();
 	USkillTreeNode* CreateSkillTreeNode(FName InSkillID, FVector2D InNodePosition = FVector2D::Zero());
 	USkillTreeNodeLine* CreateSkillTreeNodeLine(FVector2D InNodePosition = FVector2D::Zero());
 	void CreateChildNodes(USkillTreeNode* Parent);
@@ -44,5 +45,6 @@ private:
 	void CreateTwoChildNode(USkillTreeNode* Parent, FName ChildNode1SkillID, FName ChildNode2SkillID, USkillTreeNode*& OutChildNode1, USkillTreeNode*& OutChildNode2);
 	void CreateThreeChildNode(USkillTreeNode* Parent, FName ChildNode1SkillID, FName ChildNode2SkillID, FName ChildNode3SkillID, USkillTreeNode*& OutChildNode1, USkillTreeNode*& OutChildNode2, USkillTreeNode*& OutChildNode3);
 	
+	UPROPERTY()
 	TArray<UUserWidget*> AllWidgets;
 };

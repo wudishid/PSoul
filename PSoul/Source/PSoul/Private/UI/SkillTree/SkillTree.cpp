@@ -80,7 +80,7 @@ void USkillTree::CreateChildNodes(USkillTreeNode* Parent)
 {
 	if (!Parent) return;
 	
-	if (FSkillTreeNodes* TreeNodes = SkillTreeData->SkillNodeDatas.Find(Parent->GetSkillID()))
+	if (FSkillTreeNodes* TreeNodes = SkillTreeData->GetSkillTreeNodesBySkillID(Parent->GetSkillID()))
 	{
 		if (TreeNodes->SkillTreeNodes.Num() == 1)
 		{

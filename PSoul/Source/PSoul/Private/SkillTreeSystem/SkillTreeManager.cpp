@@ -5,7 +5,6 @@
 #include "Net/UnrealNetwork.h"
 #include "SkillTreeSystem/SkillTreeData.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
-#include "Util/Util_SkillTree.h"
 #include "SkillTreeSystem/SoulSkillTreeAbility.h"
 
 void USkillTreeManager::BeginPlay()
@@ -74,7 +73,7 @@ bool USkillTreeManager::CanSkillRelease(FName InSkillID) const
 {
 	if (USkillTreeNodeData* SkillTreeNodeData = GetSkillTreeNodeData(InSkillID))
 	{
-		return SkillTreeNodeData->SkillType == ESkillType::ReleaseType;
+		return SkillTreeNodeData->SkillType == ESkillType::Active;
 	}
 	
 	return false;
@@ -109,7 +108,7 @@ void USkillTreeManager::LearnSkill(FName InSkillID)
 	//解锁该技能的后置技能
 	for (auto& SkillTreeData : SkillTreeDatas)
 	{
-		TArray<USkillTreeNodeData*> UnlockedSkillNodeDatas = Util_SkillTree::GetSkillUnlockedSkillNodeDatas(SkillTreeData, InSkillID);
+		TArray<USkillTreeNodeData*> UnlockedSkillNodeDatas = SkillTreeData->GetSkillTreeNodesBySkillID(InSkillID)->SkillTreeNodes;
 		if (UnlockedSkillNodeDatas.Num() > 0)
 		{
 			for (auto& UnlockedSkillNodeData : UnlockedSkillNodeDatas)

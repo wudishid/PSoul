@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "SkillTreeNode.generated.h"
 
+class UWidgetSwitcher;
 class USkillTreeManager;
 class UBorder;
 class UImage;
@@ -50,7 +51,11 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UBorder* Border_Lock;
 
-	TObjectPtr<USkillTreeManager> SkillTreeManagerComp = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UWidgetSwitcher* WS_SkillTypeText;
+
+	UPROPERTY()
+	TObjectPtr<USkillTreeManager> SkillTreeManagerComp;
 	
 	FName SkillID;
 

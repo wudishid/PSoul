@@ -13,8 +13,9 @@ class USoulSkillTreeAbility;
 UENUM(BlueprintType)
 enum class ESkillType : uint8
 {
-	GainType				UMETA(DisplayName = "增益型"), 
-	ReleaseType				UMETA(DisplayName = "释放型")
+	Talent = 0					UMETA(DisplayName = "天赋型"),
+	Active 						UMETA(DisplayName = "主动型"),
+	Passive						UMETA(DisplayName = "被动型")
 };
 
 
