@@ -108,15 +108,17 @@ void USkillTreeManager::LearnSkill(FName InSkillID)
 	//解锁该技能的后置技能
 	for (auto& SkillTreeData : SkillTreeDatas)
 	{
-		TArray<USkillTreeNodeData*> UnlockedSkillNodeDatas = SkillTreeData->GetSkillTreeNodesBySkillID(InSkillID)->SkillTreeNodes;
-		if (UnlockedSkillNodeDatas.Num() > 0)
+		if (FSkillTreeNodes* SkillTreeNodes = SkillTreeData->GetSkillTreeNodesBySkillID(InSkillID))
 		{
-			for (auto& UnlockedSkillNodeData : UnlockedSkillNodeDatas)
+			if (!SkillTreeNodes->SkillTreeNodes.IsEmpty())
 			{
-				UnlockedSkills.AddUnique(UnlockedSkillNodeData->SkillID);
+				for (auto& UnlockedSkillNodeData : SkillTreeNodes->SkillTreeNodes)
+				{
+					UnlockedSkills.AddUnique(UnlockedSkillNodeData->SkillID);
+				}
+			
+				OnSkillUnlocked.Broadcast(UnlockedSkills);
 			}
-
-			OnSkillUnlocked.Broadcast(UnlockedSkills);
 		}
 	}
 }

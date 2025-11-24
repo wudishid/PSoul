@@ -15,6 +15,9 @@ struct FSkillTreeNodes
 
 	UPROPERTY(EditDefaultsOnly, Category = "SkillTreeNodes")
 	TArray<USkillTreeNodeData*> SkillTreeNodes;
+
+	
+	
 };
 
 

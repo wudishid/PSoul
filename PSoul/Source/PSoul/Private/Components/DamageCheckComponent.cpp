@@ -15,7 +15,7 @@
 // Sets default values for this component's properties
 UDamageCheckComponent::UDamageCheckComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 // Called when the game starts
@@ -24,23 +24,10 @@ void UDamageCheckComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void UDamageCheckComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if(bCanCheck)
-	{
-		CheckDamage();
-	}
-}
 
 void UDamageCheckComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UDamageCheckComponent, CheckMeshComp);
-	DOREPLIFETIME(UDamageCheckComponent, bCheckByMeshComp);
 }
 
 void UDamageCheckComponent::SetCheckByMesh(UPrimitiveComponent* InMeshComp)
@@ -55,27 +42,27 @@ void UDamageCheckComponent::SetCheckByBoxTrace()
 	bCheckByMeshComp = false;
 }
 
-void UDamageCheckComponent::StartCheck()
+void UDamageCheckComponent::ResetCheck()
 {
-	bCanCheck = true;
-}
-
-void UDamageCheckComponent::EndCheck()
-{
-	bCanCheck = false;
-	LastSocketsLocation.Empty();
 	HitActors.Empty();
 }
 
-void UDamageCheckComponent::CheckDamage()
+void UDamageCheckComponent::CheckDamage(bool InForceUseBoxTrace)
 {
-	if(bCheckByMeshComp)
+	if (InForceUseBoxTrace)
 	{
-		CheckDamageByMesh();
+		CheckDamageByBoxTrace();
 	}
 	else
 	{
-		CheckDamageByBoxTrace();
+		if(bCheckByMeshComp)
+		{
+			CheckDamageByMesh();
+		}
+		else
+		{
+			CheckDamageByBoxTrace();
+		}
 	}
 }
 
@@ -85,7 +72,7 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 	{
 		FVector OwnerLocation = OwnerCharacter->GetActorLocation();
 		//检测盒子向前偏移
-		FVector StartPos = OwnerLocation + (OwnerCharacter->GetActorForwardVector() * (BoxHalfSize.X / 2));
+		FVector StartPos = OwnerLocation + (OwnerCharacter->GetActorForwardVector() * (BoxHalfSize.X * 0.7f));
 		FVector EndPos = StartPos + OwnerCharacter->GetActorForwardVector();
 		TArray<AActor*> ActorsToIgnore{OwnerCharacter};
 		TArray<FHitResult> Hits;

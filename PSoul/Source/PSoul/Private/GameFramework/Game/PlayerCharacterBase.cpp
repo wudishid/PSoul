@@ -11,6 +11,7 @@
 #include "Camera/SoulCameraComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
@@ -38,15 +39,14 @@ APlayerCharacterBase::APlayerCharacterBase()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
+	CameraBoom->TargetArmLength = 800.0f; // The camera follows at this distance behind the character
+	CameraBoom->bUsePawnControlRotation = false;
+	
 	// Create a follow camera
 	Camera = CreateDefaultSubobject<USoulCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	Camera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-
-
+	Camera->bUsePawnControlRotation = false;
+	
 	InventoryManagerComponent = CreateDefaultSubobject<UInventoryManagerComponent>(TEXT("InventoryManagerComp"));
 	InventoryManagerComponent->SetIsReplicated(true);
 
@@ -57,6 +57,14 @@ APlayerCharacterBase::APlayerCharacterBase()
 	
 	SkillTreeManagerComp = CreateDefaultSubobject<USkillTreeManager>(TEXT("SkillTreeManagerComp"));
 	SkillTreeManagerComp->SetIsReplicated(true);
+	
+	SkillDirectionSceneComp = CreateDefaultSubobject<USceneComponent>(TEXT("SkillDirectionSceneComp"));
+	SkillDirectionSceneComp->SetIsReplicated(true);
+	SkillDirectionSceneComp->SetupAttachment(RootComponent);
+	
+	SkillDirectionWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("SkillDirectionWidget"));
+	SkillDirectionWidgetComp->SetupAttachment(SkillDirectionSceneComp);
+	SkillDirectionWidgetComp->SetHiddenInGame(true);
 }
 
 FRotator APlayerCharacterBase::GetDesiredRotation() const
@@ -71,6 +79,30 @@ void APlayerCharacterBase::PickUpItem(const FInventoryItemInfo& ItemInfo)
 	{
 		PlayerController->ClientPlaySoundAtLocation(GetDefault<USoul_CommonSetting>()->PickItemSound.LoadSynchronous(), GetActorLocation());
 	}
+}
+
+void APlayerCharacterBase::SetEnableDirectionalSkillControl(bool InEnable)
+{
+	bEnableDirectionalSkillControl = InEnable;
+	SkillDirectionSceneComp->SetHiddenInGame(!bEnableDirectionalSkillControl, true);
+	if (InEnable)
+	{
+		GetController()->SetControlRotation(GetActorRotation());
+	}
+}
+
+void APlayerCharacterBase::ApplyDirectionalSkillControl_Implementation()
+{
+	SetActorRotation(FRotator(GetActorRotation().Pitch, GetControlRotation().Yaw, GetActorRotation().Roll));
+}
+
+void APlayerCharacterBase::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	//玩家生成不同位置时保持摄像机臂的相对旋转
+	CameraBoom->SetRelativeRotation(FRotator(CameraBoom->GetRelativeRotation().Pitch, Transform.Rotator().Yaw,
+											 CameraBoom->GetRelativeRotation().Roll));
 }
 
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
@@ -92,9 +124,30 @@ void APlayerCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 	}
 }
 
+void APlayerCharacterBase::UpdateDirectionalSkillControl()
+{
+	if (IsLocallyControlled())
+	{
+		if (bEnableDirectionalSkillControl)
+		{
+			FRotator TargetRotation = SkillDirectionSceneComp->GetComponentRotation();
+			TargetRotation.Yaw = GetControlRotation().Yaw;
+			SkillDirectionSceneComp->SetWorldRotation(TargetRotation);
+		}
+	}
+}
+
 void APlayerCharacterBase::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	SetEnableDirectionalSkillControl(false);
+}
+
+void APlayerCharacterBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	UpdateDirectionalSkillControl();
 }
 

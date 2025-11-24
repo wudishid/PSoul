@@ -19,6 +19,16 @@ enum class ESkillType : uint8
 };
 
 
+UENUM(BlueprintType)
+enum class ESkillReleaseType : uint8
+{
+	//按下就释放
+	Normal = 0								UMETA(DisplayName = "普通"),
+
+	//按下后生成方向图标，松开释放
+	DirectionRelease 						UMETA(DisplayName = "带方向的松开"),
+};
+
 UCLASS()
 class PSOUL_API USkillTreeNodeData : public UPrimaryDataAsset
 {
@@ -41,6 +51,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	ESkillType SkillType;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
+	ESkillReleaseType SkillReleaseType;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "SkillTreeNodeData")
 	TSubclassOf<USoulSkillTreeAbility> SkillClass;

@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/SoulCharacterBase.h"
 #include "Interface/InteractInterface.h"
+#include "Interface/SkillReleaseControlInterface.h"
 #include "Logging/LogMacros.h"
 #include "PlayerCharacterBase.generated.h"
 
@@ -24,7 +25,7 @@ struct FInputActionValue;
 
 
 UCLASS(config=Game)
-class APlayerCharacterBase : public ASoulCharacterBase, public IInteractInterface
+class APlayerCharacterBase : public ASoulCharacterBase, public IInteractInterface, public ISkillReleaseControlInterface
 {
 	GENERATED_BODY()
 
@@ -43,17 +44,32 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipment")
 	TObjectPtr<UEquipmentManagerComponent> EquipmentManagerComponent;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	USkillTreeManager* SkillTreeManagerComp;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillTreeManager")
+	TObjectPtr<USkillTreeManager> SkillTreeManagerComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillControl")
+	TObjectPtr<USceneComponent> SkillDirectionSceneComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "SkillControl")
+	TObjectPtr<UWidgetComponent> SkillDirectionWidgetComp;
 public:
 	APlayerCharacterBase();
 	virtual FRotator GetDesiredRotation() const override;
 	virtual void PickUpItem(const FInventoryItemInfo& ItemInfo) override;
-protected:
-	virtual void BeginPlay() override;
 	
+	virtual void SetEnableDirectionalSkillControl(bool InEnable) override;
+	UFUNCTION()
+	virtual void ApplyDirectionalSkillControl_Implementation() override;
+protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
 	virtual void HandleUnEquip(EEquipmentType InEquipmentType);
+
+protected:
+	void UpdateDirectionalSkillControl();
+private:
+	bool bEnableDirectionalSkillControl = false;
 };
 

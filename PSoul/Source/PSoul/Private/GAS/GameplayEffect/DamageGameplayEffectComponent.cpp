@@ -7,6 +7,7 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/SoulGameplayAbilityTargetTypes.h"
 #include "GAS/Attribute/SoulCharacterSet.h"
+#include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
 #include "PSoul/SoulGameplayTags.h"
 
 void UDamageGameplayEffectComponent::OnGameplayEffectExecuted(FActiveGameplayEffectsContainer& ActiveGEContainer,
@@ -19,13 +20,30 @@ void UDamageGameplayEffectComponent::OnGameplayEffectExecuted(FActiveGameplayEff
 		//未死亡，发送受击事件
 		if (ASC->GetSet<USoulCharacterSet>()->GetHealth() > 0)
 		{
-			FGameplayEventData Payload;
-			FGameplayAbilityTargetData_DamageInfo* DamageInfo = new FGameplayAbilityTargetData_DamageInfo();
-			DamageInfo->Impulse = Impulse;
-			Payload.TargetData.Add(DamageInfo);
-			Payload.Instigator = GESpec.GetEffectContext().GetEffectCauser();
-			Payload.EventTag = SoulGameplayTags::GameplayEvent_Hit;
-			ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
+			EDamageEffct DamageEffectType;
+			if (const USoulGameplayEffect_Damage* GE_Damage = Cast<USoulGameplayEffect_Damage>(GESpec.Def))
+			{
+				DamageEffectType = GE_Damage->DamageEffect;
+			}
+			
+			//根据伤害效果来判断
+			if (DamageEffectType == EDamageEffct::Normal)
+			{
+				FGameplayEventData Payload;
+				FGameplayAbilityTargetData_DamageInfo* DamageInfo = new FGameplayAbilityTargetData_DamageInfo();
+				DamageInfo->Impulse = Impulse;
+				Payload.TargetData.Add(DamageInfo);
+				Payload.Instigator = GESpec.GetEffectContext().GetEffectCauser();
+				Payload.EventTag = SoulGameplayTags::GameplayEvent_Hit;
+				ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
+			}
+			else if (DamageEffectType == EDamageEffct::KnockUp)
+			{
+				FGameplayEventData Payload;
+				Payload.Instigator = GESpec.GetEffectContext().GetEffectCauser();
+				Payload.EventTag = SoulGameplayTags::GameplayEvent_KnockUp;
+				ASC->HandleGameplayEvent(Payload.EventTag, &Payload);
+			}
 		}
 	}
 }

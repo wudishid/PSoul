@@ -6,6 +6,7 @@
 #include "GameplayEffectComponent.h"
 #include "DamageGameplayEffectComponent.generated.h"
 
+enum class EDamageEffct : uint8;
 /**
  * 
  */
@@ -17,7 +18,5 @@ public:
 	virtual void OnGameplayEffectExecuted(FActiveGameplayEffectsContainer& ActiveGEContainer, FGameplayEffectSpec& GESpec, FPredictionKey& PredictionKey) const override;
 	
 	//伤害冲量
-	UPROPERTY(EditDefaultsOnly, Category = Damage)
 	float Impulse = 100.f;
-	
 };

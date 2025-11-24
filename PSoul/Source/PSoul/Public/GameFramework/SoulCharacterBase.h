@@ -45,18 +45,16 @@ public:
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	
 	UFUNCTION()
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
 	
 public:
-	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return AbilitySystemComponent; }
+	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return ASC; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS")
-	USoulAbilitySystemComponent* AbilitySystemComponent;
+	USoulAbilitySystemComponent* ASC;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "MotionWarping")
 	UMotionWarpingComponent* MotionWarpComp;

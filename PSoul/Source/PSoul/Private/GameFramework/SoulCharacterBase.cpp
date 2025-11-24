@@ -19,9 +19,9 @@
 ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<USoulCharacterMovementComponent>(CharacterMovementComponentName))
 {
-	AbilitySystemComponent = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
-	AbilitySystemComponent->SetIsReplicated(true);
-	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	ASC = CreateDefaultSubobject<USoulAbilitySystemComponent>(TEXT("SoulAbilitySystemComponent"));
+	ASC->SetIsReplicated(true);
+	ASC->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	MotionWarpComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComp"));
 	
@@ -55,10 +55,10 @@ void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	AbilitySystemComponent->GetSet<USoulCharacterSet>()->OnDied.AddUObject(this, &ThisClass::HandleKill);
+	ASC->InitAbilityActorInfo(this, this);
+	ASC->GetSet<USoulCharacterSet>()->OnDied.AddUObject(this, &ThisClass::HandleKill);
 	
-	AttributeComponent->InitWithAbilitySystemComponent(AbilitySystemComponent);
+	AttributeComponent->InitWithAbilitySystemComponent(ASC);
 	
 	if (!HasAuthority() && !IsLocallyControlled())
 	{
@@ -108,6 +108,7 @@ FGenericTeamId ASoulCharacterBase::GetGenericTeamId() const
 {
 	return FGenericTeamId(static_cast<uint8>(CharacterTeam));
 }
+
 
 
 

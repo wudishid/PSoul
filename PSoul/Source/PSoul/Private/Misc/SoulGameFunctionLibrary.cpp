@@ -4,6 +4,7 @@
 #include "Misc/SoulGameFunctionLibrary.h"
 
 #include "GameFramework/SoulCharacterBase.h"
+#include "GAS/GameplayAbility/SoulGameplayAbility.h"
 #include "Util/Util_Common.h"
 
 bool USoulGameFunctionLibrary::IsSameTeam(AActor* InActor1, AActor* InActor2)
@@ -20,4 +21,26 @@ bool USoulGameFunctionLibrary::SpawnInventroyItemInstance(AActor* OwnerActor,
 	TSubclassOf<AInventoryItemInstance> ItemClass)
 {
 	return Util_Common::SpawnInventroyItemInstance(OwnerActor, ItemClass);
+}
+
+EEventDirection USoulGameFunctionLibrary::GetEventDataDirection(const FGameplayEventData& InEventData,
+                                                                USoulGameplayAbility* InAbility)
+{
+	if (InAbility && InEventData.Instigator)
+	{
+		FVector SelfLoction = InAbility->GetOwningActorFromActorInfo()->GetActorLocation();
+		FVector TargetLocation = InEventData.Instigator->GetActorLocation();
+		float dotValue = (TargetLocation - SelfLoction).GetSafeNormal().Dot(
+			InAbility->GetOwningActorFromActorInfo()->GetActorForwardVector());
+		if (dotValue > 0)
+		{
+			return EEventDirection::Forward;
+		}
+		else
+		{
+			return EEventDirection::Back;
+		}
+	}
+
+	return EEventDirection::Forward;
 }

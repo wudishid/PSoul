@@ -35,25 +35,36 @@ void UQuickSkillManager::OnSetPawn(APawn* InPawn)
 	}
 }
 
-void UQuickSkillManager::PressSkill(FGameplayTag InSkillInputTag)
+void UQuickSkillManager::ReleaseSkill(FGameplayTag InSkillInputTag)
 {
 	if (!SkillTreemanager) return;
 	if (!ASC) return;
 	
-	if (QuickSkillSlots.Contains(InSkillInputTag))
+	if (USkillTreeNodeData* SkillTreeNodeData = GetQuickSkillData(InSkillInputTag))
 	{
-		FName SkillID = *QuickSkillSlots.Find(InSkillInputTag);
-		if (!SkillID.IsNone())
+		if (ASC->TryActivateAbilityByClass(SkillTreeNodeData->SkillClass))
 		{
-			if (USkillTreeNodeData* SkillTreeNodeData = SkillTreemanager->GetSkillTreeNodeData(SkillID))
+			OnQuickSkillReleased.Broadcast(InSkillInputTag);
+		}
+	}
+}
+
+
+USkillTreeNodeData* UQuickSkillManager::GetQuickSkillData(FGameplayTag InSkillInputTag) const
+{
+	if (SkillTreemanager)
+	{
+		if (QuickSkillSlots.Contains(InSkillInputTag))
+		{
+			FName SkillID = *QuickSkillSlots.Find(InSkillInputTag);
+			if (!SkillID.IsNone())
 			{
-				if (ASC->TryActivateAbilityByClass(SkillTreeNodeData->SkillClass))
-				{
-					OnQuickSkillReleased.Broadcast(InSkillInputTag);
-				}
+				return SkillTreemanager->GetSkillTreeNodeData(SkillID);
 			}
 		}
 	}
+	
+	return nullptr;
 }
 
 void UQuickSkillManager::SetQuickSkill(FGameplayTag InSkillInputTag, FName InSkillID)
@@ -73,6 +84,29 @@ void UQuickSkillManager::SetQuickSkill(FGameplayTag InSkillInputTag, FName InSki
 		*QuickSkillSlots.Find(InSkillInputTag) = InSkillID;
 		OnQuickSkillChanged.Broadcast(InSkillInputTag);
 	}
+}
+
+bool UQuickSkillManager::CanReleaseSkill(FGameplayTag InSkillInputTag) const
+{
+	return IsQuickSkillSet(InSkillInputTag) && !IsQuickSkillInCD(InSkillInputTag);
+}
+
+bool UQuickSkillManager::IsQuickSkillSet(FGameplayTag InSkillInputTag) const
+{
+	if (QuickSkillSlots.Contains(InSkillInputTag))
+	{
+		FName SkillID = *QuickSkillSlots.Find(InSkillInputTag);
+		if (!SkillID.IsNone())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UQuickSkillManager::IsQuickSkillInCD(FGameplayTag InSkillInputTag) const
+{
+	return GetQuickSkillCooldownRemainTime(InSkillInputTag) > 0.0f;
 }
 
 float UQuickSkillManager::GetQuickSkillCooldownRemainTime(FGameplayTag InSkillInputTag) const

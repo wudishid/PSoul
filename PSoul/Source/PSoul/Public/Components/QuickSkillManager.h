@@ -7,6 +7,7 @@
 #include "QuickSkillManager.generated.h"
 
 
+class USkillTreeNodeData;
 class USoulAbilitySystemComponent;
 class USkillTreeManager;
 
@@ -28,11 +29,15 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	void OnSetPawn(APawn* InPawn);
-	void PressSkill(FGameplayTag InSkillInputTag);
+	void ReleaseSkill(FGameplayTag InSkillInputTag);
 	
+	USkillTreeNodeData* GetQuickSkillData(FGameplayTag InSkillInputTag) const;
 	void SetQuickSkill(FGameplayTag InSkillInputTag, FName InSkillID);
 	const TMap<FGameplayTag, FName>& GetQuickSkillSlots() const { return QuickSkillSlots; }
 
+	bool CanReleaseSkill(FGameplayTag InSkillInputTag) const;
+	bool IsQuickSkillSet(FGameplayTag InSkillInputTag) const;
+	bool IsQuickSkillInCD(FGameplayTag InSkillInputTag) const;
 	float GetQuickSkillCooldownRemainTime(FGameplayTag InSkillInputTag) const;
 private:
 	

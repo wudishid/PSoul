@@ -24,16 +24,14 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 public:
 	void SetCheckByMesh(UPrimitiveComponent* InMeshComp);
 	void SetCheckByBoxTrace();
-	void StartCheck();
-	void EndCheck();
+	void ResetCheck();
+	void CheckDamage(bool InForceUseBoxTrace =false);
 	void SetDamageInfo(const FDamageInfo& InDamageInfo) { DamageInfo = InDamageInfo; }
 protected:
-	void CheckDamage();
 	void CheckDamageByBoxTrace();
 	
 	UFUNCTION(Client, Reliable)
@@ -63,17 +61,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugTraceType;
 
-	UPROPERTY(Replicated)
-	UPrimitiveComponent* CheckMeshComp;
+	UPROPERTY()
+	TObjectPtr<UPrimitiveComponent> CheckMeshComp;
 
-	UPROPERTY(Replicated)
+	UPROPERTY()
 	bool bCheckByMeshComp = false;
-
-	bool bCanCheck = false;
-	
-	TArray<FVector> LastSocketsLocation;
 	
 	UPROPERTY()
-	TArray<AActor*> HitActors;
-	
+	TArray<TWeakObjectPtr<AActor>> HitActors;
 };

@@ -60,10 +60,17 @@ protected:
 	void ToggleShowSkillTreePanel();
 
 	void PressSkill1();
+	void ReleaseSkill1();
+	
 	void PressSkill2();
+	void ReleaseSkill2();
+	
 	void PressSkill3();
+	void ReleaseSkill3();
+	
 	void PressSkill4();
-
+	void ReleaseSkill4();
+	
 	void SetInputMappingContextMode(EInputMappingContextMode InContextMode);
 	void SetInputModeGame();
 	void SetInputModeUI(EInputMappingContextMode InContextMode);
