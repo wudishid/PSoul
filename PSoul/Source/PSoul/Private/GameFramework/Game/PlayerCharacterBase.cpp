@@ -3,23 +3,15 @@
 #include "Engine/LocalPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/Controller.h"
-#include "GameFramework/Game/SoulPlayerController_Game.h"
-#include "GAS/SoulAbilitySystemComponent.h"
 #include "Camera/SoulCameraComponent.h"
-#include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
-#include "GAS/Attribute/SoulCharacterSet.h"
-#include "GAS/Attribute/SoulPlayerSet.h"
-#include "GAS/GameplayEffect/SoulGameplayEffect.h"
 #include "Inventory/InventoryManagerComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 
 
@@ -141,8 +133,19 @@ void APlayerCharacterBase::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
 	SetEnableDirectionalSkillControl(false);
+	if (GetNetMode() == NM_Standalone)
+	{
+		HideHealthBar();
+	}
+	else
+	{
+		if (!IsLocallyControlled())
+		{
+			ShowHealthBar();
+		}
+	}
+	
 }
 
 void APlayerCharacterBase::Tick(float DeltaTime)

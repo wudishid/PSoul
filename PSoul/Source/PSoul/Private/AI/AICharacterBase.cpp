@@ -60,6 +60,7 @@ void AAICharacterBase::DropItem_Implementation()
 void AAICharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	ShowHealthBar();
 }
 
 

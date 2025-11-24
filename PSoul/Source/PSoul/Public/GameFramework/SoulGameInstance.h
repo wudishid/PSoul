@@ -16,6 +16,7 @@ class PSOUL_API USoulGameInstance : public UGameInstance
 	GENERATED_BODY()
 protected:
 	virtual void Init() override;
+	virtual void Shutdown() override;
 public:
 	FString EnterGameMap;
 };

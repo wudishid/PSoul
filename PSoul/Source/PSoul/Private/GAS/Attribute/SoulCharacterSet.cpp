@@ -2,7 +2,6 @@
 
 #include "GAS/Attribute/SoulCharacterSet.h"
 #include "GameplayEffectExtension.h"
-#include "GameFramework/SoulCharacterBase.h"
 #include "Net/UnrealNetwork.h"
 
 USoulCharacterSet::USoulCharacterSet()

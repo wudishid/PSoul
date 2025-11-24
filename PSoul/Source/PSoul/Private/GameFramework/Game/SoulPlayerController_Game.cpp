@@ -58,12 +58,18 @@ void ASoulPlayerController_Game::SetupInputComponent()
 								 &ThisClass::PressSkill1, /*bLogIfNotFound=*/ false);
 		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill1, ETriggerEvent::Completed, this,
 								 &ThisClass::ReleaseSkill1, /*bLogIfNotFound=*/ false);
-		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill2, ETriggerEvent::Completed, this,
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill2, ETriggerEvent::Started, this,
 								 &ThisClass::PressSkill2, /*bLogIfNotFound=*/ false);
-		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill3, ETriggerEvent::Completed, this,
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill2, ETriggerEvent::Completed, this,
+								 &ThisClass::ReleaseSkill2, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill3, ETriggerEvent::Started, this,
 								 &ThisClass::PressSkill3, /*bLogIfNotFound=*/ false);
-		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill4, ETriggerEvent::Completed, this,
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill3, ETriggerEvent::Completed, this,
+								 &ThisClass::ReleaseSkill3, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill4, ETriggerEvent::Started, this,
 								 &ThisClass::PressSkill4, /*bLogIfNotFound=*/ false);
+		SoulIC->BindNativeAction(InputConfig, SoulGameplayTags::InputTag_QuickSkill4, ETriggerEvent::Completed, this,
+								 &ThisClass::ReleaseSkill4, /*bLogIfNotFound=*/ false);
 		
 	}
 }
@@ -81,26 +87,23 @@ void ASoulPlayerController_Game::PostProcessInput(const float DeltaTime, const b
 void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 {
 	Super::AcknowledgePossession(P);
-
-	SetInputModeGame();
+	ASC = P->FindComponentByClass<USoulAbilitySystemComponent>();
+	QuickSkillManager->OnSetPawn(GetPawn());
 	
+	SetInputModeGame();
 	if(ASoulHUD_Game* HUD = Cast<ASoulHUD_Game>(GetHUD()))
 	{
 		HUD->InitHUD();
 	}
-
-	QuickSkillManager->OnSetPawn(P);
-
-	ASC = P->FindComponentByClass<USoulAbilitySystemComponent>();
+	
 }
 
 void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	
-	QuickSkillManager->OnSetPawn(InPawn);
-
 	ASC = InPawn->FindComponentByClass<USoulAbilitySystemComponent>();
+	QuickSkillManager->OnSetPawn(GetPawn());
 }
 
 void ASoulPlayerController_Game::OnUnPossess()
@@ -110,7 +113,6 @@ void ASoulPlayerController_Game::OnUnPossess()
 	{
 		QuickSkillManager->OnSetPawn(nullptr);
 	}
-	
 }
 
 void ASoulPlayerController_Game::Input_Move(const FInputActionValue& Value)
@@ -201,14 +203,53 @@ void ASoulPlayerController_Game::ToggleShowSkillTreePanel()
 
 void ASoulPlayerController_Game::PressSkill1()
 {
+	PressSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill1);
+}
+
+void ASoulPlayerController_Game::ReleaseSkill1()
+{
+	ReleaseSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill1);
+}
+
+void ASoulPlayerController_Game::PressSkill2()
+{
+	PressSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill2);
+}
+
+void ASoulPlayerController_Game::ReleaseSkill2()
+{
+	ReleaseSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill2);
+}
+
+void ASoulPlayerController_Game::PressSkill3()
+{
+	PressSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill3);
+}
+
+void ASoulPlayerController_Game::ReleaseSkill3()
+{
+	ReleaseSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill3);
+}
+
+void ASoulPlayerController_Game::PressSkill4()
+{
+	PressSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill4);
+}
+
+void ASoulPlayerController_Game::ReleaseSkill4()
+{
+	ReleaseSkillByInputTag(SoulGameplayTags::InputTag_QuickSkill4);
+}
+
+void ASoulPlayerController_Game::PressSkillByInputTag(FGameplayTag InInputTag)
+{
+	if (!QuickSkillManager->CanReleaseSkill(InInputTag)) return;
 	
-	if (!QuickSkillManager->CanReleaseSkill(SoulGameplayTags::InputTag_QuickSkill1)) return;
-	
-	if (USkillTreeNodeData* SkillTreeNodeData =  QuickSkillManager->GetQuickSkillData(SoulGameplayTags::InputTag_QuickSkill1))
+	if (USkillTreeNodeData* SkillTreeNodeData =  QuickSkillManager->GetQuickSkillData(InInputTag))
 	{
 		if (SkillTreeNodeData->SkillReleaseType == ESkillReleaseType::Normal)
 		{
-			QuickSkillManager->ReleaseSkill(SoulGameplayTags::InputTag_QuickSkill1);
+			QuickSkillManager->ReleaseSkill(InInputTag);
 		}
 		else if (SkillTreeNodeData->SkillReleaseType == ESkillReleaseType::DirectionRelease)
 		{
@@ -220,15 +261,15 @@ void ASoulPlayerController_Game::PressSkill1()
 	}
 }
 
-void ASoulPlayerController_Game::ReleaseSkill1()
+void ASoulPlayerController_Game::ReleaseSkillByInputTag(FGameplayTag InInputTag)
 {
-	if (!QuickSkillManager->CanReleaseSkill(SoulGameplayTags::InputTag_QuickSkill1)) return;
+	if (!QuickSkillManager->CanReleaseSkill(InInputTag)) return;
 	
-	if (USkillTreeNodeData* SkillTreeNodeData =  QuickSkillManager->GetQuickSkillData(SoulGameplayTags::InputTag_QuickSkill1))
+	if (USkillTreeNodeData* SkillTreeNodeData =  QuickSkillManager->GetQuickSkillData(InInputTag))
 	{
 		if (SkillTreeNodeData->SkillReleaseType == ESkillReleaseType::DirectionRelease)
 		{
-			QuickSkillManager->ReleaseSkill(SoulGameplayTags::InputTag_QuickSkill1);
+			QuickSkillManager->ReleaseSkill(InInputTag);
 
 			if (ISkillReleaseControlInterface* SkillReleaseControlInterface = Cast<ISkillReleaseControlInterface>(GetPawn()))
 			{
@@ -236,34 +277,6 @@ void ASoulPlayerController_Game::ReleaseSkill1()
 			}
 		}
 	}
-}
-
-void ASoulPlayerController_Game::PressSkill2()
-{
-	QuickSkillManager->ReleaseSkill(SoulGameplayTags::InputTag_QuickSkill2);
-}
-
-
-void ASoulPlayerController_Game::ReleaseSkill2()
-{
-}
-
-void ASoulPlayerController_Game::PressSkill3()
-{
-	QuickSkillManager->ReleaseSkill(SoulGameplayTags::InputTag_QuickSkill3);
-}
-
-void ASoulPlayerController_Game::ReleaseSkill3()
-{
-}
-
-void ASoulPlayerController_Game::PressSkill4()
-{
-	QuickSkillManager->ReleaseSkill(SoulGameplayTags::InputTag_QuickSkill4);
-}
-
-void ASoulPlayerController_Game::ReleaseSkill4()
-{
 }
 
 void ASoulPlayerController_Game::SetInputMappingContextMode(EInputMappingContextMode InContextMode)
@@ -294,9 +307,6 @@ void ASoulPlayerController_Game::SetInputModeUI(EInputMappingContextMode InConte
 	SetInputMappingContextMode(InContextMode);
 }
 
-void ASoulPlayerController_Game::InitSoulPlayerState_Implementation()
-{
-}
 
 void ASoulPlayerController_Game::Rebirth()
 {

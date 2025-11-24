@@ -24,6 +24,4 @@ protected:
 	virtual void BeginPlay() override;
 	UPROPERTY()
 	USoulAbilitySystemComponent* ASC = nullptr;
-private:
-	void HandleGameplayTagChanged(const FGameplayTag GameplayTag, int32 Count);
 };

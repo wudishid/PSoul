@@ -28,5 +28,6 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* TextBlock_SkillPoint;
+	
 };
 

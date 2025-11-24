@@ -48,6 +48,9 @@ protected:
 	virtual void BeginPlay() override;
 	UFUNCTION()
 	void HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue);
+
+	void ShowHealthBar();
+	void HideHealthBar();
 	
 public:
 	FORCEINLINE class USoulAbilitySystemComponent* GetAbilitySystemComponent() const { return ASC; }

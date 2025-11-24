@@ -59,20 +59,6 @@ void ASoulCharacterBase::BeginPlay()
 	ASC->GetSet<USoulCharacterSet>()->OnDied.AddUObject(this, &ThisClass::HandleKill);
 	
 	AttributeComponent->InitWithAbilitySystemComponent(ASC);
-	
-	if (!HasAuthority() && !IsLocallyControlled())
-	{
-		HealthBarComp->SetHiddenInGame(false);
-		if (UStateBar* StateBar = Cast<UStateBar>(HealthBarComp->GetUserWidgetObject()))
-		{
-			StateBar->Init(this, USoulCharacterSet::GetHealthAttribute(), USoulCharacterSet::GetMaxHealthAttribute());
-		}
-	}
-	else
-	{
-		HealthBarComp->SetHiddenInGame(true);
-	}
-	
 }
 
 void ASoulCharacterBase::HandleAttributeChanged(FGameplayAttribute Attribute, float CurrentValue, float OldValue)
@@ -84,6 +70,20 @@ void ASoulCharacterBase::HandleAttributeChanged(FGameplayAttribute Attribute, fl
 			OnDeath();
 		}
 	}
+}
+
+void ASoulCharacterBase::ShowHealthBar()
+{
+	HealthBarComp->SetHiddenInGame(false);
+	if (UStateBar* StateBar = Cast<UStateBar>(HealthBarComp->GetUserWidgetObject()))
+	{
+		StateBar->Init(this, USoulCharacterSet::GetHealthAttribute(), USoulCharacterSet::GetMaxHealthAttribute());
+	}
+}
+
+void ASoulCharacterBase::HideHealthBar()
+{
+	HealthBarComp->SetHiddenInGame(true);
 }
 
 void ASoulCharacterBase::OnDeath()

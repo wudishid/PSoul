@@ -21,6 +21,8 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 public:
+	void UnlockSkillTreeRootSkill();
+	
 	TArray<USkillTreeData*> GetSkillTreeDatas() const { return SkillTreeDatas; }
 	
 	bool TryLearnSkill(FName InSkillID);
@@ -40,7 +42,7 @@ public:
 private:
 	int32 GetCostedSkillPoints() const;
 	void LearnSkill(FName InSkillID);
-	void UnlockSkillTreeRootSkill();
+	
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGiveSkill(FName InSkillID);
@@ -57,9 +59,6 @@ protected:
 
 	UPROPERTY(ReplicatedUsing = OnRep_LearnedSkills, EditDefaultsOnly, Category = "SkillTreeManager")
 	TArray<FName> LearnedSkills;
-
-	UPROPERTY()
-	TObjectPtr<USoulAbilitySystemComponent> ASC;
 };
 
 

@@ -9,6 +9,7 @@
 #include "SkillTreeSystem/SkillTreeManager.h"
 #include "UI/SkillTree/SkillTree.h"
 
+
 void USkillTreePanel::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -17,6 +18,8 @@ void USkillTreePanel::NativeConstruct()
 	
 	SkillTreeManagerComp = GetOwningPlayerPawn()->FindComponentByClass<USkillTreeManager>();
 	checkf(SkillTreeManagerComp, TEXT("SkillTreeManagerComp Is not valid!"));
+	SkillTreeManagerComp->UnlockSkillTreeRootSkill();
+	
 	TextBlock_SkillPoint->SetText(UKismetTextLibrary::Conv_IntToText(SkillTreeManagerComp->GetAvailableSkillPoint()));
 	SkillTreeManagerComp->OnSkillLearned.AddUObject(this, &ThisClass::OnSkillLearned);
 	if (USoulAbilitySystemComponent* ASC = GetOwningPlayerPawn()->FindComponentByClass<USoulAbilitySystemComponent>())
@@ -35,6 +38,7 @@ void USkillTreePanel::NativeConstruct()
 			HB_SkillTreePanel->AddChildToHorizontalBox(SkillTreeWidget);
 		}
 	}
+	
 }
 
 void USkillTreePanel::HandleLevelChanged(const FOnAttributeChangeData& ChangeData)

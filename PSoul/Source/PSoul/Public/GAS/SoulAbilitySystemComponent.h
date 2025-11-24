@@ -9,6 +9,8 @@
 
 class USoulAbilitySet;
 
+
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API USoulAbilitySystemComponent : public UAbilitySystemComponent
 {
@@ -30,6 +32,7 @@ public:
 	void Server_AddAttributePoint(FGameplayAttribute InAttribute);
 	
 	void ConsumeInputBuffer();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;

@@ -48,8 +48,6 @@ protected:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
 	
-	UFUNCTION(Server, Reliable)
-	void InitSoulPlayerState();
 	
 	void Input_Move(const FInputActionValue& Value);
 	void Input_Look(const FInputActionValue& Value);
@@ -70,6 +68,9 @@ protected:
 	
 	void PressSkill4();
 	void ReleaseSkill4();
+
+	void PressSkillByInputTag(FGameplayTag InInputTag);
+	void ReleaseSkillByInputTag(FGameplayTag InInputTag);
 	
 	void SetInputMappingContextMode(EInputMappingContextMode InContextMode);
 	void SetInputModeGame();

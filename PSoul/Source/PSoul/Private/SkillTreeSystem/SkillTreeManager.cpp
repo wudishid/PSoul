@@ -10,11 +10,6 @@
 void USkillTreeManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	ASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
-	check(ASC);
-
-	UnlockSkillTreeRootSkill();
 }
 
 void USkillTreeManager::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -81,9 +76,13 @@ bool USkillTreeManager::CanSkillRelease(FName InSkillID) const
 
 int32 USkillTreeManager::GetAvailableSkillPoint() const
 {
-	int32 HoldSkillPoints = ASC->GetSet<USoulPlayerSet>()->GetLevel() - 1;
-	int32 AvailableSkillPoint = HoldSkillPoints - GetCostedSkillPoints();
-	return AvailableSkillPoint;
+	if (USoulAbilitySystemComponent* ASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>())
+	{
+		int32 HoldSkillPoints = ASC->GetSet<USoulPlayerSet>()->GetLevel() - 1;
+		int32 AvailableSkillPoint = HoldSkillPoints - GetCostedSkillPoints();
+		return AvailableSkillPoint;
+	}
+	return 0;
 }
 
 int32 USkillTreeManager::GetCostedSkillPoints() const
@@ -136,7 +135,10 @@ void USkillTreeManager::ServerGiveSkill_Implementation(FName InSkillID)
 	if (USkillTreeNodeData* LearnedSkillNode = GetSkillTreeNodeData(InSkillID))
 	{
 		FGameplayAbilitySpec AbilitySpec(LearnedSkillNode->SkillClass);
-		ASC->GiveAbility(AbilitySpec);
+		if (USoulAbilitySystemComponent* ASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>())
+		{
+			ASC->GiveAbility(AbilitySpec);
+		}
 		LearnedSkills.AddUnique(InSkillID);
 	}
 }
