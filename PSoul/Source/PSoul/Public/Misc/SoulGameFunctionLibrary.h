@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "SoulGameFunctionLibrary.generated.h"
 
+class USoulSaveGame_PlayerData;
 struct FGameplayEventData;
 class USoulGameplayAbility;
 class AInventoryItemInstance;
@@ -31,5 +32,13 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "SoulGameFunctionLibrary", meta = (DefaultToSelf = "InAbility") )
 	static EEventDirection GetEventDataDirection(const FGameplayEventData& InEventData, USoulGameplayAbility* InAbility);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "SoulGameFunctionLibrary")
+	static void SaveGame(APawn* InPawn);
+
+	UFUNCTION(BlueprintCallable, Category = "SoulGameFunctionLibrary")
+	static USoulSaveGame_PlayerData* LoadGame();
+
+	UFUNCTION(BlueprintCallable, Category = "SoulGameFunctionLibrary")
+	static void DeleteGame();
 };

@@ -20,7 +20,7 @@ void UItemOperationPanel::UpdateOperationPanel(IItemOperationInterface* InOperat
 	
 	VB_OperationList->ClearChildren();
 
-	for(EItemOpetaionType OperationType :OperatedSlot->GetItemInfo().ItemOpetaions)
+	for(EItemOperationType OperationType :OperatedSlot->GetItemInfo().ItemOperations)
 	{
 		if(UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
 		{
@@ -52,7 +52,7 @@ FReply UItemOperationPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UItemOperationPanel::HandleSIngleOperationClicked(EItemOpetaionType OperationType)
+void UItemOperationPanel::HandleSIngleOperationClicked(EItemOperationType OperationType)
 {
 	if(OperatedSlot)
 	{

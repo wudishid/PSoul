@@ -10,32 +10,32 @@
 
 
 
-EItemOpetaionType UEquipmentSlotWidget::GetRulesForOperationType(EItemOpetaionType type)
+EItemOperationType UEquipmentSlotWidget::GetRulesForOperationType(EItemOperationType type)
 {
-	if(type == EItemOpetaionType::Equip)
+	if(type == EItemOperationType::Equip)
 	{
-		return EItemOpetaionType::UnEquip;
+		return EItemOperationType::UnEquip;
 	}
 	return type;
 }
 
-void UEquipmentSlotWidget::HandleItemOperation(EItemOpetaionType OpetaionType)
+void UEquipmentSlotWidget::HandleItemOperation(EItemOperationType OpetaionType)
 {
-	if(OpetaionType == EItemOpetaionType::Drop)
+	if(OpetaionType == EItemOperationType::Drop)
 	{
 		EquipmentComponent->Drop(EquipmentType);
 	}
-	else if(OpetaionType == EItemOpetaionType::UnEquip)
+	else if(OpetaionType == EItemOperationType::UnEquip)
 	{
-		InventoryManagerComp->AddItem(GetItemInfo());
-		EquipmentComponent->UnEquip(GetItemInfo().EquipmentClass);
+		InventoryManagerComp->AddItem(GetItemInfo().ItemName);
+		EquipmentComponent->UnEquip(GetItemInfo().ItemName);
 	}
 }
 
 FInventoryItemInfo UEquipmentSlotWidget::GetItemInfo() const
 {
 	FInventoryItemInfo itemInfo;
-	EquipmentComponent->GetWearedEquipmentInof(EquipmentType, itemInfo);
+	EquipmentComponent->GetWearedEquipmentInfo(EquipmentType, itemInfo);
 	return itemInfo;
 }
 
@@ -50,6 +50,13 @@ void UEquipmentSlotWidget::NativeConstruct()
 	check(EquipmentComponent);
 	EquipmentComponent->OnEquip.AddUObject(this, &ThisClass::HandleEquip);
 	EquipmentComponent->OnUnEquip.AddUObject(this, &ThisClass::HandleUnEquip);
+
+	if (AEquipmentInstance* EquipmentInstance = EquipmentComponent->GetEquipmentInstance(EquipmentType))
+	{
+		Image_Icon->SetVisibility(ESlateVisibility::Visible);
+		Image_Icon->SetBrushFromTexture(EquipmentInstance->GetItemInfo().Icon.LoadSynchronous());
+	}
+	
 }
 
 FReply UEquipmentSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

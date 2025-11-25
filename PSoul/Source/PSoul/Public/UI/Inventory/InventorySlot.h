@@ -28,9 +28,10 @@ public:
 
 	FOnSlotRightMouseButtonDown OnSlotRightMouseButtonDown;
 public:
-	virtual EItemOpetaionType GetRulesForOperationType(EItemOpetaionType type) override;
-	virtual void HandleItemOperation(EItemOpetaionType OpetaionType) override;
+	virtual EItemOperationType GetRulesForOperationType(EItemOperationType type) override;
+	virtual void HandleItemOperation(EItemOperationType OpetaionType) override;
 	virtual FInventoryItemInfo GetItemInfo() const override;
+	
 protected:
 	virtual void NativeConstruct() override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

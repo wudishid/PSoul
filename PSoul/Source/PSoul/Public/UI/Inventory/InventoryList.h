@@ -11,7 +11,7 @@ class UEquipmentSlotWidget;
 class IItemOperationInterface;
 class UEquipmentManagerComponent;
 class UInventoryManagerComponent;
-enum class EItemOpetaionType : uint8;
+enum class EItemOperationType : uint8;
 class UItemOperationPanel;
 struct FInventoryItemSlotList;
 class UInventorySlot;

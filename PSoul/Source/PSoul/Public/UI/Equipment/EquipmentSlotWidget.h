@@ -21,8 +21,8 @@ class PSOUL_API UEquipmentSlotWidget : public USoulUserWidget, public IItemOpera
 	GENERATED_BODY()
 
 public:
-	virtual EItemOpetaionType GetRulesForOperationType(EItemOpetaionType type) override;
-	virtual void HandleItemOperation(EItemOpetaionType OpetaionType) override;
+	virtual EItemOperationType GetRulesForOperationType(EItemOperationType type) override;
+	virtual void HandleItemOperation(EItemOperationType OpetaionType) override;
 	virtual FInventoryItemInfo GetItemInfo() const override;
 
 	FOnSlotRightMouseButtonDown OnSlotRightMouseButtonDown;

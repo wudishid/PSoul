@@ -67,7 +67,7 @@ USkillTreeNodeData* UQuickSkillManager::GetQuickSkillData(FGameplayTag InSkillIn
 	return nullptr;
 }
 
-void UQuickSkillManager::SetQuickSkill(FGameplayTag InSkillInputTag, FName InSkillID)
+void UQuickSkillManager::SetQuickSkill_Implementation(FGameplayTag InSkillInputTag, FName InSkillID)
 {
 	if (QuickSkillSlots.Contains(InSkillInputTag))
 	{

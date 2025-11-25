@@ -68,18 +68,12 @@ void AInventoryItemInstance::OnBoxCompOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		if(IInteractInterface* InteractInterface = Cast<IInteractInterface>(OtherActor))
 		{
-			InteractInterface->PickUpItem(ItemInfo);
+			InteractInterface->PickUpItem(ItemName);
 			Destroy();
 		}
 	}
 }
 
-void AInventoryItemInstance::ClientPlayPickItemSound_Implementation()
-{
-	UGameplayStatics::PlaySoundAtLocation(
-		GetWorld(), GetDefault<USoul_CommonSetting>()->PickItemSound.LoadSynchronous(),
-		GetActorLocation(), FRotator::ZeroRotator);
-}
 
 
 

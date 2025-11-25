@@ -7,7 +7,7 @@
 #include "ItemOperationInterface.generated.h"
 
 struct FInventoryItemInfo;
-enum class EItemOpetaionType : uint8;
+enum class EItemOperationType : uint8;
 // This class does not need to be modified.
 UINTERFACE()
 class UItemOperationInterface : public UInterface
@@ -24,7 +24,7 @@ class PSOUL_API IItemOperationInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual  EItemOpetaionType GetRulesForOperationType(EItemOpetaionType type) = 0;
-	virtual  void HandleItemOperation(EItemOpetaionType OpetaionType) = 0;
+	virtual  EItemOperationType GetRulesForOperationType(EItemOperationType type) = 0;
+	virtual  void HandleItemOperation(EItemOperationType OpetaionType) = 0;
 	virtual FInventoryItemInfo GetItemInfo() const = 0;
 };

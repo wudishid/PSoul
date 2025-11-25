@@ -55,7 +55,7 @@ protected:
 public:
 	APlayerCharacterBase();
 	virtual FRotator GetDesiredRotation() const override;
-	virtual void PickUpItem(const FInventoryItemInfo& ItemInfo) override;
+	virtual void PickUpItem(FName InItemName, int32 Amount = 1) override;
 	
 	virtual void SetEnableDirectionalSkillControl(bool InEnable) override;
 	UFUNCTION()
@@ -64,6 +64,7 @@ protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance);
 	virtual void HandleUnEquip(EEquipmentType InEquipmentType);
 

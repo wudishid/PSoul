@@ -68,17 +68,19 @@ public:
 	UEquipmentManagerComponent();
 
 	UFUNCTION(Server, Reliable)
-	void Equip(TSubclassOf<AEquipmentInstance> EquipmentClass);
+	void Equip(FName InEquipmentName);
 
 	UFUNCTION(Server, Reliable)
-	void UnEquip(TSubclassOf<AEquipmentInstance> EquipmentClass);
+	void UnEquip(FName InEquipmentName);
 
 	UFUNCTION(Server, Reliable)
 	void Drop(EEquipmentType InEquipmentType);
 	
-	bool GetWearedEquipmentInof(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo);
+	bool GetWearedEquipmentInfo(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo);
 	
 	AEquipmentInstance* GetEquipmentInstance(EEquipmentType InEquipmentType);
+
+	FEquipmentSlotList* GetEquipmentSlotList() { return &EquipmentSlotList; }
 	
 	FOnEquip OnEquip;
 	FOnUnEquip OnUnEquip;

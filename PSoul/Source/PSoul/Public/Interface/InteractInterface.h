@@ -22,5 +22,5 @@ class PSOUL_API IInteractInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void PickUpItem(const FInventoryItemInfo& ItemInfo) = 0;
+	virtual void PickUpItem(FName InItemName, int32 Amount = 1) = 0;
 };

@@ -21,8 +21,8 @@ public:
 	UInventoryManagerComponent();
 
 	UFUNCTION(BlueprintCallable, Server, Reliable)
-	void AddItem(const FInventoryItemInfo& ItemInfo);
-
+	void AddItem(FName InItemName, int32 InAmount = 1);
+	
 	UFUNCTION(BlueprintCallable, Server, Reliable)
 	void RemoveItem(int32 InItemIndex);
 
@@ -35,6 +35,8 @@ public:
 	bool GetItemInfoByIndex(int32 Index, FInventoryItemInfo& OutItemInfo) const;
 
 	bool GetItemSlotByIndex(int32 Index, FInventoryItemSlot& OutItemSlot) const;
+	
+	FInventoryItemSlotList* GetInventoryItemSlotList() { return &InventorySlotList; }
 	
 	FOnInventorySlotListChanged OnInventorySlotListChanged;
 protected:

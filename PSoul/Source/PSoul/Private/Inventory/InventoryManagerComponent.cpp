@@ -3,8 +3,15 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Inventory/InventoryItemInstance.h"
 #include "Net/UnrealNetwork.h"
+#include "PSoul/SoulLog.h"
 #include "Util/Util_Common.h"
+#include "Util/Util_Inventory.h"
 
+#define BROADCAST_LISTCHANGED_IF_STANDALONE \
+if (GetNetMode() == NM_Standalone) \
+{ \
+	OnInventorySlotListChanged.Broadcast(InventorySlotList); \
+}
 
 // Sets default values for this component's properties
 UInventoryManagerComponent::UInventoryManagerComponent()
@@ -16,6 +23,8 @@ void UInventoryManagerComponent::RemoveItem_Implementation(int32 InItemIndex)
 	if(InventorySlotList.Slots.IsValidIndex(InItemIndex))
 	{
 		InventorySlotList.Slots.RemoveAt(InItemIndex);
+		InventorySlotList.MarkArrayDirty();
+		BROADCAST_LISTCHANGED_IF_STANDALONE
 	}
 }
 
@@ -31,7 +40,6 @@ void UInventoryManagerComponent::DropItem_Implementation(int32 InItemIndex)
 	}
 }
 
-
 void UInventoryManagerComponent::UseItem_Implementation(int32 InItemIndex, int32 InUseAmount)
 {
 	if(InventorySlotList.Slots.IsValidIndex(InItemIndex))
@@ -40,9 +48,8 @@ void UInventoryManagerComponent::UseItem_Implementation(int32 InItemIndex, int32
 		ASC->ApplyGameplayEffectToSelf(ItemEffectClass.GetDefaultObject(), 1, ASC->MakeEffectContext());
 		if(--InventorySlotList.Slots[InItemIndex].Amount <=0)
 		{
-			InventorySlotList.Slots.RemoveAt(InItemIndex);
+			RemoveItem(InItemIndex);
 		}
-		InventorySlotList.MarkArrayDirty();
 	}
 }
 
@@ -64,13 +71,16 @@ bool UInventoryManagerComponent::GetItemSlotByIndex(int32 Index, FInventoryItemS
 		OutItemSlot = InventorySlotList.Slots[Index];
 		return true;
 	}
-
 	return false;
 }
 
-void UInventoryManagerComponent::AddItem_Implementation(const FInventoryItemInfo& ItemInfo)
+void UInventoryManagerComponent::AddItem_Implementation(FName InItemName, int32 InAmount)
 {
-	bool FinishAdd = false;
+	bool bFinishAdd = false;
+
+	FInventoryItemInfo ItemInfo;
+	Util_Inventory::GetItemInfoByName(InItemName, ItemInfo);
+	if (!ensureAlways(ItemInfo.IsValid())) { return; }
 	
 	for(FInventoryItemSlot& ItemSlot : InventorySlotList.Slots)
 	{
@@ -78,26 +88,36 @@ void UInventoryManagerComponent::AddItem_Implementation(const FInventoryItemInfo
 		{
 			if(ItemSlot.ItemInfo.CanStack)
 			{
-				ItemSlot.Amount ++;
-				FinishAdd = true;
+				int32 SumAmount = ItemSlot.Amount + InAmount;
+				if (SumAmount > ItemSlot.ItemInfo.MaxStackAmount)
+				{
+					ItemSlot.Amount = ItemSlot.ItemInfo.MaxStackAmount;
+					AddItem(InItemName, SumAmount - ItemSlot.ItemInfo.MaxStackAmount);
+				}
+				else
+				{
+					ItemSlot.Amount = SumAmount;
+					bFinishAdd = true;
+				}
 			}
 		}
 	}
 
-	if(FinishAdd)
+	if(bFinishAdd)
 	{
 		InventorySlotList.MarkArrayDirty();
+		BROADCAST_LISTCHANGED_IF_STANDALONE
 	}
 	else
 	{
 		FInventoryItemSlot itemSlot;
 		itemSlot.ItemInfo = ItemInfo;
-		itemSlot.Amount = 1;
+		itemSlot.Amount = InAmount;
 		InventorySlotList.Slots.Add(itemSlot);
 		InventorySlotList.MarkArrayDirty();
+		BROADCAST_LISTCHANGED_IF_STANDALONE
 	}
 }
-
 
 // Called when the game starts
 void UInventoryManagerComponent::BeginPlay()

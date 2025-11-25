@@ -4,6 +4,7 @@
 #include "Inventory/InventoryItemDefinition.h"
 #include "Net/UnrealNetwork.h"
 #include "Util/Util_Common.h"
+#include "Util/Util_Inventory.h"
 
 
 void FEquipmentSlotList::SetEquipmentSlot(EEquipmentType InEquipmentType, AEquipmentInstance* InEquipmentInstance)
@@ -47,12 +48,12 @@ void UEquipmentManagerComponent::Drop_Implementation(EEquipmentType InEquipmentT
 	{
 		if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Equipment->GetItemInfo().ItemClass))
 		{
-			UnEquip(Equipment->GetClass());
+			UnEquip(Equipment->GetItemName());
 		}
 	}
 }
 
-bool UEquipmentManagerComponent::GetWearedEquipmentInof(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo)
+bool UEquipmentManagerComponent::GetWearedEquipmentInfo(EEquipmentType InEquipmentType, FInventoryItemInfo& OutItemInfo)
 {
 	if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(InEquipmentType))
 	{
@@ -67,30 +68,38 @@ AEquipmentInstance* UEquipmentManagerComponent::GetEquipmentInstance(EEquipmentT
 	return EquipmentSlotList.GetEquipmentByType(InEquipmentType);
 }
 
-void UEquipmentManagerComponent::Equip_Implementation(TSubclassOf<AEquipmentInstance> EquipmentClass)
+void UEquipmentManagerComponent::Equip_Implementation(FName InEquipmentName)
 {
-	if (EquipmentClass)
+	FInventoryItemInfo ItemInfo;
+	if (Util_Inventory::GetItemInfoByName(InEquipmentName, ItemInfo))
 	{
-		FActorSpawnParameters Sp;
-		Sp.Owner = GetOwner();
-		if (AEquipmentInstance* Equipment = GetWorld()->SpawnActor<AEquipmentInstance>(EquipmentClass, Sp))
+		if (TSubclassOf<AEquipmentInstance> EquipmentClass = ItemInfo.EquipmentClass)
 		{
-			OnEquip.Broadcast(Equipment->GetEquipmentType(), Equipment);
-			EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), Equipment);
-			Equipment->Equip();
+			FActorSpawnParameters Sp;
+			Sp.Owner = GetOwner();
+			if (AEquipmentInstance* Equipment = GetWorld()->SpawnActor<AEquipmentInstance>(EquipmentClass, Sp))
+			{
+				OnEquip.Broadcast(Equipment->GetEquipmentType(), Equipment);
+				EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), Equipment);
+				Equipment->Equip();
+			}
 		}
 	}
 }
 
-void UEquipmentManagerComponent::UnEquip_Implementation(TSubclassOf<AEquipmentInstance> EquipmentClass)
+void UEquipmentManagerComponent::UnEquip_Implementation(FName InEquipmentName)
 {
-	if (EquipmentClass)
+	FInventoryItemInfo ItemInfo;
+	if (Util_Inventory::GetItemInfoByName(InEquipmentName, ItemInfo))
 	{
-		if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(EquipmentClass->GetDefaultObject<AEquipmentInstance>()->GetEquipmentType()))
+		if (TSubclassOf<AEquipmentInstance> EquipmentClass = ItemInfo.EquipmentClass)
 		{
-			OnUnEquip.Broadcast(Equipment->GetEquipmentType());
-			EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), nullptr);
-			Equipment->UnEquip();
+			if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(EquipmentClass->GetDefaultObject<AEquipmentInstance>()->GetEquipmentType()))
+			{
+				OnUnEquip.Broadcast(Equipment->GetEquipmentType());
+				EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), nullptr);
+				Equipment->UnEquip();
+			}
 		}
 	}
 }

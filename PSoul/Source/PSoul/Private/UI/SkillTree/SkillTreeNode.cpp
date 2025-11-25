@@ -24,7 +24,7 @@ void USkillTreeNode::NativeConstruct()
 void USkillTreeNode::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-
+	
 	if (USkillInfoTip* CurrentTip = Cast<USkillInfoTip>(GetToolTip()))
 	{
 		CurrentTip->InitTip(SkillTreeManagerComp->GetSkillTreeNodeData(SkillID)->SkillDescription);

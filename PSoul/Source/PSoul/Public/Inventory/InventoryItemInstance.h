@@ -45,10 +45,6 @@ protected:
 	
 	FInventoryItemInfo ItemInfo;
 
-private:
-	UFUNCTION(BlueprintCallable, Client, Reliable)
-	void ClientPlayPickItemSound();
-	
 public:
 	TSubclassOf<UGameplayEffect> GetItemEffectClass() const{ return ItemEffectClass; }
 };

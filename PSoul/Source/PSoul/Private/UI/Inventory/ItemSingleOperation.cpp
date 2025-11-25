@@ -6,7 +6,7 @@
 #include "Util/Util_Inventory.h"
 
 
-void UItemSingleOperation::UpdateSingleOperation(EItemOpetaionType OperationType)
+void UItemSingleOperation::UpdateSingleOperation(EItemOperationType OperationType)
 {
 	ItemOpetaionType = OperationType;
 	Text_OperationName->SetText(FText::FromString(Util_Inventory::ItemOperationTypeToString(ItemOpetaionType)));

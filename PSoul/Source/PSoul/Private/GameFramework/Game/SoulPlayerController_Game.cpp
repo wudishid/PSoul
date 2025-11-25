@@ -12,9 +12,11 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
 #include "Interface/SkillReleaseControlInterface.h"
+#include "Misc/SoulGameFunctionLibrary.h"
 #include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "PSoul/SoulLog.h"
+#include "Save/SoulSaveGame_PlayerData.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
 
 ASoulPlayerController_Game::ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -95,7 +97,14 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 	{
 		HUD->InitHUD();
 	}
-	
+
+	if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
+	{
+		for (const auto& QuickSkillSlot : SaveGame_PlayerData->SavedData.QuickSkills)
+		{
+			QuickSkillManager->SetQuickSkill(QuickSkillSlot.Key, QuickSkillSlot.Value);
+		}
+	}
 }
 
 void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
@@ -104,6 +113,7 @@ void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
 	
 	ASC = InPawn->FindComponentByClass<USoulAbilitySystemComponent>();
 	QuickSkillManager->OnSetPawn(GetPawn());
+	
 }
 
 void ASoulPlayerController_Game::OnUnPossess()

@@ -7,6 +7,6 @@
 
 namespace Util_Inventory
 {
-	bool GetItemInfoByName(const FName name, FInventoryItemInfo& outItemInfo);
-	FString ItemOperationTypeToString(EItemOpetaionType type);
+	bool GetItemInfoByName(FName name, FInventoryItemInfo& outItemInfo);
+	FString ItemOperationTypeToString(EItemOperationType type);
 }

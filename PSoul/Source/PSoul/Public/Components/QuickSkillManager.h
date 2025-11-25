@@ -32,6 +32,7 @@ public:
 	void ReleaseSkill(FGameplayTag InSkillInputTag);
 	
 	USkillTreeNodeData* GetQuickSkillData(FGameplayTag InSkillInputTag) const;
+	UFUNCTION(Client, Reliable)
 	void SetQuickSkill(FGameplayTag InSkillInputTag, FName InSkillID);
 	const TMap<FGameplayTag, FName>& GetQuickSkillSlots() const { return QuickSkillSlots; }
 

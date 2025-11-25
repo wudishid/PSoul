@@ -3,7 +3,7 @@
 
 #include "Util/Util_Inventory.h"
 
-bool Util_Inventory::GetItemInfoByName(const FName name, FInventoryItemInfo& outItemInfo)
+bool Util_Inventory::GetItemInfoByName(FName name, FInventoryItemInfo& outItemInfo)
 {
 	FSoftObjectPath ItemTablePath(TEXT("/Game/Data/Inventory/DT_InventoryItem.DT_InventoryItem"));
 	if(UDataTable* ItemTable = Cast<UDataTable>(ItemTablePath.TryLoad()))
@@ -18,17 +18,17 @@ bool Util_Inventory::GetItemInfoByName(const FName name, FInventoryItemInfo& out
 	return false;
 }
 
-FString Util_Inventory::ItemOperationTypeToString(EItemOpetaionType type)
+FString Util_Inventory::ItemOperationTypeToString(EItemOperationType type)
 {
 	switch (type)
 	{
-	case EItemOpetaionType::Use:
+	case EItemOperationType::Use:
 		return TEXT("使用");
-	case EItemOpetaionType::Drop:
+	case EItemOperationType::Drop:
 		return TEXT("丢弃");
-	case EItemOpetaionType::Equip:
+	case EItemOperationType::Equip:
 		return TEXT("装备");
-	case EItemOpetaionType::UnEquip:
+	case EItemOperationType::UnEquip:
 		return TEXT("卸下");
 	default:
 		return TEXT("");

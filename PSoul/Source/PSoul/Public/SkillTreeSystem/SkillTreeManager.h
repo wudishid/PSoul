@@ -27,6 +27,8 @@ public:
 	
 	bool TryLearnSkill(FName InSkillID);
 	
+	void UnlockSkill(FName InSkillID);
+	
 	USkillTreeNodeData* GetSkillTreeNodeData(FName InSkillID) const;
 
 	bool IsSkillUnlocked(FName InSkillID) const;
@@ -39,22 +41,26 @@ public:
 	
 	FOnSkillUnlocked OnSkillUnlocked;
 	FOnSkillLearned OnSkillLearned;
+
+	const TArray<FName>& GetUnlockedSkills() const { return UnlockedSkills; }
+	const TArray<FName>& GetLearnedSkills() const { return LearnedSkills; }
 private:
 	int32 GetCostedSkillPoints() const;
+
+	UFUNCTION(Server, Reliable)
 	void LearnSkill(FName InSkillID);
 	
-	
-	UFUNCTION(Server, Reliable)
-	void ServerGiveSkill(FName InSkillID);
-
 	UFUNCTION()
 	void OnRep_LearnedSkills();
-	
+
+	UFUNCTION()
+	void OnRep_UnlockedSkills();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "SkillTreeManager")
 	TArray<USkillTreeData*> SkillTreeDatas;
 
-	UPROPERTY(EditDefaultsOnly, Category = "SkillTreeManager")
+	UPROPERTY(ReplicatedUsing = OnRep_UnlockedSkills, EditDefaultsOnly, Category = "SkillTreeManager")
 	TArray<FName> UnlockedSkills;
 
 	UPROPERTY(ReplicatedUsing = OnRep_LearnedSkills, EditDefaultsOnly, Category = "SkillTreeManager")

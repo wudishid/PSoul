@@ -63,27 +63,27 @@ bool UInventorySlot::IsEmpty() const
 	return bEmpty;
 }
 
-EItemOpetaionType UInventorySlot::GetRulesForOperationType(EItemOpetaionType type)
+EItemOperationType UInventorySlot::GetRulesForOperationType(EItemOperationType type)
 {
 	return type;
 }
 
-void UInventorySlot::HandleItemOperation(EItemOpetaionType OpetaionType)
+void UInventorySlot::HandleItemOperation(EItemOperationType OpetaionType)
 {
-	if(OpetaionType == EItemOpetaionType::Use)
+	if(OpetaionType == EItemOperationType::Use)
 	{
 		InventoryManagerComp->UseItem(SlotIndex);
 	}
-	else if(OpetaionType == EItemOpetaionType::Drop)
+	else if(OpetaionType == EItemOperationType::Drop)
 	{
 		InventoryManagerComp->DropItem(SlotIndex);
 	}
-	else if(OpetaionType == EItemOpetaionType::Equip)
+	else if(OpetaionType == EItemOperationType::Equip)
 	{
 		FInventoryItemInfo ItemInfo;
 		if(InventoryManagerComp->GetItemInfoByIndex(SlotIndex, ItemInfo))
 		{
-			EquipmentManagerComp->Equip(ItemInfo.EquipmentClass);
+			EquipmentManagerComp->Equip(ItemInfo.ItemName);
 			InventoryManagerComp->RemoveItem(SlotIndex);
 		}
 	}

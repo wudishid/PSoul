@@ -11,7 +11,12 @@
 #include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
+#include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/Attribute/SoulCharacterSet.h"
+#include "GAS/Attribute/SoulPlayerSet.h"
 #include "Inventory/InventoryManagerComponent.h"
+#include "Misc/SoulGameFunctionLibrary.h"
+#include "Save/SoulSaveGame_PlayerData.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 
 
@@ -64,9 +69,9 @@ FRotator APlayerCharacterBase::GetDesiredRotation() const
 	return Super::GetDesiredRotation();
 }
 
-void APlayerCharacterBase::PickUpItem(const FInventoryItemInfo& ItemInfo)
+void APlayerCharacterBase::PickUpItem(FName InItemName, int32 Amount)
 {
-	InventoryManagerComponent->AddItem(ItemInfo);
+	InventoryManagerComponent->AddItem(InItemName, Amount);
 	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
 	{
 		PlayerController->ClientPlaySoundAtLocation(GetDefault<USoul_CommonSetting>()->PickItemSound.LoadSynchronous(), GetActorLocation());
@@ -144,7 +149,61 @@ void APlayerCharacterBase::BeginPlay()
 		{
 			ShowHealthBar();
 		}
+		else
+		{
+			HideHealthBar();
+		}
 	}
+
+	FTimerHandle Timer_Save;
+	GetWorld()->GetTimerManager().SetTimer(Timer_Save, FTimerDelegate::CreateLambda([this]()
+	{
+		if (HasAuthority() || GetNetMode() == NM_Standalone)
+		{
+			if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
+			{
+				if (USoulCharacterSet* CharacterSet = const_cast<USoulCharacterSet*>(ASC->GetSet<USoulCharacterSet>()))
+				{
+					CharacterSet->SetHealth(SaveGame_PlayerData->SavedData.CharacterData.Health.GetCurrentValue());
+					CharacterSet->SetStamina(SaveGame_PlayerData->SavedData.CharacterData.Stamina.GetCurrentValue());
+				}
+			
+				if (USoulPlayerSet* PlayerSet = const_cast<USoulPlayerSet*>(ASC->GetSet<USoulPlayerSet>()))
+				{
+					PlayerSet->SetLevel(SaveGame_PlayerData->SavedData.PlayerData.Level.GetCurrentValue());
+					PlayerSet->SetNextLevelNeedSoul(
+						SaveGame_PlayerData->SavedData.PlayerData.NextLevelNeedSoul.GetCurrentValue());
+					PlayerSet->SetLife(SaveGame_PlayerData->SavedData.PlayerData.Life.GetCurrentValue());
+					PlayerSet->SetStrength(SaveGame_PlayerData->SavedData.PlayerData.Strength.GetCurrentValue());
+					PlayerSet->SetStamina(SaveGame_PlayerData->SavedData.PlayerData.Stamina.GetCurrentValue());
+					PlayerSet->SetSoul(SaveGame_PlayerData->SavedData.PlayerData.Soul.GetCurrentValue());
+				}
+
+				for (const FSavedSingleItemData& SavedSingleItemData : SaveGame_PlayerData->SavedData.
+						 InventoryItemsData)
+				{
+					InventoryManagerComponent->AddItem(SavedSingleItemData.ItemName, SavedSingleItemData.ItemAmount);
+				}
+
+				for (const FName& ItemName : SaveGame_PlayerData->SavedData.WornItemData)
+				{
+					EquipmentManagerComponent->Equip(ItemName);
+				}
+
+				for (const FName& SkillName : SaveGame_PlayerData->SavedData.UnlockedSkills)
+				{
+					SkillTreeManagerComp->UnlockSkill(SkillName);
+				}
+
+				for (const FName& SkillName : SaveGame_PlayerData->SavedData.LearnedSkills)
+				{
+					SkillTreeManagerComp->TryLearnSkill(SkillName);
+				}
+			
+			}
+		}
+	}
+	), 1.f, false);
 	
 }
 
@@ -152,5 +211,10 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	UpdateDirectionalSkillControl();
+}
+
+void APlayerCharacterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
 }
 

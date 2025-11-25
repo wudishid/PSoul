@@ -8,7 +8,7 @@
 
 class IItemOperationInterface;
 class UItemSingleOperation;
-enum class EItemOpetaionType : uint8;
+enum class EItemOperationType : uint8;
 class UVerticalBox;
 
 UCLASS(Abstract)
@@ -25,7 +25,7 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 	UFUNCTION()
-	void HandleSIngleOperationClicked(EItemOpetaionType OperationType);
+	void HandleSIngleOperationClicked(EItemOperationType OperationType);
 	
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* VB_OperationList;

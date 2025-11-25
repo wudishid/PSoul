@@ -27,7 +27,7 @@ enum class EEquipmentType : uint8
 };
 
 UENUM()
-enum class EItemOpetaionType : uint8
+enum class EItemOperationType : uint8
 {
 	None = 0,
 	Use,
@@ -45,12 +45,9 @@ struct FInventoryItemInfo : public FTableRowBase
 	{
 	}
 
-	bool IsValid() const { return Guid.IsValid(); }
+	bool IsValid() const { return !ItemName.IsNone(); }
 
-	bool operator==(const FInventoryItemInfo& Other) const { return Guid == Other.Guid; }
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGuid Guid;
+	bool operator==(const FInventoryItemInfo& Other) const { return IsValid() && ItemName == Other.ItemName; }
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName ItemName;
@@ -71,7 +68,7 @@ struct FInventoryItemInfo : public FTableRowBase
 	EItemType ItemType = EItemType::Consumable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<EItemOpetaionType> ItemOpetaions;
+	TArray<EItemOperationType> ItemOperations;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<AInventoryItemInstance> ItemClass;
@@ -100,7 +97,7 @@ struct FInventoryItemSlot : public FFastArraySerializerItem
 	
 	int32 GetItemHash() const
 	{
-		return HashCombine(GetTypeHash(Amount), GetTypeHash(ItemInfo.Guid));
+		return HashCombine(GetTypeHash(Amount), GetTypeHash(ItemInfo.ItemName));
 	}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -118,7 +115,7 @@ struct FInventoryItemSlotList : public FFastArraySerializer
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParms)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FInventoryItemSlot, FInventoryItemSlotList>(Slots, DeltaParms, *this);
+		return FastArrayDeltaSerialize<FInventoryItemSlot, FInventoryItemSlotList>(Slots, DeltaParms, *this);
 	}
 	
 	UPROPERTY()

@@ -23,6 +23,7 @@ public:
 	virtual void UnEquip();
 	EEquipmentType GetEquipmentType() const;
 	FInventoryItemInfo GetItemInfo() const { return ItemInfo; };
+	FName GetItemName() const { return ItemName; };
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

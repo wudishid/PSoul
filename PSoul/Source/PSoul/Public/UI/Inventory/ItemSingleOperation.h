@@ -7,12 +7,12 @@
 #include "ItemSingleOperation.generated.h"
 
 class UTextBlock;
-enum class EItemOpetaionType : uint8;
+enum class EItemOperationType : uint8;
 class UButton;
 class UInventorySlot;
 
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnOperationClicked, EItemOpetaionType)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnOperationClicked, EItemOperationType)
 
 
 UCLASS(Abstract)
@@ -20,12 +20,12 @@ class PSOUL_API UItemSingleOperation : public USoulUserWidget
 {
 	GENERATED_BODY()
 public:
-	void UpdateSingleOperation(EItemOpetaionType OperationType);
+	void UpdateSingleOperation(EItemOperationType OperationType);
 	FOnOperationClicked OnOperationClicked;
 protected:
 	virtual void NativeConstruct() override;
 	
-	EItemOpetaionType ItemOpetaionType;
+	EItemOperationType ItemOpetaionType;
 	
 	UFUNCTION()
 	void HandleBtn_OperateClicked();
