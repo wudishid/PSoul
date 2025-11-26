@@ -263,9 +263,9 @@ void ASoulPlayerController_Game::PressSkillByInputTag(FGameplayTag InInputTag)
 		}
 		else if (SkillTreeNodeData->SkillReleaseType == ESkillReleaseType::DirectionRelease)
 		{
-			if (ISkillReleaseControlInterface* SkillReleaseControlInterface = Cast<ISkillReleaseControlInterface>(GetPawn()))
+			if (ASC.IsValid())
 			{
-				SkillReleaseControlInterface->SetEnableDirectionalSkillControl(true);
+				ASC->AddLooseGameplayTag(SoulGameplayTags::SkillRelease_Direction);
 			}
 		}
 	}
@@ -281,9 +281,9 @@ void ASoulPlayerController_Game::ReleaseSkillByInputTag(FGameplayTag InInputTag)
 		{
 			QuickSkillManager->ReleaseSkill(InInputTag);
 
-			if (ISkillReleaseControlInterface* SkillReleaseControlInterface = Cast<ISkillReleaseControlInterface>(GetPawn()))
+			if (ASC.IsValid())
 			{
-				SkillReleaseControlInterface->SetEnableDirectionalSkillControl(false);
+				ASC->RemoveLooseGameplayTag(SoulGameplayTags::SkillRelease_Direction);
 			}
 		}
 	}

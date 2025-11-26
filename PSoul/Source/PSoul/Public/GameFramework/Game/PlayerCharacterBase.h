@@ -57,7 +57,6 @@ public:
 	virtual FRotator GetDesiredRotation() const override;
 	virtual void PickUpItem(FName InItemName, int32 Amount = 1) override;
 	
-	virtual void SetEnableDirectionalSkillControl(bool InEnable) override;
 	UFUNCTION()
 	virtual void ApplyDirectionalSkillControl_Implementation() override;
 protected:

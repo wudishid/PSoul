@@ -31,10 +31,9 @@ AEquipmentInstance* FEquipmentSlotList::GetEquipmentByType(EEquipmentType InEqui
 	return nullptr;
 }
 
-
-void FEquipmentSlotList::AddEntry(FEquipmentSlot Entry)
+void FEquipmentSlotList::AddSlot(FEquipmentSlot InSlot)
 {
-	FEquipmentSlot& NewSlot = Slots.Add_GetRef(MoveTemp(Entry));
+	Slots.Add(InSlot);
 }
 
 // Sets default values for this component's properties
@@ -79,9 +78,9 @@ void UEquipmentManagerComponent::Equip_Implementation(FName InEquipmentName)
 			Sp.Owner = GetOwner();
 			if (AEquipmentInstance* Equipment = GetWorld()->SpawnActor<AEquipmentInstance>(EquipmentClass, Sp))
 			{
-				OnEquip.Broadcast(Equipment->GetEquipmentType(), Equipment);
 				EquipmentSlotList.SetEquipmentSlot(Equipment->GetEquipmentType(), Equipment);
 				Equipment->Equip();
+				OnEquip.Broadcast(Equipment->GetEquipmentType(), Equipment);
 			}
 		}
 	}
@@ -125,12 +124,11 @@ void UEquipmentManagerComponent::GetLifetimeReplicatedProps(TArray<class FLifeti
 
 void UEquipmentManagerComponent::InitEquipmentSlotList()
 {
-	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Weapon, nullptr));
-	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Armor, nullptr));
-	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Shield, nullptr));
-	EquipmentSlotList.AddEntry(FEquipmentSlot(EEquipmentType::Ring, nullptr));
+	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Weapon, nullptr));
+	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Armor, nullptr));
+	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Shield, nullptr));
+	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Ring, nullptr));
 }
-
 
 
 void UEquipmentManagerComponent::OnRep_EquipmentSlotList(const FEquipmentSlotList& OldEquipmentSlotList)

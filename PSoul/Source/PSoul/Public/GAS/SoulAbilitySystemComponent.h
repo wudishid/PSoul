@@ -33,6 +33,12 @@ public:
 	
 	void ConsumeInputBuffer();
 
+	UFUNCTION(BlueprintCallable, Category = "SoulAbilitySystemComponent")
+	void AddGameplayTags(FGameplayTagContainer Tags);
+
+	UFUNCTION(BlueprintCallable, Category = "SoulAbilitySystemComponent")
+	void RemoveGameplayTags(FGameplayTagContainer Tags);
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;

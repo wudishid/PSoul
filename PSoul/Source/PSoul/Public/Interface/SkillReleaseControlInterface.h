@@ -22,8 +22,6 @@ class PSOUL_API ISkillReleaseControlInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void SetEnableDirectionalSkillControl(bool InEnable) = 0;
-
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "SkillReleaseControlInterface")
 	void ApplyDirectionalSkillControl();
 	

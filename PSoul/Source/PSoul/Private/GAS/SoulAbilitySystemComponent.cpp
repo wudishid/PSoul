@@ -22,6 +22,16 @@ void USoulAbilitySystemComponent::ConsumeInputBuffer()
 	}
 }
 
+void USoulAbilitySystemComponent::AddGameplayTags(FGameplayTagContainer Tags)
+{
+	AddLooseGameplayTags(Tags);
+}
+
+void USoulAbilitySystemComponent::RemoveGameplayTags(FGameplayTagContainer Tags)
+{
+	RemoveLooseGameplayTags(Tags);
+}
+
 // Called when the game starts
 void USoulAbilitySystemComponent::BeginPlay()
 {

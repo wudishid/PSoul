@@ -47,12 +47,10 @@ struct FEquipmentSlotList
 
 	void SetEquipmentSlot(EEquipmentType InEquipmentType, AEquipmentInstance* InEquipmentInstance);
 	AEquipmentInstance* GetEquipmentByType(EEquipmentType InEquipmentType);
-	
-	void AddEntry(FEquipmentSlot Entry);
+	void AddSlot(FEquipmentSlot InSlot);
 	
 	UPROPERTY()
 	TArray<FEquipmentSlot> Slots;
-	
 };
 
 

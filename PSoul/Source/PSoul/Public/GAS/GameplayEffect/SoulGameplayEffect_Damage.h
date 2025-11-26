@@ -10,10 +10,12 @@ class USoulGameplayEffect_Damage;
 
 
 UENUM(BlueprintType)
-enum class EDamageEffct : uint8
+enum class EDamageEffect : uint8
 {
 	Normal = 0			UMETA(DisplayName = "普通"),
-	KnockUp				UMETA(DisplayName = "击飞"),
+	//轻推，比如翻滚碰到敌人
+	Nudge				UMETA(DisplayName = "轻推"),
+	KnockUp				UMETA(DisplayName = "击飞")
 };
 
 
@@ -36,5 +38,5 @@ class PSOUL_API USoulGameplayEffect_Damage : public USoulGameplayEffect
 	GENERATED_BODY()
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "DamageInfo")
-	EDamageEffct DamageEffect;
+	EDamageEffect DamageEffect;
 };

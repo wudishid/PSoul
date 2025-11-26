@@ -12,11 +12,8 @@
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
 #include "GAS/SoulAbilitySystemComponent.h"
-#include "GAS/Attribute/SoulCharacterSet.h"
-#include "GAS/Attribute/SoulPlayerSet.h"
 #include "Inventory/InventoryManagerComponent.h"
-#include "Misc/SoulGameFunctionLibrary.h"
-#include "Save/SoulSaveGame_PlayerData.h"
+#include "PSoul/SoulGameplayTags.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 
 
@@ -78,16 +75,6 @@ void APlayerCharacterBase::PickUpItem(FName InItemName, int32 Amount)
 	}
 }
 
-void APlayerCharacterBase::SetEnableDirectionalSkillControl(bool InEnable)
-{
-	bEnableDirectionalSkillControl = InEnable;
-	SkillDirectionSceneComp->SetHiddenInGame(!bEnableDirectionalSkillControl, true);
-	if (InEnable)
-	{
-		GetController()->SetControlRotation(GetActorRotation());
-	}
-}
-
 void APlayerCharacterBase::ApplyDirectionalSkillControl_Implementation()
 {
 	SetActorRotation(FRotator(GetActorRotation().Pitch, GetControlRotation().Yaw, GetActorRotation().Roll));
@@ -104,20 +91,26 @@ void APlayerCharacterBase::OnConstruction(const FTransform& Transform)
 
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
-	if(InEquipmentType == EEquipmentType::Weapon)
+	if (HasAuthority())
 	{
-		if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
+		if(InEquipmentType == EEquipmentType::Weapon)
 		{
-			DamageCheckComp->SetCheckByMesh(Weapon->GetWeaponMesh());
+			if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
+			{
+				//DamageCheckComp->SetCheckByMesh(Weapon->GetWeaponMesh());
+			}
 		}
 	}
 }
 
 void APlayerCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 {
-	if(InEquipmentType == EEquipmentType::Weapon)
+	if (HasAuthority())
 	{
-		DamageCheckComp->SetCheckByBoxTrace();
+		if(InEquipmentType == EEquipmentType::Weapon)
+		{
+			//DamageCheckComp->SetCheckByBoxTrace();
+		}
 	}
 }
 
@@ -125,11 +118,24 @@ void APlayerCharacterBase::UpdateDirectionalSkillControl()
 {
 	if (IsLocallyControlled())
 	{
-		if (bEnableDirectionalSkillControl)
+		if (ASC->HasMatchingGameplayTag(SoulGameplayTags::SkillRelease_Direction))
 		{
+			if (SkillDirectionSceneComp->bHiddenInGame)
+			{
+				SkillDirectionSceneComp->SetHiddenInGame(false, true);
+				SetActorRotation(FRotator(GetActorRotation().Pitch, GetControlRotation().Yaw, GetActorRotation().Roll));
+			}
+			
 			FRotator TargetRotation = SkillDirectionSceneComp->GetComponentRotation();
 			TargetRotation.Yaw = GetControlRotation().Yaw;
 			SkillDirectionSceneComp->SetWorldRotation(TargetRotation);
+		}
+		else
+		{
+			if (!SkillDirectionSceneComp->bHiddenInGame)
+			{
+				SkillDirectionSceneComp->SetHiddenInGame(true, true);
+			}
 		}
 	}
 }
@@ -138,7 +144,7 @@ void APlayerCharacterBase::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	SetEnableDirectionalSkillControl(false);
+	
 	if (GetNetMode() == NM_Standalone)
 	{
 		HideHealthBar();
@@ -154,56 +160,56 @@ void APlayerCharacterBase::BeginPlay()
 			HideHealthBar();
 		}
 	}
-
-	FTimerHandle Timer_Save;
-	GetWorld()->GetTimerManager().SetTimer(Timer_Save, FTimerDelegate::CreateLambda([this]()
-	{
-		if (HasAuthority() || GetNetMode() == NM_Standalone)
-		{
-			if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
-			{
-				if (USoulCharacterSet* CharacterSet = const_cast<USoulCharacterSet*>(ASC->GetSet<USoulCharacterSet>()))
-				{
-					CharacterSet->SetHealth(SaveGame_PlayerData->SavedData.CharacterData.Health.GetCurrentValue());
-					CharacterSet->SetStamina(SaveGame_PlayerData->SavedData.CharacterData.Stamina.GetCurrentValue());
-				}
-			
-				if (USoulPlayerSet* PlayerSet = const_cast<USoulPlayerSet*>(ASC->GetSet<USoulPlayerSet>()))
-				{
-					PlayerSet->SetLevel(SaveGame_PlayerData->SavedData.PlayerData.Level.GetCurrentValue());
-					PlayerSet->SetNextLevelNeedSoul(
-						SaveGame_PlayerData->SavedData.PlayerData.NextLevelNeedSoul.GetCurrentValue());
-					PlayerSet->SetLife(SaveGame_PlayerData->SavedData.PlayerData.Life.GetCurrentValue());
-					PlayerSet->SetStrength(SaveGame_PlayerData->SavedData.PlayerData.Strength.GetCurrentValue());
-					PlayerSet->SetStamina(SaveGame_PlayerData->SavedData.PlayerData.Stamina.GetCurrentValue());
-					PlayerSet->SetSoul(SaveGame_PlayerData->SavedData.PlayerData.Soul.GetCurrentValue());
-				}
-
-				for (const FSavedSingleItemData& SavedSingleItemData : SaveGame_PlayerData->SavedData.
-						 InventoryItemsData)
-				{
-					InventoryManagerComponent->AddItem(SavedSingleItemData.ItemName, SavedSingleItemData.ItemAmount);
-				}
-
-				for (const FName& ItemName : SaveGame_PlayerData->SavedData.WornItemData)
-				{
-					EquipmentManagerComponent->Equip(ItemName);
-				}
-
-				for (const FName& SkillName : SaveGame_PlayerData->SavedData.UnlockedSkills)
-				{
-					SkillTreeManagerComp->UnlockSkill(SkillName);
-				}
-
-				for (const FName& SkillName : SaveGame_PlayerData->SavedData.LearnedSkills)
-				{
-					SkillTreeManagerComp->TryLearnSkill(SkillName);
-				}
-			
-			}
-		}
-	}
-	), 1.f, false);
+	
+	// FTimerHandle Timer_Save;
+	// GetWorld()->GetTimerManager().SetTimer(Timer_Save, FTimerDelegate::CreateLambda([this]()
+	// {
+	// 	if (HasAuthority() || GetNetMode() == NM_Standalone)
+	// 	{
+	// 		if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
+	// 		{
+	// 			if (USoulCharacterSet* CharacterSet = const_cast<USoulCharacterSet*>(ASC->GetSet<USoulCharacterSet>()))
+	// 			{
+	// 				CharacterSet->SetHealth(SaveGame_PlayerData->SavedData.CharacterData.Health.GetCurrentValue());
+	// 				CharacterSet->SetStamina(SaveGame_PlayerData->SavedData.CharacterData.Stamina.GetCurrentValue());
+	// 			}
+	// 		
+	// 			if (USoulPlayerSet* PlayerSet = const_cast<USoulPlayerSet*>(ASC->GetSet<USoulPlayerSet>()))
+	// 			{
+	// 				PlayerSet->SetLevel(SaveGame_PlayerData->SavedData.PlayerData.Level.GetCurrentValue());
+	// 				PlayerSet->SetNextLevelNeedSoul(
+	// 					SaveGame_PlayerData->SavedData.PlayerData.NextLevelNeedSoul.GetCurrentValue());
+	// 				PlayerSet->SetLife(SaveGame_PlayerData->SavedData.PlayerData.Life.GetCurrentValue());
+	// 				PlayerSet->SetStrength(SaveGame_PlayerData->SavedData.PlayerData.Strength.GetCurrentValue());
+	// 				PlayerSet->SetStamina(SaveGame_PlayerData->SavedData.PlayerData.Stamina.GetCurrentValue());
+	// 				PlayerSet->SetSoul(SaveGame_PlayerData->SavedData.PlayerData.Soul.GetCurrentValue());
+	// 			}
+	//
+	// 			for (const FSavedSingleItemData& SavedSingleItemData : SaveGame_PlayerData->SavedData.
+	// 					 InventoryItemsData)
+	// 			{
+	// 				InventoryManagerComponent->AddItem(SavedSingleItemData.ItemName, SavedSingleItemData.ItemAmount);
+	// 			}
+	//
+	// 			for (const FName& ItemName : SaveGame_PlayerData->SavedData.WornItemData)
+	// 			{
+	// 				EquipmentManagerComponent->Equip(ItemName);
+	// 			}
+	//
+	// 			for (const FName& SkillName : SaveGame_PlayerData->SavedData.UnlockedSkills)
+	// 			{
+	// 				SkillTreeManagerComp->UnlockSkill(SkillName);
+	// 			}
+	//
+	// 			for (const FName& SkillName : SaveGame_PlayerData->SavedData.LearnedSkills)
+	// 			{
+	// 				SkillTreeManagerComp->TryLearnSkill(SkillName);
+	// 			}
+	// 		
+	// 		}
+	// 	}
+	// }
+	// ), 1.f, false);
 	
 }
 

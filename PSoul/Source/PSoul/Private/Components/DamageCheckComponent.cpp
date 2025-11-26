@@ -2,14 +2,12 @@
 
 #include "Components/DamageCheckComponent.h"
 #include "GameFramework/SoulCharacterBase.h"
-#include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
 #include "Interface/SoulDamageInterface.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/SoulGameFunctionLibrary.h"
-#include "Net/UnrealNetwork.h"
-#include "PSoul/SoulGameplayTags.h"
+
 
 
 // Sets default values for this component's properties
@@ -53,16 +51,13 @@ void UDamageCheckComponent::CheckDamage(bool InForceUseBoxTrace)
 	{
 		CheckDamageByBoxTrace();
 	}
+	else if (bCheckByMeshComp)
+	{
+		CheckDamageByMesh();
+	}
 	else
 	{
-		if(bCheckByMeshComp)
-		{
-			CheckDamageByMesh();
-		}
-		else
-		{
-			CheckDamageByBoxTrace();
-		}
+		CheckDamageByBoxTrace();
 	}
 }
 

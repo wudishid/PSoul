@@ -26,6 +26,7 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputTag_QuickSkill4, "InputTag.QuickSkill4", "InputTag.QuickSkill4");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Hit, "GameplayEvent.Hit", "GameplayEvent.Hit");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Nudge, "GameplayEvent.Nudge", "GameplayEvent.Nudge");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_KnockUp, "GameplayEvent.KnockUp", "GameplayEvent.KnockUp");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "GameplayEvent.Death");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Montage_OpenCombWindow, "GameplayEvent.Montage.OpenCombWindow", "GameplayEvent.Montage.OpenCombWindow");

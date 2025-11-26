@@ -6,7 +6,7 @@
 #include "GameplayEffectComponent.h"
 #include "DamageGameplayEffectComponent.generated.h"
 
-enum class EDamageEffct : uint8;
+enum class EDamageEffect : uint8;
 /**
  * 
  */

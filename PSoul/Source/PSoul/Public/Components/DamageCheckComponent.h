@@ -46,10 +46,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	FVector BoxHalfSize = FVector(50, 50, 50);
 
-	UPROPERTY(EditAnywhere, Category = "AttackCheck")
+	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	float MeshCheckHalfHeight = 20.f;
 	
-	UPROPERTY(EditAnywhere, Category = "AttackCheck")
+	UPROPERTY(EditAnywhere, Category = "DamageCheck")
 	float MeshCheckRadius = 20.f;
 
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
@@ -59,7 +59,7 @@ protected:
 	};
 
 	UPROPERTY(EditAnywhere, Category = "DamageCheck")
-	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugTraceType;
+	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugTraceType = EDrawDebugTrace::None;
 
 	UPROPERTY()
 	TObjectPtr<UPrimitiveComponent> CheckMeshComp;
