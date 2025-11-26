@@ -28,9 +28,9 @@ protected:
 public:
 	void SetCheckByMesh(UPrimitiveComponent* InMeshComp);
 	void SetCheckByBoxTrace();
-	void ResetCheck();
+	void EndCheck();
 	void CheckDamage(bool InForceUseBoxTrace =false);
-	void SetDamageInfo(const FDamageInfo& InDamageInfo) { DamageInfo = InDamageInfo; }
+	void StartCheck(const FDamageInfo& InDamageInfo) { DamageInfo = InDamageInfo; }
 protected:
 	void CheckDamageByBoxTrace();
 	

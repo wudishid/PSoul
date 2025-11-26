@@ -40,7 +40,7 @@ void UDamageCheckComponent::SetCheckByBoxTrace()
 	bCheckByMeshComp = false;
 }
 
-void UDamageCheckComponent::ResetCheck()
+void UDamageCheckComponent::EndCheck()
 {
 	HitActors.Empty();
 }
@@ -126,39 +126,39 @@ void UDamageCheckComponent::Server_CheckDamge_Implementation(const TArray<FVecto
 														  MeshCheckRadius, MeshCheckHalfHeight,
 														  TraceObjectType, false, ActorsToIgnore,
 														  DrawDebugTraceType, Hits, true);
-	}
 
-	if (!Hits.IsEmpty())
-	{
-		USoulAbilitySystemComponent* CauserASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
-		if (!CauserASC) return;
-		
-		for (const FHitResult& Hit : Hits)
+		if (!Hits.IsEmpty())
 		{
-			if (AActor* HitActor = Hit.GetActor())
+			USoulAbilitySystemComponent* CauserASC = GetOwner()->FindComponentByClass<USoulAbilitySystemComponent>();
+			if (!CauserASC) return;
+		
+			for (const FHitResult& Hit : Hits)
 			{
-				if (!HitActors.Contains(HitActor))
+				if (AActor* HitActor = Hit.GetActor())
 				{
-					HitActors.AddUnique(HitActor);
-					
-					if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(HitActor))
+					if (!HitActors.Contains(HitActor))
 					{
-						DamageInterface->Execute_TakeDamage(HitActor);
-					}
-
-					if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+						HitActors.AddUnique(HitActor);
 					
-					USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
-							USoulAbilitySystemComponent>();
-					if (!TargetASC) continue;
+						if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(HitActor))
+						{
+							DamageInterface->Execute_TakeDamage(HitActor);
+						}
 
-					if (DamageInfo.DamageEffect)
-					{
-						UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
-						UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
-							FindOrAddComponent<UDamageGameplayEffectComponent>();
-						DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
-						CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+						if (USoulGameFunctionLibrary::IsSameTeam(HitActor, GetOwner())) continue;
+					
+						USoulAbilitySystemComponent* TargetASC = HitActor->FindComponentByClass<
+								USoulAbilitySystemComponent>();
+						if (!TargetASC) continue;
+
+						if (DamageInfo.DamageEffect)
+						{
+							UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
+							UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
+								FindOrAddComponent<UDamageGameplayEffectComponent>();
+							DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
+							CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+						}
 					}
 				}
 			}

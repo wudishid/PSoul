@@ -91,26 +91,20 @@ void APlayerCharacterBase::OnConstruction(const FTransform& Transform)
 
 void APlayerCharacterBase::HandleEquip(EEquipmentType InEquipmentType, AEquipmentInstance* EquipmentInstance)
 {
-	if (HasAuthority())
+	if(InEquipmentType == EEquipmentType::Weapon)
 	{
-		if(InEquipmentType == EEquipmentType::Weapon)
+		if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
 		{
-			if(AEquipment_Weapon* Weapon = Cast<AEquipment_Weapon>(EquipmentInstance))
-			{
-				//DamageCheckComp->SetCheckByMesh(Weapon->GetWeaponMesh());
-			}
+			DamageCheckComp->SetCheckByMesh(Weapon->GetWeaponMesh());
 		}
 	}
 }
 
 void APlayerCharacterBase::HandleUnEquip(EEquipmentType InEquipmentType)
 {
-	if (HasAuthority())
+	if(InEquipmentType == EEquipmentType::Weapon)
 	{
-		if(InEquipmentType == EEquipmentType::Weapon)
-		{
-			//DamageCheckComp->SetCheckByBoxTrace();
-		}
+		DamageCheckComp->SetCheckByBoxTrace();
 	}
 }
 

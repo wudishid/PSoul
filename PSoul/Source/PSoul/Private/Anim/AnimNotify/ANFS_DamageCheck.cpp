@@ -10,11 +10,11 @@ void UANFS_DamageCheck::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeque
 	
 	if (AActor* OwnerActor = MeshComp->GetOwner())
 	{
+		if (!OwnerActor->HasAuthority()) return;
+		
 		if (UDamageCheckComponent* DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>())
 		{
-			DamageCheckComponent->ResetCheck();
-			DamageCheckComponent->SetDamageInfo(DamageInfo);
-			DamageCheckComponent->CheckDamage(bForceUseBoxTrace);
+			DamageCheckComponent->StartCheck(DamageInfo);
 		}
 	}
 }
@@ -26,9 +26,26 @@ void UANFS_DamageCheck::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequen
 
 	if (AActor* OwnerActor = MeshComp->GetOwner())
 	{
+		if (!OwnerActor->HasAuthority()) return;
+		
 		if (UDamageCheckComponent* DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>())
 		{
-			DamageCheckComponent->CheckDamage();
+			DamageCheckComponent->CheckDamage(bForceUseBoxTrace);
+		}
+	}
+}
+
+void UANFS_DamageCheck::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	const FAnimNotifyEventReference& EventReference)
+{
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
+	if (AActor* OwnerActor = MeshComp->GetOwner())
+	{
+		if (!OwnerActor->HasAuthority()) return;
+		
+		if (UDamageCheckComponent* DamageCheckComponent = OwnerActor->FindComponentByClass<UDamageCheckComponent>())
+		{
+			DamageCheckComponent->EndCheck();
 		}
 	}
 }
