@@ -11,6 +11,7 @@ Stamina(50),
 MaxStamina(50),
 PhysicalAttack(30),
 PhysicalDefence(0),
+MaxMoveSpeed(600),
 MagicDefence(0),
 Damage(0)
 {
@@ -28,6 +29,8 @@ void USoulCharacterSet::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, PhysicalAttack, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, PhysicalDefence, COND_None, REPNOTIFY_Always);
 
+	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, MaxMoveSpeed, COND_None, REPNOTIFY_Always);
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Damage, COND_None, REPNOTIFY_Always);
 
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulCharacterSet, Soul, COND_None, REPNOTIFY_Always);
@@ -118,6 +121,12 @@ void USoulCharacterSet::OnRep_MagicDefence(const FGameplayAttributeData& OldValu
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, MagicDefence, OldValue);
 	OnSoulAttributeChanged.Broadcast(GetMagicDefenceAttribute(), GetMagicDefence(), OldValue.GetCurrentValue());
+}
+
+void USoulCharacterSet::OnRep_MoveSpeed(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulCharacterSet, MaxMoveSpeed, OldValue);
+	OnSoulAttributeChanged.Broadcast(GetMaxMoveSpeedAttribute(), GetMaxMoveSpeed(), OldValue.GetCurrentValue());
 }
 
 void USoulCharacterSet::OnRep_Damage(const FGameplayAttributeData& OldValue)

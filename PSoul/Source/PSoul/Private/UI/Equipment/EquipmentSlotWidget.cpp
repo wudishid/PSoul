@@ -1,6 +1,4 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/Equipment/EquipmentSlotWidget.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
@@ -14,7 +12,7 @@ EItemOperationType UEquipmentSlotWidget::GetRulesForOperationType(EItemOperation
 {
 	if(type == EItemOperationType::Equip)
 	{
-		return EItemOperationType::UnEquip;
+		return EItemOperationType::None;
 	}
 	return type;
 }

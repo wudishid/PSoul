@@ -6,6 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "Soul_UISetting.generated.h"
 
+class UBuffSlot;
 class USkillPicklQuickSlot;
 class USkillQuickSlot;
 class USkillQuickPickPanel;
@@ -65,6 +66,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | QuickSkill")
 	TSoftClassPtr<USkillPicklQuickSlot> SkillPicklQuickSlotClass;
+
+	
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Buff")
+	TSoftClassPtr<UBuffSlot> BuffSlotClass;
 	
 protected:
 #if WITH_EDITOR

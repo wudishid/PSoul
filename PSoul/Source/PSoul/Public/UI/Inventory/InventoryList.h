@@ -47,10 +47,7 @@ protected:
 	
 	UPROPERTY()
 	TArray<UInventorySlot*> InventorySlots;
-
-	UPROPERTY()
-	UItemOperationPanel* ItemOperationPanel;
-
+	
 	UPROPERTY()
 	UInventoryManagerComponent* InventoryManagerComponent;
 

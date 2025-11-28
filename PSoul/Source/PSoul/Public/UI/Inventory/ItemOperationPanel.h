@@ -18,7 +18,6 @@ class PSOUL_API UItemOperationPanel : public USoulUserWidget
 
 public:
 	void UpdateOperationPanel(IItemOperationInterface* InOperatedSlot, FVector2d Position);
-	
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;

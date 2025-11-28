@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DeveloperSettings.h"
 #include "Soul_CommonSetting.generated.h"
 
@@ -25,4 +26,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Config, Category = "Soul Common Settings | Sound")
 	TSoftObjectPtr<USoundBase> ClosePanelSound;
+
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul Common Settings | Buff")
+	TMap<FGameplayTag, TSoftObjectPtr<UTexture2D>> BuffsIconMap;
 };

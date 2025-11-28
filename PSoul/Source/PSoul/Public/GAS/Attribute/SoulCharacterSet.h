@@ -23,9 +23,11 @@ public:
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalAttack);
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, PhysicalDefence);
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, MagicDefence);
+
+	ATTRIBUTE_ACCESSORS(USoulCharacterSet, MaxMoveSpeed);
 	
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Damage);
-
+	
 	ATTRIBUTE_ACCESSORS(USoulCharacterSet, Soul);
 public:
 	USoulCharacterSet();
@@ -60,6 +62,9 @@ protected:
 
 	UFUNCTION()
 	void OnRep_MagicDefence(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MoveSpeed(const FGameplayAttributeData& OldValue);
 	
 	UFUNCTION()
 	void OnRep_Damage(const FGameplayAttributeData& OldValue);
@@ -90,6 +95,9 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MagicDefence, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MagicDefence;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MoveSpeed, Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxMoveSpeed;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Damage, Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;

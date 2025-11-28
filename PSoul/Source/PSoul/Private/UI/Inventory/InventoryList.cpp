@@ -1,16 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
 #include "UI/Inventory/InventoryList.h"
-
-#include <filesystem>
-
-#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/CanvasPanel.h"
-#include "Components/CanvasPanelSlot.h"
 #include "Components/UniformGridPanel.h"
 #include "Development/Soul_UISetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
+#include "Subsystem/UIPopupManager.h"
 #include "UI/Equipment/EquipmentSlotWidget.h"
 #include "UI/Inventory/InventorySlot.h"
 #include "UI/Inventory/ItemOperationPanel.h"
@@ -80,21 +75,11 @@ void UInventoryList::CreateInventoryPanel()
 
 void UInventoryList::HandleSlotRightMouseButtonDown(IItemOperationInterface* InOperatedSlot, FVector2d InPosition)
 {
-	if(ItemOperationPanel)
+	if (UItemOperationPanel* ItemOperationPanel = GetGameInstance()->GetSubsystem<UUIPopupManager>()->PopupPanelWidget<
+		UItemOperationPanel>(this, EPopupWidgetLayer::Inventory,
+		                     GetDefault<USoul_UISetting>()->ItemOperationPanelClass.LoadSynchronous()))
 	{
-		if(!ItemOperationPanel->IsInViewport())
-		{
-			ItemOperationPanel->AddToViewport();
-			ItemOperationPanel->UpdateOperationPanel(InOperatedSlot, InPosition);
-		}
-	}
-	else
-	{
-		ItemOperationPanel = CreateWidget<UItemOperationPanel>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemOperationPanelClass.LoadSynchronous());
-		if(ensure(ItemOperationPanel))
-		{
-			ItemOperationPanel->AddToViewport();
-			ItemOperationPanel->UpdateOperationPanel(InOperatedSlot, InPosition);
-		}
+		ItemOperationPanel->AddToViewport();
+		ItemOperationPanel->UpdateOperationPanel(InOperatedSlot, InPosition);
 	}
 }

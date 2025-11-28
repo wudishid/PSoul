@@ -65,6 +65,10 @@ bool UInventorySlot::IsEmpty() const
 
 EItemOperationType UInventorySlot::GetRulesForOperationType(EItemOperationType type)
 {
+	if(type == EItemOperationType::UnEquip)
+	{
+		return EItemOperationType::None;
+	}
 	return type;
 }
 

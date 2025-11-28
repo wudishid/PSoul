@@ -18,15 +18,13 @@ public:
 	// Sets default values for this component's properties
 	USoulCharacterMovementComponent();
 	virtual float GetMaxSpeed() const override;
-
-	//默认最大移动速度
-	UPROPERTY(EditAnywhere, Category = "SoulCharacterMovement")
-	float DefaultMaxSpeed = 600.f;
-
-
+	float GetDefaultMaxSpeed() const;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	UPROPERTY()
 	USoulAbilitySystemComponent* ASC = nullptr;
 };
+
+
+

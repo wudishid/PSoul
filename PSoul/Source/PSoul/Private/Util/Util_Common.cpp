@@ -90,3 +90,13 @@ void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageI
 	}
 }
 
+UTexture2D* Util_Common::GetBuffIconByBuffTag(FGameplayTag InBuffTag)
+{
+	if (GetDefault<USoul_CommonSetting>()->BuffsIconMap.Contains(InBuffTag))
+	{
+		return GetDefault<USoul_CommonSetting>()->BuffsIconMap.Find(InBuffTag)->LoadSynchronous();
+	}
+	
+	return nullptr;
+}
+

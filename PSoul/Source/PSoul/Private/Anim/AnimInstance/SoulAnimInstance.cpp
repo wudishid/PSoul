@@ -20,7 +20,7 @@ void USoulAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		if (CharacterMovementComponent)
 		{
 			float TempSpeed = UKismetMathLibrary::VSizeXY(OwnerPawn->GetVelocity());
-			Speed = UKismetMathLibrary::MapRangeClamped(TempSpeed, 0, CharacterMovementComponent->DefaultMaxSpeed, 0, 1);
+			Speed = UKismetMathLibrary::MapRangeClamped(TempSpeed, 0, CharacterMovementComponent->GetDefaultMaxSpeed(), 0, 1);
 		}
 		Direction = UKismetAnimationLibrary::CalculateDirection(OwnerPawn->GetVelocity(), OwnerPawn->GetActorRotation());
 		Direction =  UKismetMathLibrary::MapRangeClamped(Direction, -180, 180, -1, 1);

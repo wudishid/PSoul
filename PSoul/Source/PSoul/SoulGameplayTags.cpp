@@ -42,6 +42,9 @@ namespace SoulGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Immune, "Buff.Immune", "Buff.Immune");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Stoic, "Buff.Stoic", "Buff.Stoic");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Gain_Health, "Buff.Gain.Health", "Buff.Gain.Health");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Gain_Attack, "Buff.Gain.Attack", "Buff.Gain.Attack");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Buff_Gain_MoveSpeed, "Buff.Gain.MoveSpeed", "Buff.Gain.MoveSpeed");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputBuffer_Roll, "InputBuffer.Roll", "InputBuffer.Roll");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputBuffer_Attack, "InputBuffer.Attack", "InputBuffer.Attack");

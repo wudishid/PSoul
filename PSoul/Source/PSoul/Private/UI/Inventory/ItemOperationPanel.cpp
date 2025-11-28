@@ -24,9 +24,13 @@ void UItemOperationPanel::UpdateOperationPanel(IItemOperationInterface* InOperat
 	{
 		if(UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
 		{
-			SingleOperation->UpdateSingleOperation(OperatedSlot->GetRulesForOperationType(OperationType));
-			SingleOperation->OnOperationClicked.AddUObject(this, &ThisClass::HandleSIngleOperationClicked);
-			VB_OperationList->AddChildToVerticalBox(SingleOperation);
+			EItemOperationType ItemOperationType = OperatedSlot->GetRulesForOperationType(OperationType);
+			if(ItemOperationType != EItemOperationType::None)
+			{
+				SingleOperation->UpdateSingleOperation(ItemOperationType);
+				SingleOperation->OnOperationClicked.AddUObject(this, &ThisClass::HandleSIngleOperationClicked);
+				VB_OperationList->AddChildToVerticalBox(SingleOperation);
+			}
 		}
 	}
 }

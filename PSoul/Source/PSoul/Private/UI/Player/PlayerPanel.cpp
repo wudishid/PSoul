@@ -30,6 +30,7 @@ void UPlayerPanel::SetShowInventoryPanel(bool bShow)
 	else
 	{
 		InventoryList->SetVisibility(ESlateVisibility::Hidden);
+		GetGameInstance()->GetSubsystem<UUIPopupManager>()->RemoveAllPopupWidgetsByLayer(EPopupWidgetLayer::Inventory);
 		AttributePanel->SetVisibility(ESlateVisibility::Hidden);
 		Util_Common::PlayClosePanelSound(GetWorld());
 	}
