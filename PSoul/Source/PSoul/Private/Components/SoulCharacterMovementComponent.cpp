@@ -16,7 +16,7 @@ float USoulCharacterMovementComponent::GetMaxSpeed() const
 {
 	if (ASC->HasMatchingGameplayTag(SoulGameplayTags::Status_Run))
 	{
-		return 600.f;
+		return DefaultMaxSpeed;
 	}
 	
 	return Super::GetMaxSpeed();

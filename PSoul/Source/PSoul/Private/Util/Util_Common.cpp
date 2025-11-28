@@ -2,8 +2,13 @@
 
 #include "Util/Util_Common.h"
 #include "Development/Soul_CommonSetting.h"
+#include "GAS/SoulAbilitySystemComponent.h"
+#include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
+#include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
+#include "Interface/SoulDamageInterface.h"
 #include "Inventory/InventoryItemInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/SoulGameFunctionLibrary.h"
 
 bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
 {
@@ -55,5 +60,33 @@ void Util_Common::PlayOpenPanelSound(UWorld* InWorld)
 void Util_Common::PlayClosePanelSound(UWorld* InWorld)
 {
 	UGameplayStatics::PlaySound2D(InWorld, GetDefault<USoul_CommonSetting>()->ClosePanelSound.LoadSynchronous());
+}
+
+void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo)
+{
+	if (InCauser && InTarget)
+	{
+		if (ISoulDamageInterface* DamageInterface = Cast<ISoulDamageInterface>(InTarget))
+		{
+			DamageInterface->Execute_TakeDamage(InTarget);
+		}
+
+		if (USoulGameFunctionLibrary::IsSameTeam(InCauser, InTarget)) return;
+		
+		USoulAbilitySystemComponent* CauserASC = InCauser->FindComponentByClass<USoulAbilitySystemComponent>();
+		if (!CauserASC) return;
+		USoulAbilitySystemComponent* TargetASC = InTarget->FindComponentByClass<
+			USoulAbilitySystemComponent>();
+		if (!TargetASC) return;
+
+		if (DamageInfo.DamageEffect)
+		{
+			UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
+			UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
+				FindOrAddComponent<UDamageGameplayEffectComponent>();
+			DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
+			CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+		}
+	}
 }
 

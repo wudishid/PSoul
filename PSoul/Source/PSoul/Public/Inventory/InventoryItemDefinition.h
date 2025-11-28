@@ -20,9 +20,9 @@ enum class EItemType : uint8
 UENUM()
 enum class EEquipmentType : uint8
 {
-	Weapon,
+	Weapon = 0,
 	Armor,
-	Shield,
+	Shoes,
 	Ring
 };
 

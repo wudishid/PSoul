@@ -126,7 +126,7 @@ void UEquipmentManagerComponent::InitEquipmentSlotList()
 {
 	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Weapon, nullptr));
 	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Armor, nullptr));
-	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Shield, nullptr));
+	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Shoes, nullptr));
 	EquipmentSlotList.AddSlot(FEquipmentSlot(EEquipmentType::Ring, nullptr));
 }
 

@@ -112,12 +112,11 @@ void APlayerCharacterBase::UpdateDirectionalSkillControl()
 {
 	if (IsLocallyControlled())
 	{
-		if (ASC->HasMatchingGameplayTag(SoulGameplayTags::SkillRelease_Direction))
+		if (ASC->HasMatchingGameplayTag(SoulGameplayTags::Help_SkillReleaseDirection))
 		{
 			if (SkillDirectionSceneComp->bHiddenInGame)
 			{
 				SkillDirectionSceneComp->SetHiddenInGame(false, true);
-				SetActorRotation(FRotator(GetActorRotation().Pitch, GetControlRotation().Yaw, GetActorRotation().Roll));
 			}
 			
 			FRotator TargetRotation = SkillDirectionSceneComp->GetComponentRotation();

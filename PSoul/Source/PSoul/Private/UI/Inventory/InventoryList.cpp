@@ -60,7 +60,7 @@ void UInventoryList::CreateInventoryPanel()
 	for(int index = 0; index < MaxColumn * MaxRow; index++)
 	{
 		UInventorySlot* InventorySlot =nullptr;
-		if(GetWorld()->HasBegunPlay() || GetWorld()->GetNetMode() == NM_Standalone)
+		if(GetWorld()->HasBegunPlay())
 		{
 			InventorySlot = CreateWidget<UInventorySlot>(GetOwningPlayer(),  GetDefault<USoul_UISetting>()->InventorySlotClass.LoadSynchronous());
 			InventorySlot->SlotIndex = index;

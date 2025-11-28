@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 
+struct FDamageInfo;
 class AInventoryItemInstance;
 
 namespace Util_Common
@@ -10,4 +11,5 @@ namespace Util_Common
 	bool SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass);
 	void PlayOpenPanelSound(UWorld* InWorld);
 	void PlayClosePanelSound(UWorld* InWorld);
+	void ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo);
 }

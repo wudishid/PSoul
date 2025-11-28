@@ -45,6 +45,7 @@ namespace SoulGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputBuffer_Roll, "InputBuffer.Roll", "InputBuffer.Roll");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(InputBuffer_Attack, "InputBuffer.Attack", "InputBuffer.Attack");
-	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SkillRelease_Direction, "SkillRelease.Direction", "SkillRelease.Direction");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Help_ActionDirection, "Help.ActionDirection", "Help.ActionDirection");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Help_SkillReleaseDirection, "Help.SkillReleaseDirection", "Help.SkillReleaseDirection");
 }

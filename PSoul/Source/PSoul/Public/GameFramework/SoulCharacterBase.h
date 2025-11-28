@@ -39,7 +39,8 @@ public:
 	virtual void HandleKill(AActor* InKilled);
 	
 	virtual void OnDeath();
-	
+
+	UFUNCTION(BlueprintPure, Category = "SoulCharacterBase")
 	virtual FRotator GetDesiredRotation() const;
 
 	virtual FGenericTeamId GetGenericTeamId() const override;

@@ -6,8 +6,8 @@
 #include "Animation/AnimInstance.h"
 #include "SoulAnimInstance.generated.h"
 
-class USoulAbilitySystemComponent;
-class UCharacterMovementComponent;
+
+class USoulCharacterMovementComponent;
 /**
  * 
  */
@@ -33,5 +33,5 @@ protected:
 	bool IsFalling;
 	
 	UPROPERTY()
-	TObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
+	TObjectPtr<USoulCharacterMovementComponent> CharacterMovementComponent;
 };

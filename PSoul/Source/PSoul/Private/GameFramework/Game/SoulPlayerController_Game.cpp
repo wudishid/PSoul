@@ -98,13 +98,13 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 		HUD->InitHUD();
 	}
 
-	if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
-	{
-		for (const auto& QuickSkillSlot : SaveGame_PlayerData->SavedData.QuickSkills)
-		{
-			QuickSkillManager->SetQuickSkill(QuickSkillSlot.Key, QuickSkillSlot.Value);
-		}
-	}
+	// if (USoulSaveGame_PlayerData* SaveGame_PlayerData = USoulGameFunctionLibrary::LoadGame())
+	// {
+	// 	for (const auto& QuickSkillSlot : SaveGame_PlayerData->SavedData.QuickSkills)
+	// 	{
+	// 		QuickSkillManager->SetQuickSkill(QuickSkillSlot.Key, QuickSkillSlot.Value);
+	// 	}
+	// }
 }
 
 void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
@@ -265,7 +265,7 @@ void ASoulPlayerController_Game::PressSkillByInputTag(FGameplayTag InInputTag)
 		{
 			if (ASC.IsValid())
 			{
-				ASC->AddLooseGameplayTag(SoulGameplayTags::SkillRelease_Direction);
+				ASC->AddLooseGameplayTag(SoulGameplayTags::Help_SkillReleaseDirection);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ void ASoulPlayerController_Game::ReleaseSkillByInputTag(FGameplayTag InInputTag)
 
 			if (ASC.IsValid())
 			{
-				ASC->RemoveLooseGameplayTag(SoulGameplayTags::SkillRelease_Direction);
+				ASC->RemoveLooseGameplayTag(SoulGameplayTags::Help_SkillReleaseDirection);
 			}
 		}
 	}
