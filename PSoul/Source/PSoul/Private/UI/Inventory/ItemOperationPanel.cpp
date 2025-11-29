@@ -19,13 +19,14 @@ void UItemOperationPanel::UpdateOperationPanel(IItemOperationInterface* InOperat
 	}
 	
 	VB_OperationList->ClearChildren();
-
-	for(EItemOperationType OperationType :OperatedSlot->GetItemInfo().ItemOperations)
+	
+	for (EItemOperationType OperationType : OperatedSlot->GetItemInfo().ItemOperations)
 	{
-		if(UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
+		if (UItemSingleOperation* SingleOperation = CreateWidget<UItemSingleOperation>(
+			GetOwningPlayer(), GetDefault<USoul_UISetting>()->ItemSingleOperationClass.LoadSynchronous()))
 		{
 			EItemOperationType ItemOperationType = OperatedSlot->GetRulesForOperationType(OperationType);
-			if(ItemOperationType != EItemOperationType::None)
+			if (ItemOperationType != EItemOperationType::None)
 			{
 				SingleOperation->UpdateSingleOperation(ItemOperationType);
 				SingleOperation->OnOperationClicked.AddUObject(this, &ThisClass::HandleSIngleOperationClicked);

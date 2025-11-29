@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "AI/SoulAIControllerBase.h"
-
 #include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/SoulCharacterBase.h"
 
