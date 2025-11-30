@@ -2,7 +2,7 @@
 
 
 #include "GameFramework/Login/SoulHUD_Login.h"
-#include "UI/Login/LoginPanel.h"
+#include "UI/Login/MainMenu.h"
 
 void ASoulHUD_Login::BeginPlay()
 {
@@ -10,7 +10,7 @@ void ASoulHUD_Login::BeginPlay()
 
 	if(IsValid(LoginPanelClass))
 	{
-		ULoginPanel* LoginPanel = CreateWidget<ULoginPanel>(GetOwningPlayerController(), LoginPanelClass);
+		UMainMenu* LoginPanel = CreateWidget<UMainMenu>(GetOwningPlayerController(), LoginPanelClass);
 		LoginPanel->AddToViewport();
 	}
 }

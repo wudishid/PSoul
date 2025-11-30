@@ -6,7 +6,7 @@
 #include "GameFramework/SoulHUD.h"
 #include "SoulHUD_Login.generated.h"
 
-class ULoginPanel;
+class UMainMenu;
 /**
  * 
  */
@@ -18,5 +18,5 @@ public:
 	virtual void BeginPlay() override;
 protected:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<ULoginPanel> LoginPanelClass;
+	TSubclassOf<UMainMenu> LoginPanelClass;
 };
