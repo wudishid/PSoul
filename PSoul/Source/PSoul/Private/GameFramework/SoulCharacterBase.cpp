@@ -55,7 +55,11 @@ void ASoulCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ASC->InitAbilityActorInfo(this, this);
+	if (HasAuthority())
+	{
+		ASC->InitAbilityActorInfo(this, this);
+	}
+	
 	ASC->GetSet<USoulCharacterSet>()->OnDied.AddUObject(this, &ThisClass::HandleKill);
 	
 	AttributeComponent->InitWithAbilitySystemComponent(ASC);
