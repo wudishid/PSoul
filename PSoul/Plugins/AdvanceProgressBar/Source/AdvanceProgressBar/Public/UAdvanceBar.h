@@ -7,8 +7,8 @@
 #include "UAdvanceBar.generated.h"
 
 
-
-
+class UProgressBar;
+class USizeBox;
 
 UENUM(BlueprintType)
 enum class EAdvanceBarUpdateStyle:uint8
@@ -29,13 +29,8 @@ class ADVANCEPROGRESSBAR_API UAdvanceBar : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	virtual void NativePreConstruct() override;
-
-	virtual void NativeConstruct() override;
-
-	virtual void NativeDestruct() override;
-
 public:
 	UFUNCTION(BlueprintCallable,Category="AdvanceBar")
 	void SetBarWidth(float InWidth);
@@ -44,18 +39,25 @@ public:
 	void UpdateBar(float InTargetPercent,EAdvanceBarUpdateStyle UpdateStyle=EAdvanceBarUpdateStyle::DirectSet);
 
 	float GetBarPercent() const;
-	
-public:
+
+	UFUNCTION(BlueprintCallable,Category="AdvanceBar")
+	void SetBarColor(FLinearColor InFrontColor, FLinearColor InBackColor);
+
+	virtual void BeginDestroy() override;
+protected:
 	//用来动态调整条的大小
 	UPROPERTY(meta=(BindWidget))
-	class USizeBox* BarSizeBox;
+	USizeBox* BarSizeBox;
 	
 	UPROPERTY(meta=(BindWidget))
-	class UProgressBar* FrontBar;
+	UProgressBar* FrontBar;
 
 	//背景条，用来显示变化了多少
 	UPROPERTY(meta=(BindWidget))
-	class UProgressBar* BackBar;
+	UProgressBar* BackBar;
+
+	UPROPERTY(EditAnywhere,Category="AdvanceBar")
+	float BarWidth = 150.f;
 	
 	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	FLinearColor FrontBarColor=FLinearColor::Red;;
@@ -74,7 +76,6 @@ public:
 	//更新频率，越大越顺滑，但会耗费更多性能
 	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	float UpdateFrequency=60;
-	
 private:
 	void ClearAllBarTimers();
 private:

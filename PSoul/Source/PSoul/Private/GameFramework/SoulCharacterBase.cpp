@@ -13,6 +13,7 @@
 #include "GAS/Attribute/SoulPlayerSet.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "UI/Character/StateBar.h"
+#include "UI/Character/StateBar_Info.h"
 
 
 // Sets default values
@@ -79,9 +80,9 @@ void ASoulCharacterBase::HandleAttributeChanged(FGameplayAttribute Attribute, fl
 void ASoulCharacterBase::ShowHealthBar()
 {
 	HealthBarComp->SetHiddenInGame(false);
-	if (UStateBar* StateBar = Cast<UStateBar>(HealthBarComp->GetUserWidgetObject()))
+	if (UStateBar_Info* StateBar_Info = Cast<UStateBar_Info>(HealthBarComp->GetUserWidgetObject()))
 	{
-		StateBar->Init(this, USoulCharacterSet::GetHealthAttribute(), USoulCharacterSet::GetMaxHealthAttribute());
+		StateBar_Info->Init(this, USoulCharacterSet::GetHealthAttribute(), USoulCharacterSet::GetMaxHealthAttribute());
 	}
 }
 
@@ -101,6 +102,11 @@ void ASoulCharacterBase::OnDeath()
 	{
 		HealthBarComp->SetHiddenInGame(true);
 	}
+}
+
+void ASoulCharacterBase::FinishDeath()
+{
+	
 }
 
 FRotator ASoulCharacterBase::GetDesiredRotation() const

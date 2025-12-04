@@ -11,7 +11,7 @@ UCLASS()
 class PSOUL_API ASoulPlayerState_Game : public ASoulPlayerState
 {
 	GENERATED_BODY()
-public:
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void OnRep_PlayerName() override;
 };

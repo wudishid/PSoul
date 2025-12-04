@@ -96,7 +96,7 @@ void UDamageCheckComponent::CheckDamageByBoxTrace()
 void UDamageCheckComponent::Server_CheckDamge_Implementation(const TArray<FVector>& InSocketsLocations)
 {
 	TArray<FHitResult> Hits;
-	TArray ActorsToIgnore{CheckMeshComp->GetOwner()};
+	TArray ActorsToIgnore{GetOwner()};
 	for (int i = 0; i <InSocketsLocations.Num(); i++)
 	{
 		FVector SocketLocation = InSocketsLocations[i];

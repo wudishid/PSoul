@@ -110,10 +110,8 @@ void ASoulPlayerController_Game::AcknowledgePossession(class APawn* P)
 void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	
 	ASC = InPawn->FindComponentByClass<USoulAbilitySystemComponent>();
 	QuickSkillManager->OnSetPawn(GetPawn());
-	
 }
 
 void ASoulPlayerController_Game::OnUnPossess()
@@ -123,6 +121,12 @@ void ASoulPlayerController_Game::OnUnPossess()
 	{
 		QuickSkillManager->OnSetPawn(nullptr);
 	}
+}
+
+void ASoulPlayerController_Game::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	SetPlayerName(GetGameInstance<USoulGameInstance>()->PlayerName);
 }
 
 void ASoulPlayerController_Game::Input_Move(const FInputActionValue& Value)
@@ -317,13 +321,22 @@ void ASoulPlayerController_Game::SetInputModeUI(EInputMappingContextMode InConte
 	SetInputMappingContextMode(InContextMode);
 }
 
+void ASoulPlayerController_Game::SetPlayerName_Implementation(FName InName)
+{
+	if (PlayerState)
+	{
+		PlayerState->SetPlayerName(InName.ToString());
+	}
+}
 
 void ASoulPlayerController_Game::Rebirth()
 {
-	APawn* CurPawn = GetPawn();
-	CurPawn->DetachFromControllerPendingDestroy();
-	CurPawn->Destroy();
-	GetWorld()->GetAuthGameMode()->RestartPlayer(this);
+	if (APawn* CurPawn = GetPawn())
+	{
+		CurPawn->DetachFromControllerPendingDestroy();
+		CurPawn->Destroy();
+		GetWorld()->GetAuthGameMode()->RestartPlayer(this);
+	}
 }
 
 void ASoulPlayerController_Game::BeginPlay()

@@ -30,8 +30,7 @@ class PSOUL_API ASoulPlayerController_Game : public ASoulPlayerController
 
 public:
 	ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer);
-
-	UFUNCTION(BlueprintCallable, Category = "SoulPlayerController_Game")
+	
 	void Rebirth();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -47,6 +46,7 @@ protected:
 	virtual void AcknowledgePossession(class APawn* P) override;
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
+	virtual void OnRep_PlayerState() override;
 	
 	void Input_Move(const FInputActionValue& Value);
 	void Input_Look(const FInputActionValue& Value);
@@ -75,6 +75,10 @@ protected:
 	void SetInputModeGame();
 	void SetInputModeUI(EInputMappingContextMode InContextMode);
 
+
+	UFUNCTION(Server, Reliable)
+	void SetPlayerName(FName InName);
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuickSkillManager")
 	TObjectPtr<UQuickSkillManager> QuickSkillManager;

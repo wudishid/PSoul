@@ -12,6 +12,8 @@ public class PSoul : ModuleRules
 		{
 			"Core",
 			"CoreUObject", 
+			"Slate",
+			"SlateCore",
 			"Engine", 
 			"InputCore", 
 			"EnhancedInput", 

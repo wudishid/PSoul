@@ -25,11 +25,27 @@ FRotator AAICharacterBase::GetDesiredRotation() const
 	return Super::GetDesiredRotation();
 }
 
+FName AAICharacterBase::GetCharacterName() const
+{
+	return AICharacterData->AICharacterName;
+}
+
 void AAICharacterBase::OnDeath()
 {
 	Super::OnDeath();
-	GetMovementComponent()->StopMovementImmediately();
-	DetachFromControllerPendingDestroy();
+
+	if (AAIController* AC = GetController<AAIController>())
+	{
+		DetachFromControllerPendingDestroy();
+		AC->Destroy();
+	}
+}
+
+void AAICharacterBase::FinishDeath()
+{
+	Super::FinishDeath();
+	DropItem();
+	Destroy();
 }
 
 void AAICharacterBase::DropItem_Implementation()
@@ -60,10 +76,8 @@ void AAICharacterBase::DropItem_Implementation()
 void AAICharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	if (!HasAuthority())
-	{
-		ShowHealthBar();
-	}
+	check(AICharacterData);
+	ShowHealthBar();
 }
 
 

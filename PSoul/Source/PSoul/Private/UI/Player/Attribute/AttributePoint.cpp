@@ -5,10 +5,8 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Kismet/KismetTextLibrary.h"
 
-void UAttributePoint::NativeConstruct()
+void UAttributePoint::Init()
 {
-	Super::NativeConstruct();
-	
 	ASC = GetOwningPlayerPawn()->FindComponentByClass<USoulAbilitySystemComponent>();
 	check(ASC);
 	TextBlock_AttributePointValue->SetText(UKismetTextLibrary::Conv_FloatToText(ASC->GetNumericAttribute(Attribute), ToPositiveInfinity));
@@ -17,7 +15,13 @@ void UAttributePoint::NativeConstruct()
 		ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &ThisClass::HandleAttributeChanged);
 	}
 
+	Btn_AddPoint->OnClicked.RemoveAll(this);
 	Btn_AddPoint->OnClicked.AddDynamic(this, &ThisClass::HandleBtn_AddPointClicked);
+}
+
+void UAttributePoint::NativeConstruct()
+{
+	Super::NativeConstruct();
 }
 
 void UAttributePoint::HandleAttributeChanged(const FOnAttributeChangeData& ChangeData)
@@ -27,5 +31,8 @@ void UAttributePoint::HandleAttributeChanged(const FOnAttributeChangeData& Chang
 
 void UAttributePoint::HandleBtn_AddPointClicked()
 {
-	ASC->Server_AddAttributePoint(Attribute);
+	if (ASC)
+	{
+		ASC->Server_AddAttributePoint(Attribute);
+	}
 }

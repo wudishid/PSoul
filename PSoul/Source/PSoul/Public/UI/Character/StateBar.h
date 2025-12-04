@@ -19,10 +19,11 @@ class PSOUL_API UStateBar : public USoulUserWidget
 {
 	GENERATED_BODY()
 
-public:
+protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
-
+	
+public:
 	void Init(APawn* OwnerPawn);
 	void Init(APawn* OwnerPawn, FGameplayAttribute InAttribute, FGameplayAttribute InMaxAttribute);
 	
@@ -40,15 +41,14 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "StateBar")
 	FGameplayAttribute MaxAttribute;
 
-	UPROPERTY(EditAnywhere,Category="StateBar")
+	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	float BarWidth = 150.f;
 	
-	UPROPERTY(EditAnywhere,Category="StateBar")
+	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	FLinearColor FrontBarColor=FLinearColor::Red;;
 
-	UPROPERTY(EditAnywhere,Category="StateBar")
+	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	FLinearColor BackBarColor=FLinearColor::Yellow;
-
 	
 	UPROPERTY()
 	UCharacterAttributeComponent* AttributeComponent;

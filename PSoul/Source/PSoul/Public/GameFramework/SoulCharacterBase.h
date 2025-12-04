@@ -40,11 +40,15 @@ public:
 	
 	virtual void OnDeath();
 
+	UFUNCTION(BlueprintCallable, Category = "SoulCharacterBase")
+	virtual void FinishDeath();
+	
 	UFUNCTION(BlueprintPure, Category = "SoulCharacterBase")
 	virtual FRotator GetDesiredRotation() const;
 
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
+	virtual FName GetCharacterName() const { return NAME_None; }
 protected:
 	virtual void BeginPlay() override;
 	UFUNCTION()

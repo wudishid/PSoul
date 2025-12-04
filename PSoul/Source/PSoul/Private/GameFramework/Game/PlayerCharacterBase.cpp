@@ -11,6 +11,9 @@
 #include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
+#include "GameFramework/SoulGameInstance.h"
+#include "GameFramework/Game/SoulPlayerController_Game.h"
+#include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
 #include "PSoul/SoulGameplayTags.h"
@@ -61,9 +64,46 @@ APlayerCharacterBase::APlayerCharacterBase()
 	SkillDirectionWidgetComp->SetHiddenInGame(true);
 }
 
+void APlayerCharacterBase::OnDeath()
+{
+	Super::OnDeath();
+	if (IsLocallyControlled())
+	{
+		if (ASoulPlayerController_Game* PC_Game = GetController<ASoulPlayerController_Game>())
+		{
+			PC_Game->SetIgnoreMoveInput(true);
+		}
+	}
+
+	if (HasAuthority())
+	{
+		EquipmentManagerComponent->DestroyEquipments();
+	}
+	
+}
+
+void APlayerCharacterBase::FinishDeath()
+{
+	Super::FinishDeath();
+	if (ASoulPlayerController_Game* PC_Game = GetController<ASoulPlayerController_Game>())
+	{
+		PC_Game->Rebirth();
+	}
+}
+
 FRotator APlayerCharacterBase::GetDesiredRotation() const
 {
 	return Super::GetDesiredRotation();
+}
+
+FName APlayerCharacterBase::GetCharacterName() const
+{
+	if (ASoulPlayerState_Game* PS = GetPlayerState<ASoulPlayerState_Game>())
+	{
+		return *PS->GetPlayerName();
+	}
+
+	return Super::GetCharacterName();
 }
 
 void APlayerCharacterBase::PickUpItem(FName InItemName, int32 Amount)

@@ -71,7 +71,10 @@ void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageI
 			DamageInterface->Execute_TakeDamage(InTarget);
 		}
 
-		if (USoulGameFunctionLibrary::IsSameTeam(InCauser, InTarget)) return;
+		if (!GetDefault<USoul_CommonSetting>()->OpenFriendDamage)
+		{
+			if (USoulGameFunctionLibrary::IsSameTeam(InCauser, InTarget)) return;
+		}
 		
 		USoulAbilitySystemComponent* CauserASC = InCauser->FindComponentByClass<USoulAbilitySystemComponent>();
 		if (!CauserASC) return;

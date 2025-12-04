@@ -7,6 +7,27 @@
 #include "Inventory/InventoryManagerComponent.h"
 
 
+void UEquipmentSlotWidget::Init()
+{
+	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
+	check(InventoryManagerComp);
+	
+	EquipmentComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
+	check(EquipmentComponent);
+	EquipmentComponent->OnEquip.AddUObject(this, &ThisClass::HandleEquip);
+	EquipmentComponent->OnUnEquip.AddUObject(this, &ThisClass::HandleUnEquip);
+
+	if (AEquipmentInstance* EquipmentInstance = EquipmentComponent->GetEquipmentInstance(EquipmentType))
+	{
+		Image_Icon->SetVisibility(ESlateVisibility::Visible);
+		Image_Icon->SetBrushFromTexture(EquipmentInstance->GetItemInfo().Icon.LoadSynchronous());
+	}
+	else
+	{
+		Image_Icon->SetVisibility(ESlateVisibility::Hidden);
+		Image_Icon->SetBrushFromTexture(nullptr);
+	}
+}
 
 EItemOperationType UEquipmentSlotWidget::GetRulesForOperationType(EItemOperationType type)
 {
@@ -40,21 +61,6 @@ FInventoryItemInfo UEquipmentSlotWidget::GetItemInfo() const
 void UEquipmentSlotWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	InventoryManagerComp = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
-	check(InventoryManagerComp);
-	
-	EquipmentComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
-	check(EquipmentComponent);
-	EquipmentComponent->OnEquip.AddUObject(this, &ThisClass::HandleEquip);
-	EquipmentComponent->OnUnEquip.AddUObject(this, &ThisClass::HandleUnEquip);
-
-	if (AEquipmentInstance* EquipmentInstance = EquipmentComponent->GetEquipmentInstance(EquipmentType))
-	{
-		Image_Icon->SetVisibility(ESlateVisibility::Visible);
-		Image_Icon->SetBrushFromTexture(EquipmentInstance->GetItemInfo().Icon.LoadSynchronous());
-	}
-	
 }
 
 FReply UEquipmentSlotWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

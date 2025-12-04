@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "MainMenu.generated.h"
 
+class UEditableTextBox;
 class UOverlay;
 class UTextBlock;
 class UProgressBar;
@@ -24,6 +25,12 @@ protected:
 	
 	UFUNCTION()
 	void HandleEnterGameClicked();
+
+	UFUNCTION()
+	void HandleNameTextBoxCommited(const FText& InText, ETextCommit::Type InCommitMethod);
+	
+	UPROPERTY(meta = (BindWidget))
+	UEditableTextBox* TextBox_Name;
 	
 	UPROPERTY(meta = (BindWidget))
 	UButton* Btn_EnterGame;

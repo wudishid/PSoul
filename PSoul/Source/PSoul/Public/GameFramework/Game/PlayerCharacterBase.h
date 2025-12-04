@@ -54,11 +54,16 @@ protected:
 	TObjectPtr<UWidgetComponent> SkillDirectionWidgetComp;
 public:
 	APlayerCharacterBase();
+
+	virtual void OnDeath() override;
+	virtual void FinishDeath() override;
 	virtual FRotator GetDesiredRotation() const override;
+	virtual FName GetCharacterName() const override;
 	virtual void PickUpItem(FName InItemName, int32 Amount = 1) override;
 	
 	UFUNCTION()
 	virtual void ApplyDirectionalSkillControl_Implementation() override;
+
 protected:
 	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;

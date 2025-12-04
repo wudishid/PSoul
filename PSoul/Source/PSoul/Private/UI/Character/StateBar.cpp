@@ -1,20 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "UI/Character/StateBar.h"
-
 #include "../../../../../Plugins/AdvanceProgressBar/Source/AdvanceProgressBar/Public/UAdvanceBar.h"
 #include "Components/CharacterAttributeComponent.h"
-#include "Components/ProgressBar.h"
 #include "Kismet/KismetSystemLibrary.h"
+
 
 void UStateBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
 	Bar->SetBarWidth(BarWidth);
-	Bar->FrontBar->SetFillColorAndOpacity(FrontBarColor);
-	Bar->BackBar->SetFillColorAndOpacity(BackBarColor);
+	Bar->SetBarColor(FrontBarColor, BackBarColor);
 }
 
 void UStateBar::NativeConstruct()
@@ -73,5 +68,5 @@ void UStateBar::UpdateBar()
 	float MaxValue = AttributeComponent->GetAttributeValue(MaxAttribute);
 	//UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Cur%f : Max%f"), CurValue, MaxValue), true, true, FLinearColor::Yellow, 5.f);
 	Bar->SetBarWidth(MaxValue);
-	Bar->UpdateBar(CurValue / MaxValue, EAdvanceBarUpdateStyle::Lerp);
+	Bar->UpdateBar(CurValue / MaxValue, EAdvanceBarUpdateStyle::DirectSet);
 }

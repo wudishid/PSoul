@@ -27,6 +27,9 @@ class PSOUL_API UAICharacterDataAsset : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "AICharacter")
+	FName AICharacterName;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "DropItem", meta = (UIMin = 0, ClampMin = 0, UIMax = 10, ClampMax = 10))
 	int32 MaxDropItemAmount = 1;
 	

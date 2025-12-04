@@ -17,6 +17,8 @@ UCLASS(Abstract)
 class PSOUL_API UAttributeRow : public USoulUserWidget
 {
 	GENERATED_BODY()
+public:
+	void Init();
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;

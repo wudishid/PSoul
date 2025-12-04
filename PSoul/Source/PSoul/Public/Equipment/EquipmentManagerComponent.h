@@ -54,8 +54,6 @@ struct FEquipmentSlotList
 };
 
 
-
-
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PSOUL_API UEquipmentManagerComponent : public UActorComponent
 {
@@ -79,6 +77,8 @@ public:
 	AEquipmentInstance* GetEquipmentInstance(EEquipmentType InEquipmentType);
 
 	FEquipmentSlotList* GetEquipmentSlotList() { return &EquipmentSlotList; }
+
+	void DestroyEquipments();
 	
 	FOnEquip OnEquip;
 	FOnUnEquip OnUnEquip;

@@ -5,24 +5,8 @@
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Kismet/KismetTextLibrary.h"
 
-void UAttributeRow::NativePreConstruct()
+void UAttributeRow::Init()
 {
-	Super::NativePreConstruct();
-
-	if(MaxAttribute.IsValid())
-	{
-		HB_AttributeMaxValue->SetVisibility(ESlateVisibility::Visible);
-	}
-	else
-	{
-		HB_AttributeMaxValue->SetVisibility(ESlateVisibility::Collapsed);
-	}
-}
-
-void UAttributeRow::NativeConstruct()
-{
-	Super::NativeConstruct();
-
 	if (USoulAbilitySystemComponent* ASC = GetOwningPlayerPawn()->FindComponentByClass<USoulAbilitySystemComponent>())
 	{
 		TextBlock_AttributeValue->SetText(UKismetTextLibrary::Conv_IntToText(ASC->GetNumericAttribute(Attribute)));
@@ -42,6 +26,26 @@ void UAttributeRow::NativeConstruct()
 			}
 		}
 	}
+}
+
+void UAttributeRow::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	if(MaxAttribute.IsValid())
+	{
+		HB_AttributeMaxValue->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		HB_AttributeMaxValue->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UAttributeRow::NativeConstruct()
+{
+	Super::NativeConstruct();
+	
 }
 
 void UAttributeRow::HandleAttributeChanged(const FOnAttributeChangeData& ChangeData)

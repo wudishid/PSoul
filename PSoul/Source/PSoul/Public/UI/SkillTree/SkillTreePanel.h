@@ -14,6 +14,8 @@ UCLASS(Abstract)
 class PSOUL_API USkillTreePanel : public USoulUserWidget
 {
 	GENERATED_BODY()
+public:
+	void Init();
 protected:
 	virtual void NativeConstruct() override;
 

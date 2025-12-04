@@ -19,4 +19,5 @@ protected:
 	virtual void Shutdown() override;
 public:
 	FString EnterGameMap;
+	FName PlayerName;
 };

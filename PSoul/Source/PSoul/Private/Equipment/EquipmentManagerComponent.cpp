@@ -67,6 +67,17 @@ AEquipmentInstance* UEquipmentManagerComponent::GetEquipmentInstance(EEquipmentT
 	return EquipmentSlotList.GetEquipmentByType(InEquipmentType);
 }
 
+void UEquipmentManagerComponent::DestroyEquipments()
+{
+	for (FEquipmentSlot& EquipmentSlot : EquipmentSlotList.Slots)
+	{
+		if (EquipmentSlot.EquipmentInstance)
+		{
+			EquipmentSlot.EquipmentInstance->Destroy();
+		}
+	}
+}
+
 void UEquipmentManagerComponent::Equip_Implementation(FName InEquipmentName)
 {
 	FInventoryItemInfo ItemInfo;
@@ -120,7 +131,6 @@ void UEquipmentManagerComponent::GetLifetimeReplicatedProps(TArray<class FLifeti
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, EquipmentSlotList, COND_None, REPNOTIFY_Always);
 }
-
 
 void UEquipmentManagerComponent::InitEquipmentSlotList()
 {

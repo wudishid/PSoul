@@ -10,10 +10,8 @@
 #include "UI/SkillTree/SkillTree.h"
 
 
-void USkillTreePanel::NativeConstruct()
+void USkillTreePanel::Init()
 {
-	Super::NativeConstruct();
-
 	HB_SkillTreePanel->ClearChildren();
 	
 	SkillTreeManagerComp = GetOwningPlayerPawn()->FindComponentByClass<USkillTreeManager>();
@@ -38,7 +36,11 @@ void USkillTreePanel::NativeConstruct()
 			HB_SkillTreePanel->AddChildToHorizontalBox(SkillTreeWidget);
 		}
 	}
-	
+}
+
+void USkillTreePanel::NativeConstruct()
+{
+	Super::NativeConstruct();
 }
 
 void USkillTreePanel::HandleLevelChanged(const FOnAttributeChangeData& ChangeData)

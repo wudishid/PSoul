@@ -17,6 +17,9 @@ void UPlayerPanel::InitPanel()
 {
 	HealthBar->Init(GetOwningPlayerPawn());
 	StaminaBar->Init(GetOwningPlayerPawn());
+	AttributePanel->Init();
+	InventoryList->Init();
+	SkillTreePanel->Init();
 }
 
 void UPlayerPanel::SetShowInventoryPanel(bool bShow)

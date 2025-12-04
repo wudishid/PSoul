@@ -30,4 +30,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Config, Category = "Soul Common Settings | Buff")
 	TMap<FGameplayTag, TSoftObjectPtr<UTexture2D>> BuffsIconMap;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul Common Settings | FriendDamage")
+	bool OpenFriendDamage = false;
 };

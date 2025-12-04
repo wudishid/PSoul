@@ -22,6 +22,8 @@ UCLASS(Abstract)
 class PSOUL_API UInventoryList : public USoulUserWidget
 {
 	GENERATED_BODY()
+public:
+	void Init();
 	
 	void OnPlayerInventoryChanged(FInventoryItemSlotList& InventoryItemSlotList);
 

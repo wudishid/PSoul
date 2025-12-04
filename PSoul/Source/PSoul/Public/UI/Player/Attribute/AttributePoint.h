@@ -18,7 +18,8 @@ UCLASS(Abstract)
 class PSOUL_API UAttributePoint : public USoulUserWidget
 {
 	GENERATED_BODY()
-
+public:
+	void Init();
 protected:
 	virtual void NativeConstruct() override;
 

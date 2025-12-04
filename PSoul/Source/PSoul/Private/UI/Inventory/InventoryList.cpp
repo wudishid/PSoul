@@ -10,6 +10,28 @@
 #include "UI/Inventory/InventorySlot.h"
 #include "UI/Inventory/ItemOperationPanel.h"
 
+void UInventoryList::Init()
+{
+	InventoryManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
+	check(InventoryManagerComponent);
+	InventoryManagerComponent->OnInventorySlotListChanged.AddUObject(this, &ThisClass::OnPlayerInventoryChanged);
+
+	EquipmentManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
+	check(EquipmentManagerComponent);
+
+	TArray<UWidget*>AllEquipmentSlots = EquipmentPanel->GetAllChildren();
+	for (UWidget* Widget : AllEquipmentSlots)
+	{
+		if(UEquipmentSlotWidget* EquipmentSlotWidget = Cast<UEquipmentSlotWidget>(Widget))
+		{
+			EquipmentSlotWidget->Init();
+			EquipmentSlotWidget->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
+		}
+	}
+	
+	CreateInventoryPanel();
+}
+
 void UInventoryList::OnPlayerInventoryChanged(FInventoryItemSlotList& InventoryItemSlotList)
 {
 	CreateInventoryPanel();
@@ -28,24 +50,6 @@ void UInventoryList::NativePreConstruct()
 void UInventoryList::NativeConstruct()
 {
 	Super::NativeConstruct();
-	
-	InventoryManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UInventoryManagerComponent>();
-	check(InventoryManagerComponent);
-	InventoryManagerComponent->OnInventorySlotListChanged.AddUObject(this, &ThisClass::OnPlayerInventoryChanged);
-
-	EquipmentManagerComponent = GetOwningPlayerPawn()->FindComponentByClass<UEquipmentManagerComponent>();
-	check(EquipmentManagerComponent);
-
-	TArray<UWidget*>AllEquipmentSlots = EquipmentPanel->GetAllChildren();
-	for (UWidget* Widget : AllEquipmentSlots)
-	{
-		if(UEquipmentSlotWidget* EquipmentSlotWidget = Cast<UEquipmentSlotWidget>(Widget))
-		{
-			EquipmentSlotWidget->OnSlotRightMouseButtonDown.AddUObject(this, &ThisClass::HandleSlotRightMouseButtonDown);
-		}
-	}
-	
-	CreateInventoryPanel();
 }
 
 void UInventoryList::CreateInventoryPanel()
