@@ -18,5 +18,5 @@ public:
 	virtual void OnGameplayEffectExecuted(FActiveGameplayEffectsContainer& ActiveGEContainer, FGameplayEffectSpec& GESpec, FPredictionKey& PredictionKey) const override;
 	
 	//伤害冲量
-	float Impulse = 100.f;
+	mutable float Impulse = 100.f;
 };

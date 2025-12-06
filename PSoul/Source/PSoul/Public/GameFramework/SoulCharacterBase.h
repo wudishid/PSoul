@@ -21,7 +21,8 @@ class USoulAbilitySystemComponent;
 UENUM(BlueprintType)
 enum class ECharacterTeam : uint8
 {
-	AI = 0		UMETA(DisplayName = "AI"),
+	None = 0	UMETA(DisplayName = "None"),
+	AI 			UMETA(DisplayName = "AI"),
 	Player		UMETA(DisplayName = "玩家")
 };
 

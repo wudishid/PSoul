@@ -31,19 +31,18 @@ class ADVANCEPROGRESSBAR_API UAdvanceBar : public UUserWidget
 
 protected:
 	virtual void NativePreConstruct() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 public:
 	UFUNCTION(BlueprintCallable,Category="AdvanceBar")
 	void SetBarWidth(float InWidth);
 
 	UFUNCTION(BlueprintCallable,Category="AdvanceBar")
-	void UpdateBar(float InTargetPercent,EAdvanceBarUpdateStyle UpdateStyle=EAdvanceBarUpdateStyle::DirectSet);
+	void UpdateBar(float InTargetPercent, EAdvanceBarUpdateStyle InUpdateStyle = EAdvanceBarUpdateStyle::DirectSet);
 
 	float GetBarPercent() const;
 
 	UFUNCTION(BlueprintCallable,Category="AdvanceBar")
 	void SetBarColor(FLinearColor InFrontColor, FLinearColor InBackColor);
-
-	virtual void BeginDestroy() override;
 protected:
 	//用来动态调整条的大小
 	UPROPERTY(meta=(BindWidget))
@@ -58,42 +57,32 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="AdvanceBar")
 	float BarWidth = 150.f;
-	
-	UPROPERTY(EditAnywhere,Category="AdvanceBar")
-	FLinearColor FrontBarColor=FLinearColor::Red;;
 
-	UPROPERTY(EditAnywhere,Category="AdvanceBar")
-	FLinearColor BackBarColor=FLinearColor::Yellow;
+	UPROPERTY(EditAnywhere, Category="AdvanceBar")
+	FLinearColor FrontBarColor = FLinearColor::Red;;
+
+	UPROPERTY(EditAnywhere, Category="AdvanceBar")
+	FLinearColor BackBarColor = FLinearColor::Yellow;
 
 	//直接更新条的百分比所花费的时间
-	UPROPERTY(EditAnywhere,Category="AdvanceBar")
-	float DirectSetBarPercentTimeLength=0.2f;
+	UPROPERTY(EditAnywhere, Category="AdvanceBar")
+	float DirectSetBarPercentTimeLength = 0.2f;
 
 	//背景条跟随插值到前景条花费的时间
-	UPROPERTY(EditAnywhere,Category="AdvanceBar")
-	float LerpSetBarPercentTimeLength=0.5f;
+	UPROPERTY(EditAnywhere, Category="AdvanceBar")
+	float LerpSetBarPercentTimeLength = 0.5f;
 
-	//更新频率，越大越顺滑，但会耗费更多性能
-	UPROPERTY(EditAnywhere,Category="AdvanceBar")
-	float UpdateFrequency=60;
 private:
-	void ClearAllBarTimers();
-private:
-	UPROPERTY()
-	FTimerHandle FrontBarLerpTimerHandle;
 
-	UPROPERTY()
-	FTimerHandle BackBarLerpTimerHandle;
-
-	//背景条延迟一段时间后跟随到前景条百分比
-	UPROPERTY()
-	FTimerHandle BackBarLerpDelayTimerHandle;
-
+	void ResetParameter();
 	
-
-	float CurrentFrontBarPercent;
-	float CurrentBackBarPercent;
-	float FrontBarLerpAlpha;
-	float BackBarLerpAlpha;
-	float TargetPercent;
+	EAdvanceBarUpdateStyle UpdateStyle;
+	float CurrentFrontBarPercent = 0.f;
+	float CurrentBackBarPercent = 0.f;
+	float FrontBarLerpAlpha = 0.f;
+	float BackBarLerpAlpha = 0.f;
+	float TargetPercent = 0.f;
+	float BackBarDelayTime = 0.f;
+	bool bUpdateBar = false;
+	bool bUpdateBackBar = false;
 };

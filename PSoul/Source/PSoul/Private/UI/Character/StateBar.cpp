@@ -68,5 +68,5 @@ void UStateBar::UpdateBar()
 	float MaxValue = AttributeComponent->GetAttributeValue(MaxAttribute);
 	//UKismetSystemLibrary::PrintString(GetWorld(), FString::Printf(TEXT("Cur%f : Max%f"), CurValue, MaxValue), true, true, FLinearColor::Yellow, 5.f);
 	Bar->SetBarWidth(MaxValue);
-	Bar->UpdateBar(CurValue / MaxValue, EAdvanceBarUpdateStyle::DirectSet);
+	Bar->UpdateBar(CurValue / MaxValue, EAdvanceBarUpdateStyle::Lerp);
 }

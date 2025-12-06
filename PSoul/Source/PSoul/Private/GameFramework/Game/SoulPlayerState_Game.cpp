@@ -9,7 +9,8 @@ void ASoulPlayerState_Game::GetLifetimeReplicatedProps(TArray<class FLifetimePro
 void ASoulPlayerState_Game::OnRep_PlayerName()
 {
 	Super::OnRep_PlayerName();
-	
+
+	OnPlayerNameChanged.Broadcast(GetPlayerName());
 }
 
 

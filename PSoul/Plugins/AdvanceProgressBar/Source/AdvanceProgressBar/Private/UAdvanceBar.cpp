@@ -4,9 +4,6 @@
 #include "Components/SizeBox.h"
 
 
-#define TimerManager GetWorld()->GetTimerManager()
-
-
 void UAdvanceBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -15,14 +12,73 @@ void UAdvanceBar::NativePreConstruct()
 	SetBarColor(FrontBarColor, BackBarColor);
 }
 
+void UAdvanceBar::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if (bUpdateBar)
+	{
+		if (UpdateStyle == EAdvanceBarUpdateStyle::DirectSet)
+		{
+			FrontBar->SetPercent(TargetPercent);
+
+			BackBar->SetPercent(TargetPercent);
+
+			bUpdateBar = false;
+		}
+		else
+		{
+			FrontBarLerpAlpha += InDeltaTime / DirectSetBarPercentTimeLength;
+			if (FrontBarLerpAlpha <= 1)
+			{
+				FrontBar->SetPercent(
+					FMath::Lerp(CurrentFrontBarPercent, TargetPercent, FrontBarLerpAlpha));
+			}
+			
+			
+			if (bUpdateBackBar)
+			{
+				BackBarLerpAlpha += InDeltaTime / LerpSetBarPercentTimeLength;
+				if (BackBarLerpAlpha <= 1)
+				{
+					BackBar->SetPercent(
+						FMath::Lerp(CurrentBackBarPercent, TargetPercent, BackBarLerpAlpha));
+				}
+				else
+				{
+					ResetParameter();
+				}
+			}
+			else
+			{
+				BackBarDelayTime += InDeltaTime;
+				if (BackBarDelayTime >= 0.5f)
+				{
+					BackBarLerpAlpha += InDeltaTime / LerpSetBarPercentTimeLength;
+					if (BackBarLerpAlpha <= 1)
+					{
+						BackBar->SetPercent(
+						FMath::Lerp(CurrentBackBarPercent, TargetPercent, BackBarLerpAlpha));
+					}
+					else
+					{
+						ResetParameter();
+					}
+				}
+			}
+		}
+	}
+}
+
 void UAdvanceBar::SetBarWidth(float InWidth)
 {
 	BarSizeBox->SetWidthOverride(InWidth);
 }
 
-void UAdvanceBar::UpdateBar(float InTargetPercent, EAdvanceBarUpdateStyle UpdateStyle)
+void UAdvanceBar::UpdateBar(float InTargetPercent, EAdvanceBarUpdateStyle InUpdateStyle)
 {
 	TargetPercent = InTargetPercent;
+	UpdateStyle = InUpdateStyle;
 	CurrentFrontBarPercent = FrontBar->GetPercent();
 	CurrentBackBarPercent = BackBar->GetPercent();
 	FrontBarLerpAlpha = 0;
@@ -34,86 +90,15 @@ void UAdvanceBar::UpdateBar(float InTargetPercent, EAdvanceBarUpdateStyle Update
 	//如果比当前的条百分比大，则设置更新条方式为直接更新
 	if (InTargetPercent > CurrentFrontBarPercent) { UpdateStyle = EAdvanceBarUpdateStyle::DirectSet; }
 
-	switch (UpdateStyle)
+	if (bUpdateBar)
 	{
-	//如果更新方式为直接设置，则前景条和背景条同时到目标百分比
-	case EAdvanceBarUpdateStyle::DirectSet:
-		//移除所有条计时器
-		ClearAllBarTimers();
-		FrontBar->SetPercent(InTargetPercent);
-		BackBar->SetPercent(InTargetPercent);
-		break;
-
-	//插值到目标百分比
-	case EAdvanceBarUpdateStyle::Lerp:
-
-		TimerManager.SetTimer(FrontBarLerpTimerHandle, FTimerDelegate::CreateLambda
-		                      ([this]()
-			                      {
-				                      FrontBarLerpAlpha += (1 / UpdateFrequency) / DirectSetBarPercentTimeLength;
-				                      if (FrontBarLerpAlpha >= 1)
-				                      {
-					                      FrontBarLerpAlpha = 1;
-					                      TimerManager.ClearTimer(FrontBarLerpTimerHandle);
-				                      }
-				                      FrontBar->SetPercent(
-					                      FMath::Lerp(CurrentFrontBarPercent, TargetPercent, FrontBarLerpAlpha));
-			                      }
-		                      ), 1 / UpdateFrequency, true);
-		
-		//如果背景条等待计时器活跃，则让背景条不等待直接插值
-		if (BackBarLerpDelayTimerHandle.IsValid())
+		if (!bUpdateBackBar)
 		{
-			//移除背景条等待计时器
-			TimerManager.ClearTimer(BackBarLerpDelayTimerHandle);
-
-			//背景条插值
-			TimerManager.SetTimer(BackBarLerpTimerHandle, FTimerDelegate::CreateLambda
-			                      ([this]()
-				                      {
-					                      BackBarLerpAlpha += (1 / UpdateFrequency) / LerpSetBarPercentTimeLength;
-					                      if (BackBarLerpAlpha >= 1)
-					                      {
-						                      BackBarLerpAlpha = 1;
-						                      TimerManager.ClearTimer(BackBarLerpTimerHandle);
-					                      }
-					                      BackBar->SetPercent(
-						                      FMath::Lerp(CurrentBackBarPercent, TargetPercent, BackBarLerpAlpha));
-				                      }
-			                      ), 1 / UpdateFrequency, true);
+			bUpdateBackBar = true;
 		}
-		else
-		{
-			//等待一会后，背景条插值到目标百分比
-			TimerManager.SetTimer(BackBarLerpDelayTimerHandle, FTimerDelegate::CreateLambda
-			                      ([this]()
-				                      {
-					                      TimerManager.SetTimer(BackBarLerpTimerHandle, FTimerDelegate::CreateLambda
-					                                            ([this]()
-						                                            {
-							                                            BackBarLerpAlpha += (1 / UpdateFrequency) /
-								                                            LerpSetBarPercentTimeLength;
-							                                            if (BackBarLerpAlpha >= 1)
-							                                            {
-								                                            BackBarLerpAlpha = 1;
-								                                            TimerManager.ClearTimer(
-									                                            BackBarLerpTimerHandle);
-							                                            }
-							                                            BackBar->SetPercent(
-								                                            FMath::Lerp(
-									                                            CurrentBackBarPercent, TargetPercent,
-									                                            BackBarLerpAlpha));
-						                                            }
-					                                            ), 1 / UpdateFrequency, true);
-
-					                      TimerManager.ClearTimer(BackBarLerpDelayTimerHandle);
-				                      }
-			                      ), 0.5f, false);
-		}
-		break;
-	default:
-		break;
 	}
+	
+	bUpdateBar = true;
 }
 
 float UAdvanceBar::GetBarPercent() const
@@ -127,24 +112,17 @@ void UAdvanceBar::SetBarColor(FLinearColor InFrontColor, FLinearColor InBackColo
 	BackBar->SetFillColorAndOpacity(InBackColor);
 }
 
-void UAdvanceBar::BeginDestroy()
+void UAdvanceBar::ResetParameter()
 {
-	ClearAllBarTimers();
-	Super::BeginDestroy();
+	CurrentFrontBarPercent = 0.f;
+	CurrentBackBarPercent = 0.f;
+	FrontBarLerpAlpha = 0.f;
+	BackBarLerpAlpha = 0.f;
+	TargetPercent = 0.f;
+	BackBarDelayTime = 0.f;
+	bUpdateBar = false;
+	bUpdateBackBar = false;
 }
 
-void UAdvanceBar::ClearAllBarTimers()
-{
-	if (FrontBarLerpTimerHandle.IsValid())
-	{
-		TimerManager.ClearTimer(FrontBarLerpTimerHandle);
-	}
-	if (BackBarLerpTimerHandle.IsValid())
-	{
-		TimerManager.ClearTimer(BackBarLerpTimerHandle);
-	}
-	if (BackBarLerpDelayTimerHandle.IsValid())
-	{
-		TimerManager.ClearTimer(BackBarLerpDelayTimerHandle);
-	}
-}
+
+

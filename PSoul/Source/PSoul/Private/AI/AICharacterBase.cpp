@@ -2,6 +2,7 @@
 #include "AI/AICharacterBase.h"
 #include "AI/SoulAIControllerBase.h"
 #include "Data/AICharacterDataAsset.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Util/Util_Common.h"
@@ -36,6 +37,7 @@ void AAICharacterBase::OnDeath()
 
 	if (AAIController* AC = GetController<AAIController>())
 	{
+		GetCharacterMovement()->StopMovementImmediately();
 		DetachFromControllerPendingDestroy();
 		AC->Destroy();
 	}

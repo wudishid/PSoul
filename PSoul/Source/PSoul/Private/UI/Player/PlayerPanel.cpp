@@ -4,6 +4,7 @@
 #include "UI/Character/StateBar.h"
 #include "UI/Inventory/InventoryList.h"
 #include "UI/Player/Attribute/AttributePanel.h"
+#include "UI/Player/Attribute/AttributeRow.h"
 #include "UI/SkillTree/SkillTreePanel.h"
 #include "Util/Util_Common.h"
 
@@ -20,6 +21,7 @@ void UPlayerPanel::InitPanel()
 	AttributePanel->Init();
 	InventoryList->Init();
 	SkillTreePanel->Init();
+	AttributeRow_Soul->Init();
 }
 
 void UPlayerPanel::SetShowInventoryPanel(bool bShow)

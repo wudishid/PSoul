@@ -252,8 +252,4 @@ void APlayerCharacterBase::Tick(float DeltaTime)
 	UpdateDirectionalSkillControl();
 }
 
-void APlayerCharacterBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-}
 

@@ -117,10 +117,6 @@ void ASoulPlayerController_Game::OnPossess(APawn* InPawn)
 void ASoulPlayerController_Game::OnUnPossess()
 {
 	Super::OnUnPossess();
-	if (QuickSkillManager)
-	{
-		QuickSkillManager->OnSetPawn(nullptr);
-	}
 }
 
 void ASoulPlayerController_Game::OnRep_PlayerState()

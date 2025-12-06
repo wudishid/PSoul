@@ -11,8 +11,8 @@ Stamina(50),
 MaxStamina(50),
 PhysicalAttack(30),
 PhysicalDefence(0),
-MaxMoveSpeed(600),
 MagicDefence(0),
+MaxMoveSpeed(600),
 Damage(0)
 {
 	

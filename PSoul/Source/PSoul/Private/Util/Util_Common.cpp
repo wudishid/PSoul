@@ -9,6 +9,7 @@
 #include "Inventory/InventoryItemInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/SoulGameFunctionLibrary.h"
+#include "Perception/AISense_Damage.h"
 
 bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
 {
@@ -85,9 +86,11 @@ void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageI
 		if (DamageInfo.DamageEffect)
 		{
 			UGameplayEffect* GameplayEffect = DamageInfo.DamageEffect.GetDefaultObject();
-			UDamageGameplayEffectComponent& DamageGameplayEffectComponent = GameplayEffect->
-				FindOrAddComponent<UDamageGameplayEffectComponent>();
-			DamageGameplayEffectComponent.Impulse = DamageInfo.DamageImpulse;
+			if (const UDamageGameplayEffectComponent* DamageGameplayEffectComponent = GameplayEffect->FindComponent<
+				UDamageGameplayEffectComponent>())
+			{
+				DamageGameplayEffectComponent->Impulse = DamageInfo.DamageImpulse;
+			}
 			CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
 		}
 	}

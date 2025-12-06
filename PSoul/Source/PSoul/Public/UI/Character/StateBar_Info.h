@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Text_Name;
 
+private:
+	void OnPlayerNameChanged(FString NewName);
+
 public:
 	void Init(APawn* OwnerPawn, FGameplayAttribute InAttribute, FGameplayAttribute InMaxAttribute);
 };

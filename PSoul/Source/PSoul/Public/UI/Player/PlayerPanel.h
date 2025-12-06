@@ -7,6 +7,7 @@
 #include "PlayerPanel.generated.h"
 
 
+class UAttributeRow;
 class USkillTreePanel;
 class UAttributePanel;
 class UInventoryList;
@@ -33,6 +34,10 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	USkillTreePanel* SkillTreePanel;
+
+	UPROPERTY(meta = (BindWidget))
+	UAttributeRow* AttributeRow_Soul;
+	
 public:
 	void InitPanel();
 	void SetShowInventoryPanel(bool bShow);
