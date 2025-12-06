@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
 #include "ProjectileBase.generated.h"
 
 class UProjectileMovementComponent;
@@ -21,6 +22,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnProjectileOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TObjectPtr<USceneComponent> RootComp;
@@ -30,7 +34,10 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Projectile")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMoveComp;
-	
+
+	UPROPERTY(EditAnywhere, Category = "DamageCheck")
+	FDamageInfo DamageInfo;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

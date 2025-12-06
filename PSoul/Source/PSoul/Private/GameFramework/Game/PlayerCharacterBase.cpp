@@ -62,6 +62,7 @@ APlayerCharacterBase::APlayerCharacterBase()
 	SkillDirectionWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("SkillDirectionWidget"));
 	SkillDirectionWidgetComp->SetupAttachment(SkillDirectionSceneComp);
 	SkillDirectionWidgetComp->SetHiddenInGame(true);
+	SkillDirectionWidgetComp->SetCollisionProfileName(TEXT("SoulUI"));
 }
 
 void APlayerCharacterBase::OnDeath()

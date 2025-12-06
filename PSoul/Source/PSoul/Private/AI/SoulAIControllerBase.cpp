@@ -21,7 +21,11 @@ FGenericTeamId ASoulAIControllerBase::GetGenericTeamId() const
 
 AActor* ASoulAIControllerBase::GetCurrentAttackTarget() const
 {
-	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(TEXT("Target")));
+	if (const UBlackboardComponent* BlackboardComponent = GetBlackboardComponent())
+	{
+		return Cast<AActor>( BlackboardComponent->GetValueAsObject(TEXT("Target")));
+	}
+	return nullptr;
 }
 
 // Called when the game starts or when spawned

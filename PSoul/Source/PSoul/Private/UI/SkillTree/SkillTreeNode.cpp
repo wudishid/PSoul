@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Image.h"
+#include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "Development/Soul_UISetting.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -60,6 +61,7 @@ void USkillTreeNode::UpdateNode()
 		SkillImage->SetBrushFromTexture(NodeData->SkillIcon);
 		SetNodeUnlocked(SkillTreeManagerComp->IsSkillUnlocked(SkillID));
 		WS_SkillTypeText->SetActiveWidgetIndex(static_cast<int32>(NodeData->SkillType));
+		Text_SkillPointCost->SetText(FText::FromString(FString::FromInt(NodeData->SkillPointCost)));
 	}
 }
 

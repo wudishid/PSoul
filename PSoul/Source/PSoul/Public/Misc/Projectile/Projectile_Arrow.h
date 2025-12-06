@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ProjectileBase.h"
-#include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
 #include "Projectile_Arrow.generated.h"
 
 class UBoxComponent;
@@ -22,20 +21,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintNativeEvent)
-	void OnArrowMeshCompOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Arrow")
 	TObjectPtr<UBoxComponent> CheckBox;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Arrow")
 	TObjectPtr<UStaticMeshComponent> ArrowMesh;
-
-	UPROPERTY(EditAnywhere, Category = "DamageCheck")
-	FDamageInfo DamageInfo;
-	
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 };

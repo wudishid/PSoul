@@ -1,9 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "PSoul/Public/GameFramework/SoulCharacterBase.h"
-
-#include <filesystem>
-
 #include "MotionWarpingComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/CharacterAttributeComponent.h"
 #include "Components/DamageCheckComponent.h"
 #include "Components/SoulCharacterMovementComponent.h"
@@ -32,11 +30,13 @@ ASoulCharacterBase::ASoulCharacterBase(const FObjectInitializer& ObjectInitializ
 	
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarComp->SetupAttachment(GetMesh());
+	HealthBarComp->SetCollisionProfileName(TEXT("SoulUI"));
 	
 	DamageCheckComp = CreateDefaultSubobject<UDamageCheckComponent>(TEXT("DamageCheckComp"));
 	DamageCheckComp->SetIsReplicated(true);
 	
-	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionProfileName(TEXT("SoulCharacterMesh"));
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("SoulCharacterCapsule"));
 }
 
 void ASoulCharacterBase::HandleKill_Implementation(AActor* InCauser)
@@ -102,6 +102,9 @@ void ASoulCharacterBase::OnDeath()
 	{
 		HealthBarComp->SetHiddenInGame(true);
 	}
+
+	//死亡后，不对其他角色造成阻挡
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 }
 
 void ASoulCharacterBase::FinishDeath()

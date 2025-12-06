@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "SkillTreeNode.generated.h"
 
+class UTextBlock;
 class UWidgetSwitcher;
 class USkillTreeManager;
 class UBorder;
@@ -54,6 +55,9 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UWidgetSwitcher* WS_SkillTypeText;
 
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Text_SkillPointCost;
+	
 	UPROPERTY()
 	TObjectPtr<USkillTreeManager> SkillTreeManagerComp;
 	

@@ -9,7 +9,7 @@ void USoulDamageEffectExecution::Execute_Implementation(const FGameplayEffectCus
 {
 #if WITH_SERVER_CODE
 	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
-
+	
 	float CauserPhysicalAttack = ExecutionParams.GetSourceAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalAttack();
 	float TargetPhysicalDefence = ExecutionParams.GetTargetAbilitySystemComponent()->GetSet<USoulCharacterSet>()->GetPhysicalDefence();
 	float RealDamage = FMath::Max(CauserPhysicalAttack - TargetPhysicalDefence, 0.f);
