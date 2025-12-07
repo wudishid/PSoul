@@ -13,4 +13,7 @@ UCLASS()
 class PSOUL_API USoulUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
+public:
+	void ShowInViewport();
+	int32 GetZOrder() const;
 };

@@ -6,6 +6,7 @@
 #include "UI/SoulUserWidget.h"
 #include "MainMenu.generated.h"
 
+class UVerticalBox;
 class UEditableTextBox;
 class UOverlay;
 class UTextBlock;
@@ -24,17 +25,32 @@ protected:
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION()
-	void HandleEnterGameClicked();
+	void HandleSinglePlayerGameClicked();
+
+	UFUNCTION()
+	void HandleMultiPlayerGameClicked();
+
+	UFUNCTION()
+	void HandleExitGameClicked();
 
 	UFUNCTION()
 	void HandleNameTextBoxCommited(const FText& InText, ETextCommit::Type InCommitMethod);
 	
 	UPROPERTY(meta = (BindWidget))
 	UEditableTextBox* TextBox_Name;
+
+	UPROPERTY(meta = (BindWidget))
+	UVerticalBox* VB_Option;
 	
 	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_EnterGame;
+	UButton* Btn_SinglePlayerGame;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_MultiPlayerGame;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_ExitGame;
+	
 	UPROPERTY(meta = (BindWidget))
 	UOverlay* Overlay_Loading;
 	

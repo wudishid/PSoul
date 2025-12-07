@@ -2,22 +2,18 @@
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputMappingContext.h"
-#include "Camera/CameraComponent.h"
 #include "Components/QuickSkillManager.h"
-#include "GameFramework/Character.h"
+#include "Development/Soul_UISetting.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameFramework/SoulGameInstance.h"
 #include "GameFramework/Game/SoulHUD_Game.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Input/SoulInputComponent.h"
-#include "Interface/SkillReleaseControlInterface.h"
-#include "Misc/SoulGameFunctionLibrary.h"
-#include "Net/UnrealNetwork.h"
 #include "PSoul/SoulGameplayTags.h"
-#include "PSoul/SoulLog.h"
-#include "Save/SoulSaveGame_PlayerData.h"
 #include "SkillTreeSystem/SkillTreeNodeData.h"
+#include "UI/Game/GameRoundTip.h"
+#include "Util/Util_Common.h"
 
 ASoulPlayerController_Game::ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -122,7 +118,7 @@ void ASoulPlayerController_Game::OnUnPossess()
 void ASoulPlayerController_Game::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	SetPlayerName(GetGameInstance<USoulGameInstance>()->PlayerName);
+	ServerSetPlayerName(GetGameInstance<USoulGameInstance>()->PlayerName);
 }
 
 void ASoulPlayerController_Game::Input_Move(const FInputActionValue& Value)
@@ -317,7 +313,15 @@ void ASoulPlayerController_Game::SetInputModeUI(EInputMappingContextMode InConte
 	SetInputMappingContextMode(InContextMode);
 }
 
-void ASoulPlayerController_Game::SetPlayerName_Implementation(FName InName)
+void ASoulPlayerController_Game::ClientShowRoundTip_Implementation(int32 InRoundNum)
+{
+	if (UGameRoundTip* RoundTip = CreateWidget<UGameRoundTip>(GetWorld(), GetDefault<USoul_UISetting>()->GameRoundTipClass.LoadSynchronous()))
+	{
+		RoundTip->Init(InRoundNum);
+	}
+}
+
+void ASoulPlayerController_Game::ServerSetPlayerName_Implementation(FName InName)
 {
 	if (PlayerState)
 	{
@@ -333,6 +337,11 @@ void ASoulPlayerController_Game::Rebirth()
 		CurPawn->Destroy();
 		GetWorld()->GetAuthGameMode()->RestartPlayer(this);
 	}
+}
+
+void ASoulPlayerController_Game::ClientShowGameOverTip_Implementation()
+{
+	Util_Common::PopTipWindow(GetWorld(), TEXT("恭喜，游戏通关!"));
 }
 
 void ASoulPlayerController_Game::BeginPlay()

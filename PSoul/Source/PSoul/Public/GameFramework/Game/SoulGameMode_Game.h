@@ -6,9 +6,7 @@
 #include "GameFramework/PSoulGameMode.h"
 #include "SoulGameMode_Game.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PSOUL_API ASoulGameMode_Game : public APSoulGameMode
 {
@@ -17,4 +15,7 @@ class PSOUL_API ASoulGameMode_Game : public APSoulGameMode
 protected:
 	virtual void BeginPlay() override;
 public:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+protected:
+	
 };

@@ -21,7 +21,7 @@ void ABarrel::SpawnItems_Implementation()
 	{
 		for (auto& DropedItem : DropedItems)
 		{
-			Util_Common::SpawnInventroyItemInstance(this, DropedItem);
+			Util_Common::SpawnInventoryItemInstance(this, DropedItem);
 		}
 	}
 }

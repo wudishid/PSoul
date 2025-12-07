@@ -12,3 +12,4 @@ APSoulGameMode::APSoulGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 }
+

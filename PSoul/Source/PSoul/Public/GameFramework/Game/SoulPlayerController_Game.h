@@ -32,6 +32,12 @@ public:
 	ASoulPlayerController_Game(const FObjectInitializer& ObjectInitializer);
 	
 	void Rebirth();
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowRoundTip(int32 InRoundNum);
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowGameOverTip();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	TMap<EInputMappingContextMode, TObjectPtr<UInputMappingContext>> InputMappingContexts;
@@ -77,8 +83,7 @@ protected:
 
 
 	UFUNCTION(Server, Reliable)
-	void SetPlayerName(FName InName);
-	
+	void ServerSetPlayerName(FName InName);
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "QuickSkillManager")
 	TObjectPtr<UQuickSkillManager> QuickSkillManager;

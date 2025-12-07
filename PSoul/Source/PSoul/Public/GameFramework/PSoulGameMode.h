@@ -6,6 +6,10 @@
 #include "GameFramework/GameModeBase.h"
 #include "PSoulGameMode.generated.h"
 
+
+
+
+
 UCLASS(minimalapi)
 class APSoulGameMode : public AGameModeBase
 {
@@ -13,6 +17,7 @@ class APSoulGameMode : public AGameModeBase
 
 public:
 	APSoulGameMode();
+	
 };
 
 

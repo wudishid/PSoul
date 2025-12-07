@@ -30,7 +30,7 @@ bool USoulGameFunctionLibrary::IsSameTeam(AActor* InActor1, AActor* InActor2)
 bool USoulGameFunctionLibrary::SpawnInventroyItemInstance(AActor* OwnerActor,
 	TSubclassOf<AInventoryItemInstance> ItemClass)
 {
-	return Util_Common::SpawnInventroyItemInstance(OwnerActor, ItemClass);
+	return Util_Common::SpawnInventoryItemInstance(OwnerActor, ItemClass);
 }
 
 EEventDirection USoulGameFunctionLibrary::GetEventDataDirection(const FGameplayEventData& InEventData,

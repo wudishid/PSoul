@@ -64,7 +64,7 @@ void AAICharacterBase::DropItem_Implementation()
 				{
 					if (FMath::RandRange(0.f, 1.f) <= ItemInfo.DropProbability)
 					{
-						Util_Common::SpawnInventroyItemInstance(this, Item);
+						Util_Common::SpawnInventoryItemInstance(this, Item);
 						
 						if (++DropedItemCount >= AICharacterData->MaxDropItemAmount) return;
 					}

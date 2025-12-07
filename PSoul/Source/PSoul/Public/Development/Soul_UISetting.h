@@ -6,6 +6,9 @@
 #include "Engine/DeveloperSettings.h"
 #include "Soul_UISetting.generated.h"
 
+class USoulUserWidget;
+class USoulGameTipWindow;
+class UGameRoundTip;
 class UBuffSlot;
 class USkillPicklQuickSlot;
 class USkillQuickSlot;
@@ -71,6 +74,15 @@ public:
 	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Buff")
 	TSoftClassPtr<UBuffSlot> BuffSlotClass;
 	
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Game")
+	TSoftClassPtr<UGameRoundTip> GameRoundTipClass;
+
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | Game")
+	TSoftClassPtr<USoulGameTipWindow> GameTipWindowClass;
+
+	
+	UPROPERTY(EditAnywhere, Config, Category = "Soul UI Settings | ZOrder")
+	TMap<TSoftClassPtr<USoulUserWidget>, int32> WidgetsZOrderMap;
 protected:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;

@@ -2,6 +2,7 @@
 
 #include "Util/Util_Common.h"
 #include "Development/Soul_CommonSetting.h"
+#include "Development/Soul_UISetting.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "GAS/GameplayEffect/DamageGameplayEffectComponent.h"
 #include "GAS/GameplayEffect/SoulGameplayEffect_Damage.h"
@@ -10,8 +11,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/SoulGameFunctionLibrary.h"
 #include "Perception/AISense_Damage.h"
+#include "UI/Game/SoulGameTipWindow.h"
 
-bool Util_Common::SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
+bool Util_Common::SpawnInventoryItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass)
 {
 	if (!OwnerActor) return false;
 	if (!ItemClass) return false;
@@ -63,7 +65,7 @@ void Util_Common::PlayClosePanelSound(UWorld* InWorld)
 	UGameplayStatics::PlaySound2D(InWorld, GetDefault<USoul_CommonSetting>()->ClosePanelSound.LoadSynchronous());
 }
 
-void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo)
+bool Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo)
 {
 	if (InCauser && InTarget)
 	{
@@ -74,14 +76,14 @@ void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageI
 
 		if (!GetDefault<USoul_CommonSetting>()->OpenFriendDamage)
 		{
-			if (USoulGameFunctionLibrary::IsSameTeam(InCauser, InTarget)) return;
+			if (USoulGameFunctionLibrary::IsSameTeam(InCauser, InTarget)) return false;
 		}
 		
 		USoulAbilitySystemComponent* CauserASC = InCauser->FindComponentByClass<USoulAbilitySystemComponent>();
-		if (!CauserASC) return;
+		if (!CauserASC) return false;
 		USoulAbilitySystemComponent* TargetASC = InTarget->FindComponentByClass<
 			USoulAbilitySystemComponent>();
-		if (!TargetASC) return;
+		if (!TargetASC) return false;
 
 		if (DamageInfo.DamageEffect)
 		{
@@ -92,8 +94,10 @@ void Util_Common::ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageI
 				DamageGameplayEffectComponent->Impulse = DamageInfo.DamageImpulse;
 			}
 			CauserASC->ApplyGameplayEffectToTarget(GameplayEffect, TargetASC, 1);
+			return true;
 		}
 	}
+	return false;
 }
 
 UTexture2D* Util_Common::GetBuffIconByBuffTag(FGameplayTag InBuffTag)
@@ -105,4 +109,14 @@ UTexture2D* Util_Common::GetBuffIconByBuffTag(FGameplayTag InBuffTag)
 	
 	return nullptr;
 }
+
+void Util_Common::PopTipWindow(UWorld* InWorld, const FString& InMessage)
+{
+	if (USoulGameTipWindow* TipWindow = CreateWidget<USoulGameTipWindow>(
+		InWorld, GetDefault<USoul_UISetting>()->GameTipWindowClass.LoadSynchronous()))
+	{
+		TipWindow->Init(InMessage);
+	}
+}
+
 

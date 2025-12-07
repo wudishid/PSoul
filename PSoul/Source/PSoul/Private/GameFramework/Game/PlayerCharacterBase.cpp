@@ -11,11 +11,11 @@
 #include "Development/Soul_CommonSetting.h"
 #include "Equipment/EquipmentManagerComponent.h"
 #include "Equipment/Equipment_Weapon.h"
-#include "GameFramework/SoulGameInstance.h"
 #include "GameFramework/Game/SoulPlayerController_Game.h"
 #include "GameFramework/Game/SoulPlayerState_Game.h"
 #include "GAS/SoulAbilitySystemComponent.h"
 #include "Inventory/InventoryManagerComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "PSoul/SoulGameplayTags.h"
 #include "SkillTreeSystem/SkillTreeManager.h"
 
@@ -86,10 +86,11 @@ void APlayerCharacterBase::OnDeath()
 void APlayerCharacterBase::FinishDeath()
 {
 	Super::FinishDeath();
-	if (ASoulPlayerController_Game* PC_Game = GetController<ASoulPlayerController_Game>())
-	{
-		PC_Game->Rebirth();
-	}
+	UGameplayStatics::OpenLevel(GetWorld(), TEXT("LobbyMap"));
+	// if (ASoulPlayerController_Game* PC_Game = GetController<ASoulPlayerController_Game>())
+	// {
+	// 	PC_Game->Rebirth();
+	// }
 }
 
 FRotator APlayerCharacterBase::GetDesiredRotation() const

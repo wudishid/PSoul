@@ -9,9 +9,10 @@ struct FGameplayTag;
 
 namespace Util_Common
 {
-	bool SpawnInventroyItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass);
+	bool SpawnInventoryItemInstance(AActor* OwnerActor, TSubclassOf<AInventoryItemInstance> ItemClass);
 	void PlayOpenPanelSound(UWorld* InWorld);
 	void PlayClosePanelSound(UWorld* InWorld);
-	void ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo);
+	bool ApplyDamage(AActor* InCauser, AActor* InTarget, const FDamageInfo& DamageInfo);
 	UTexture2D* GetBuffIconByBuffTag(FGameplayTag InBuffTag);
+	void PopTipWindow(UWorld* InWorld, const FString& InMessage);
 }

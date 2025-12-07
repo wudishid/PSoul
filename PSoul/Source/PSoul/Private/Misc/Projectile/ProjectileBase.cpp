@@ -36,8 +36,10 @@ void AProjectileBase::OnProjectileOverlap_Implementation(UPrimitiveComponent* Ov
 	{
 		if (OtherActor && OtherActor != GetOwner())
 		{
-			Util_Common::ApplyDamage(GetOwner(), OtherActor, DamageInfo);
-			Destroy();
+			if (Util_Common::ApplyDamage(GetOwner(), OtherActor, DamageInfo))
+			{
+				Destroy();
+			}
 		}
 	}
 }

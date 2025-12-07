@@ -26,12 +26,13 @@ enum class ECharacterTeam : uint8
 	Player		UMETA(DisplayName = "玩家")
 };
 
-
 UCLASS()
 class PSOUL_API ASoulCharacterBase : public ACharacter, public IGenericTeamAgentInterface 
 {
 	GENERATED_BODY()
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCharacterDied, ASoulCharacterBase*);
+	
 public:
 	// Sets default values for this character's properties
 	ASoulCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
@@ -50,6 +51,8 @@ public:
 	virtual FGenericTeamId GetGenericTeamId() const override;
 
 	virtual FName GetCharacterName() const { return NAME_None; }
+
+	FOnCharacterDied OnCharacterDied;
 protected:
 	virtual void BeginPlay() override;
 	UFUNCTION()

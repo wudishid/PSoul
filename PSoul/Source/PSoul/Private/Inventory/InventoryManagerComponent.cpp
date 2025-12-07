@@ -33,7 +33,7 @@ void UInventoryManagerComponent::DropItem_Implementation(int32 InItemIndex)
 	if(InventorySlotList.Slots.IsValidIndex(InItemIndex))
 	{
 		TSubclassOf<AInventoryItemInstance> ItemInstanceClass = InventorySlotList.Slots[InItemIndex].ItemInfo.ItemClass;
-		if(Util_Common::SpawnInventroyItemInstance(GetOwner(), ItemInstanceClass))
+		if(Util_Common::SpawnInventoryItemInstance(GetOwner(), ItemInstanceClass))
 		{
 			RemoveItem(InItemIndex);
 		}

@@ -2,7 +2,7 @@
 
 
 #include "GameFramework/Login/SoulHUD_Login.h"
-#include "UI/Login/MainMenu.h"
+#include "PSoul/Public/UI/Lobby/MainMenu.h"
 
 void ASoulHUD_Login::BeginPlay()
 {

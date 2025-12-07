@@ -105,6 +105,8 @@ void ASoulCharacterBase::OnDeath()
 
 	//死亡后，不对其他角色造成阻挡
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+
+	OnCharacterDied.Broadcast(this);
 }
 
 void ASoulCharacterBase::FinishDeath()

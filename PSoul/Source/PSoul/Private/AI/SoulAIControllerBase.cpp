@@ -4,6 +4,7 @@
 #include "GameFramework/SoulCharacterBase.h"
 
 
+
 // Sets default values
 ASoulAIControllerBase::ASoulAIControllerBase()
 {

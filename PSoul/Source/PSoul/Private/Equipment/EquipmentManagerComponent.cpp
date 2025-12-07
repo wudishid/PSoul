@@ -45,7 +45,7 @@ void UEquipmentManagerComponent::Drop_Implementation(EEquipmentType InEquipmentT
 {
 	if(AEquipmentInstance* Equipment = EquipmentSlotList.GetEquipmentByType(InEquipmentType))
 	{
-		if(Util_Common::SpawnInventroyItemInstance(GetOwner(), Equipment->GetItemInfo().ItemClass))
+		if(Util_Common::SpawnInventoryItemInstance(GetOwner(), Equipment->GetItemInfo().ItemClass))
 		{
 			UnEquip(Equipment->GetItemName());
 		}
