@@ -76,6 +76,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "SpawnAIData")
 	TObjectPtr<UEnvQuery> AISpawnEQ;
+
+	UPROPERTY(EditAnywhere, Category = "SpawnAIData")
+	float StartDelay = 15.f;
 	
 	UPROPERTY(EditAnywhere, Category = "SpawnAIData")
 	float WaveInterval = 7.f;

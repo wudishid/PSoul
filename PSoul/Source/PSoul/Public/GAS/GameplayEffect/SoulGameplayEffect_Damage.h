@@ -39,4 +39,8 @@ class PSOUL_API USoulGameplayEffect_Damage : public USoulGameplayEffect
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "DamageInfo")
 	EDamageEffect DamageEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "DamageInfo",
+		meta = (UIMin = 0.f, ClampMin = 0.f, UIMax = 3.f, ClampMax = 3.f))
+	float DamageMultiply = 1.f;
 };

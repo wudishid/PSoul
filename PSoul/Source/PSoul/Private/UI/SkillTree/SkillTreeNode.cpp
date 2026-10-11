@@ -15,6 +15,7 @@
 #include "UI/QuickPanel/SkillQuickPanel.h"
 #include "UI/QuickPanel/SkillQuickPickPanel.h"
 #include "UI/SkillTree/SkillInfoTip.h"
+#include "Util/Util_Common.h"
 
 
 void USkillTreeNode::NativeConstruct()
@@ -106,7 +107,7 @@ void USkillTreeNode::OnSkillBtnClicked()
 	{
 		if (!SkillTreeManagerComp->TryLearnSkill(SkillID))
 		{
-			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SkillPoints not enough!"));
+			Util_Common::PopTipWindow(GetWorld(), TEXT("技能点数不够！"));
 		}
 	}
 	//创建快捷技能设置面板

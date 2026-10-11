@@ -1,20 +1,101 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "Camera/SoulCameraComponent.h"
 #include "Camera/SoulCameraMode.h"
-
-void USoulCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& DesiredView)
-{
-	check(CurrentCameraMode);
-	CurrentCameraMode->UpdateCameraMode(DeltaTime);
-	FSoulCameraModeView CameraModeView = CurrentCameraMode->GetCamereModeView();
-
-	DesiredView.Location = CameraModeView.Location;
-	DesiredView.Rotation = CameraModeView.Rotation;
-	DesiredView.FOV = CameraModeView.FieldOfView;
-}
+#include "Camera/SoulCameraMode_ThirdPerson.h"
+#include "GameFramework/Controller.h"
+#include "GameFramework/Pawn.h"
 
 USoulCameraComponent::USoulCameraComponent()
 {
+	// Camera modes own the framing, so the component must not also apply pawn control rotation.
+	bUsePawnControlRotation = false;
+
+	DefaultCameraModeClass = USoulCameraMode_ThirdPerson::StaticClass();
+}
+
+void USoulCameraComponent::OnRegister()
+{
+	Super::OnRegister();
+
+	// The class default object must never instance camera modes.
+	if (HasAnyFlags(RF_ClassDefaultObject))
+	{
+		return;
+	}
+
+	// Camera modes are per-instance runtime objects. Anything inherited from an archetype belongs to a
+	// different outer, so discard it rather than risk driving this camera from another component.
+	if (CurrentCameraMode && CurrentCameraMode->GetOuter() != this)
+	{
+		CurrentCameraMode = nullptr;
+	}
+
+	CameraModeInstances.RemoveAll([this](const TObjectPtr<USoulCameraMode>& CameraModeInstance)
+	{
+		return !CameraModeInstance || CameraModeInstance->GetOuter() != this;
+	});
+
+	if (!CurrentCameraMode)
+	{
+		TSubclassOf<USoulCameraMode> CameraModeClass;
+		if (DefaultCameraModeClass)
+		{
+			CameraModeClass = DefaultCameraModeClass;
+		}
+		else
+		{
+			CameraModeClass = USoulCameraMode_ThirdPerson::StaticClass();
+		}
+		SetCameraMode(CameraModeClass);
+	}
+}
+
+void USoulCameraComponent::GetCameraView(float DeltaTime, FMinimalViewInfo& DesiredView)
+{
+	// Let the base component fill in projection mode, aspect ratio, ortho planes and the post process
+	// settings first, then replace only the transform and field of view with the mode's framing.
+	Super::GetCameraView(DeltaTime, DesiredView);
+
+	// Normally set up in OnRegister; this covers components that were never registered through it.
+	if (!CurrentCameraMode)
+	{
+		
+		TSubclassOf<USoulCameraMode> CameraModeClass;
+		if (DefaultCameraModeClass)
+		{
+			CameraModeClass = DefaultCameraModeClass;
+		}
+		else
+		{
+			CameraModeClass = USoulCameraMode_ThirdPerson::StaticClass();
+		}
+		SetCameraMode(CameraModeClass);
+		if (!CurrentCameraMode)
+		{
+			return;
+		}
+	}
+
+	CurrentCameraMode->UpdateCameraMode(DeltaTime);
+
+	if (bHasProducedView)
+	{
+		// Ease from what we presented last frame toward the active mode's view.
+		View.Blend(CurrentCameraMode->GetCameraModeView(), CurrentCameraMode->GetBlendWeight());
+	}
+	else
+	{
+		// Nothing to blend from yet. Adopt the mode's view outright so the camera does not fly in
+		// from a default-constructed view sitting at the world origin.
+		View = CurrentCameraMode->GetCameraModeView();
+		bHasProducedView = true;
+	}
+
+	DesiredView.Location = View.Location;
+	DesiredView.Rotation = View.Rotation;
+	DesiredView.FOV = View.FieldOfView;
+
+	ApplyControlRotationToOwner();
 }
 
 AActor* USoulCameraComponent::GetTargetActor() const
@@ -24,34 +105,68 @@ AActor* USoulCameraComponent::GetTargetActor() const
 
 void USoulCameraComponent::SetCameraMode(TSubclassOf<USoulCameraMode> InCameraModeClass)
 {
+	if (!InCameraModeClass)
+	{
+		return;
+	}
+
+	// Already active. Bail out so we do not restart the blend-in.
+	if (CurrentCameraMode && CurrentCameraMode->GetClass() == InCameraModeClass)
+	{
+		return;
+	}
+
 	USoulCameraMode* CameraModeInstance = GetCameraModeInstance(InCameraModeClass);
 	if (!CameraModeInstance)
 	{
 		CameraModeInstance = NewObject<USoulCameraMode>(this, InCameraModeClass);
+		if (!CameraModeInstance)
+		{
+			return;
+		}
+
+		CameraModeInstances.Add(CameraModeInstance);
 	}
-	CameraModeInstances.AddUnique(CameraModeInstance);
+
+	if (CurrentCameraMode)
+	{
+		CurrentCameraMode->OnDeactivation();
+	}
+
 	CurrentCameraMode = CameraModeInstance;
+	CurrentCameraMode->OnActivation();
 }
 
 USoulCameraMode* USoulCameraComponent::GetCameraModeInstance(TSubclassOf<USoulCameraMode> InCameraModeClass)
 {
-	for(USoulCameraMode* CameraModeInstance : CameraModeInstances)
+	for (const TObjectPtr<USoulCameraMode>& CameraModeInstance : CameraModeInstances)
 	{
-		if ((CameraModeInstance != nullptr) && (CameraModeInstance->GetClass() == InCameraModeClass))
+		if (CameraModeInstance && CameraModeInstance->GetClass() == InCameraModeClass)
 		{
-			return CameraModeInstance;
+			return CameraModeInstance.Get();
 		}
 	}
 
 	return nullptr;
 }
 
-void USoulCameraComponent::OnRegister()
+void USoulCameraComponent::ApplyControlRotationToOwner()
 {
-	Super::OnRegister();
-
-	if(!CurrentCameraMode)
+	if (!bAllowControlRotationWriteback || !CurrentCameraMode || !CurrentCameraMode->ShouldApplyControlRotationToOwner())
 	{
-		CurrentCameraMode = NewObject<USoulCameraMode>(this, DefaultCameraModeClass);
+		return;
+	}
+
+	const APawn* Pawn = Cast<APawn>(GetTargetActor());
+	if (!Pawn)
+	{
+		return;
+	}
+
+	// Only the locally controlled copy should be driven; remote copies follow input from their own client.
+	AController* Controller = Pawn->GetController();
+	if (Controller && Controller->IsLocalController())
+	{
+		Controller->SetControlRotation(View.ControlRotation);
 	}
 }

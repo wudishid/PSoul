@@ -17,7 +17,11 @@ void USoulGameManager::StartSpawnAI()
 	{
 		AISpawnDataTable->GetAllRows<FAIRoundSpawnData>(TEXT(""), AIRoundSpawnData);
 	}
-	NextRound();
+	FTimerHandle TH_StartDelay;
+	GetWorld()->GetTimerManager().SetTimer(TH_StartDelay, FTimerDelegate::CreateLambda([this]()
+	{
+		NextRound();
+	}), StartDelay, false);
 }
 
 // Called when the game starts

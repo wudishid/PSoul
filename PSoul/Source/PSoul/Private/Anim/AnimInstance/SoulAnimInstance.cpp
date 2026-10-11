@@ -21,14 +21,9 @@ void USoulAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		{
 			float TempSpeed = UKismetMathLibrary::VSizeXY(OwnerPawn->GetVelocity());
 			Speed = UKismetMathLibrary::MapRangeClamped(TempSpeed, 0, CharacterMovementComponent->GetDefaultMaxSpeed(), 0, 1);
+			IsFalling = CharacterMovementComponent->IsFalling();
 		}
 		Direction = UKismetAnimationLibrary::CalculateDirection(OwnerPawn->GetVelocity(), OwnerPawn->GetActorRotation());
 		Direction =  UKismetMathLibrary::MapRangeClamped(Direction, -180, 180, -1, 1);
 	}
-
-	if(CharacterMovementComponent)
-	{
-		IsFalling = CharacterMovementComponent->IsFalling();
-	}
-	
 }

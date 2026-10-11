@@ -20,8 +20,7 @@ void ASoulGameState_Game::StartGame()
 }
 
 AActor* ASoulGameState_Game::OnGetQuerier()
-{
-	if (PlayerArray.Num() > 0)
+{	if (PlayerArray.Num() > 0)
 	{
 		int32 RandomIndex = FMath::RandRange(0, PlayerArray.Num() - 1);
 		return PlayerArray[RandomIndex]->GetPawn();

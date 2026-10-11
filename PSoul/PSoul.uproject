@@ -29,6 +29,10 @@
 		{
 			"Name": "AdvanceProgressBar",
 			"Enabled": true
+		},
+		{
+			"Name": "LockTargetSystem",
+			"Enabled": true
 		}
 	]
 }
