@@ -26,6 +26,9 @@ protected:
 	virtual void UpdateView(float DeltaTime) override;
 	virtual void OnActivation() override;
 
+	virtual FVector GetPivotLocation() const;
+	virtual FRotator GetPivotRotation() const;
+	
 	/**
 	 * Sweeps a sphere from PivotLocation toward DesiredLocation and reports where the camera can sit
 	 * without intersecting level geometry.

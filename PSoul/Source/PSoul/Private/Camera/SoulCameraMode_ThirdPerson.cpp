@@ -20,6 +20,16 @@ void USoulCameraMode_ThirdPerson::OnActivation()
 	bLagInitialized = false;
 }
 
+FVector USoulCameraMode_ThirdPerson::GetPivotLocation() const
+{
+	return GetCameraComponent()->GetComponentLocation();
+}
+
+FRotator USoulCameraMode_ThirdPerson::GetPivotRotation() const
+{
+	return GetCameraComponent()->GetComponentRotation();
+}
+
 void USoulCameraMode_ThirdPerson::UpdateView(float DeltaTime)
 {
 	const FVector PivotLocation = GetPivotLocation();
