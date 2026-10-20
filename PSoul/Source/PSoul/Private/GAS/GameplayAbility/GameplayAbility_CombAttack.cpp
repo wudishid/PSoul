@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "GAS/GameplayAbility/GameplayAbility_CombAttack.h"
 #include "AbilitySystemComponent.h"
-#include "../../../../../../../UE5.4.4/UnrealEngine-release/Engine/Plugins/Animation/MotionWarping/Source/MotionWarping/Public/MotionWarpingComponent.h"
+#include "MotionWarpingComponent.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "GameFramework/SoulCharacterBase.h"

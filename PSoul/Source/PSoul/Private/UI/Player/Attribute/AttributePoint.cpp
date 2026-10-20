@@ -9,7 +9,7 @@ void UAttributePoint::Init()
 {
 	ASC = GetOwningPlayerPawn()->FindComponentByClass<USoulAbilitySystemComponent>();
 	check(ASC);
-	TextBlock_AttributePointValue->SetText(UKismetTextLibrary::Conv_FloatToText(ASC->GetNumericAttribute(Attribute), ToPositiveInfinity));
+	TextBlock_AttributePointValue->SetText(UKismetTextLibrary::Conv_DoubleToText(ASC->GetNumericAttribute(Attribute), ToPositiveInfinity));
 	if (!ASC->GetGameplayAttributeValueChangeDelegate(Attribute).IsBoundToObject(this))
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &ThisClass::HandleAttributeChanged);
@@ -26,7 +26,7 @@ void UAttributePoint::NativeConstruct()
 
 void UAttributePoint::HandleAttributeChanged(const FOnAttributeChangeData& ChangeData)
 {
-	TextBlock_AttributePointValue->SetText(UKismetTextLibrary::Conv_FloatToText(ChangeData.NewValue, ToPositiveInfinity));
+	TextBlock_AttributePointValue->SetText(UKismetTextLibrary::Conv_DoubleToText(ChangeData.NewValue, ToPositiveInfinity));
 }
 
 void UAttributePoint::HandleBtn_AddPointClicked()
